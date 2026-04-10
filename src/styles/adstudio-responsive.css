@@ -1,0 +1,480 @@
+/* ================================ ADSTUDIO FINAL (ULTIMATE FIX v2) ================================ */
+/* GLOBAL */
+.studio-layout {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 60px);
+    background: #f4f7fb;
+    overflow: hidden;
+}
+
+/* ================================ DESKTOP PANELS ================================ */
+.leftpanel-full,
+.rightpanel-full {
+    width: 300px;
+    min-width: 260px;
+    height: calc(100vh - 60px);
+    background: white;
+    padding: 18px;
+    overflow-y: auto;
+    border-right: 1px solid #ddd;
+}
+
+/* SCROLL */
+.leftpanel-full::-webkit-scrollbar,
+.rightpanel-full::-webkit-scrollbar {
+    width: 6px;
+}
+
+.leftpanel-full::-webkit-scrollbar-thumb,
+.rightpanel-full::-webkit-scrollbar-thumb {
+    background: #0b1f33;
+    border-radius: 4px;
+}
+
+/* CANVAS CENTER */
+.studio-layout>*:nth-child(2) {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* DESKTOP BUTTON HOVER IMPROVEMENT */
+.topbar-full button {
+    position: relative;
+    overflow: hidden;
+}
+
+.topbar-full button:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #ffffff !important;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+/* subtle glow */
+.topbar-full button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    transition: 0.3s;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.25), transparent 70%);
+}
+
+.topbar-full button:hover::after {
+    opacity: 1;
+}
+
+/* ================================ ICON BUTTON ================================ */
+.icon-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: white;
+    border: 2px solid #0b1f33;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0b1f33;
+    font-size: 16px;
+    transition: all 0.25s ease;
+}
+
+.icon-btn:hover {
+    background: #0b1f33;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ================================ HIDE MOBILE UI IN DESKTOP ================================ */
+.topbar-icons,
+.topbar-header,
+.leftpanel-icons,
+.rightpanel-icons {
+    display: none !important;
+}
+
+/* 🔥 REMOVE ONLY RIGHT SIDE EXTRA TEXT */
+.topbar-full>div:last-child span:last-child {
+    display: none !important;
+}
+
+/* REMOVE PANEL ACTIONS DESKTOP */
+.panel-actions {
+    display: none !important;
+}
+
+/* ================================ DESKTOP TOPBAR ================================ */
+.topbar-container {
+    height: 60px;
+    background: linear-gradient(135deg, #0b1f33, #123a5c);
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.topbar-full {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* LOGO (🔥 FIXED) */
+.topbar-full>div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topbar-full>div:first-child div {
+    width: 38px;
+    height: 38px;
+    background: white;
+    color: #0b1f33;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.topbar-full>div:first-child span {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* NAV BUTTONS */
+.topbar-full button {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: white !important;
+    height: 38px;
+    padding: 0 14px;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+
+.topbar-full button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: white;
+    transform: translateY(-2px);
+}
+
+/* SELECTS */
+.topbar-full select {
+    height: 38px;
+    border-radius: 8px;
+}
+
+/* ================================ 🔥 TABLET VIEW FIX (775px–1291px) ================================ */
+@media (max-width:1291px) and (min-width:775px) {
+
+    /* TOPBAR WRAP FIX */
+    .topbar-container {
+        height: auto;
+        padding: 10px 20px;
+    }
+
+    .topbar-full {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* MAKE BUTTON GROUP CLEAN */
+    .topbar-full>div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* 🔥 PANEL SHRINK */
+    .leftpanel-full,
+    .rightpanel-full {
+        width: 220px;
+        min-width: 200px;
+    }
+
+    /* 🔥 CANVAS BIGGER */
+    .studio-layout>*:nth-child(2) {
+        flex: 2;
+    }
+}
+
+/* ================================ MOBILE VIEW ================================ */
+@media(max-width:768px) {
+    .studio-layout {
+        flex-direction: column;
+        padding-bottom: 70px;
+    }
+
+    .topbar-mobile-header {
+        display: flex !important;
+    }
+
+    .topbar-full {
+        display: none !important;
+    }
+
+    .topbar-container {
+        flex-direction: column;
+        height: auto;
+        padding: 0;
+    }
+
+    /* 🔥 BEAUTIFUL HEADER
+    .topbar-header {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: 14px;
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: white;
+        background: linear-gradient(135deg, #0b1f33, #123a5c);
+    }
+
+    .topbar-header::before {
+        content: "AD";
+        margin-right: 12px;
+        background: white;
+        color: #0b1f33;
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    } */
+    .topbar-mobile-header {
+        display: none;
+    }
+
+    @media(max-width:768px) {
+
+        .topbar-mobile-header {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+
+            padding: 14px;
+
+            background: linear-gradient(135deg, #0b1f33, #123a5c);
+            color: white;
+
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 1px;
+
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .topbar-mobile-header .logo {
+            width: 42px;
+            height: 42px;
+
+            background: linear-gradient(135deg, #ffffff, #cfe9ff);
+            color: #0b1f33;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+            font-weight: bold;
+
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+
+            transform: rotate(-5deg);
+        }
+
+        .topbar-mobile-header span {
+            background: linear-gradient(90deg, #ffffff, #9ecbff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    }
+
+    /* BUTTON ROW */
+    .topbar-icons {
+        display: flex !important;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px;
+        background: #0b1f33;
+    }
+
+    /* PANELS */
+    .leftpanel-full,
+    .rightpanel-full {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.95);
+        width: 90%;
+        max-height: 65vh;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(16px);
+        border-radius: 16px;
+        padding: 16px;
+        overflow-y: auto;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.25s ease;
+        z-index: 1000;
+    }
+
+    .leftpanel-full.active,
+    .rightpanel-full.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* PANEL BUTTONS */
+    .panel-actions {
+        display: flex !important;
+        gap: 10px;
+        margin-top: 12px;
+    }
+
+    .btn-set {
+        flex: 1;
+        background: #0b1f33;
+        color: white;
+        padding: 8px;
+        border-radius: 8px;
+    }
+
+    .btn-close {
+        flex: 1;
+        background: #e74c3c;
+        color: white;
+        padding: 8px;
+        border-radius: 8px;
+    }
+
+    /* ICON BARS */
+    .leftpanel-icons {
+        display: flex !important;
+        justify-content: center;
+        gap: 12px;
+        padding: 10px;
+        background: #0b1f33;
+    }
+
+    .rightpanel-icons {
+        display: flex !important;
+        justify-content: center;
+        gap: 16px;
+        padding: 10px;
+        background: #0b1f33;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+}
+
+/* SMALL MOBILE */
+@media(max-width:480px) {
+    .icon-btn {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+/* REMOVE ANY EXTRA TEXT IN RIGHT SIDE OF TOPBAR */
+.topbar-full>div:last-child {
+    display: flex;
+    align-items: center;
+}
+
+/* hide stray text nodes */
+.topbar-full>div:last-child span:not(:first-child) {
+    display: none !important;
+}
+
+/* AUTO TARGET BUTTONS (fallback) */
+.rightpanel-full button {
+    margin-top: 8px;
+}
+
+.rightpanel-full button+button {
+    margin-left: 10px;
+}
+
+/* HIDE MOBILE HEADER BY DEFAULT */
+.topbar-mobile-header {
+    display: none;
+}
+
+/* floating tool bar */
+.floating-toolbar {
+    pointer-events: auto;
+}
+
+.toolbar-box {
+    display: flex;
+    gap: 8px;
+    background: white;
+    padding: 6px 10px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    align-items: center;
+}
+
+.toolbar-box button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #0b1f33;
+}
+
+.toolbar-box button:hover {
+    color: #4a6cf7;
+}
+
+/* replacement tippy */
+.icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-label {
+    font-size: 10px;
+    margin-top: 4px;
+    color: #f5f7f9;
+    text-align: center;
+    line-height: 1;
+}
+
+@keyframes loading {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}

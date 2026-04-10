@@ -1,0 +1,287 @@
+/* ================================
+   ADSTUDIO FINAL STABLE (FIXED)
+================================ */
+
+/* GLOBAL */
+.studio-layout {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+    background: #f4f7fb;
+}
+
+/* ================================
+   PANELS (DESKTOP DEFAULT)
+================================ */
+
+.leftpanel-full,
+.rightpanel-full {
+    background: white;
+    padding: 20px;
+    overflow-y: auto;
+
+    height: calc(100vh - 60px);
+    width: 300px;
+
+    border: 1px solid #ddd;
+
+    scrollbar-width: thin;
+    scrollbar-color: #0b1f33 rgba(0, 0, 0, 0.1);
+}
+
+.leftpanel-full::-webkit-scrollbar,
+.rightpanel-full::-webkit-scrollbar {
+    width: 8px;
+}
+
+.leftpanel-full::-webkit-scrollbar-thumb,
+.rightpanel-full::-webkit-scrollbar-thumb {
+    background: #0b1f33;
+    border-radius: 4px;
+}
+
+/* CANVAS CENTER FIX */
+.studio-layout>*:nth-child(2) {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ================================
+   ICON BUTTON
+================================ */
+
+.icon-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 12px;
+    border: 2px solid #0b1f33;
+    color: #0b1f33;
+    font-size: 18px;
+}
+
+/* ================================
+   🔴 FIX: HIDE PANEL ICONS DESKTOP/TABLET
+================================ */
+
+.leftpanel-icons,
+.rightpanel-icons {
+    display: none !important;
+}
+
+/* ================================
+   CLOSE BUTTON (ONLY MOBILE)
+================================ */
+
+.panel-close {
+    display: none;
+}
+
+/* ================================
+   TOPBAR DESKTOP
+================================ */
+
+.topbar-container {
+    width: 100%;
+    height: 60px;
+    background: #0b1f33;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.topbar-full {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* HIDE MOBILE BAR BY DEFAULT */
+.topbar-icons {
+    display: none;
+}
+
+/* ================================
+   MOBILE (<=768px)
+================================ */
+
+@media(max-width:768px) {
+
+    .studio-layout {
+        flex-direction: column;
+    }
+
+    /* FLOAT PANELS */
+    .leftpanel-full,
+    .rightpanel-full {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.95);
+
+        width: 92vw;
+        max-height: 75vh;
+
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(15px);
+
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1000;
+        transition: 0.25s ease;
+    }
+
+    .leftpanel-full.active,
+    .rightpanel-full.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* CLOSE BUTTON */
+    .panel-close {
+        display: flex;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: red;
+        color: white;
+        width: 30px;
+        height: 30px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    /* PANEL ICONS ONLY MOBILE */
+    .leftpanel-icons,
+    .rightpanel-icons {
+        display: flex !important;
+        justify-content: space-around;
+        padding: 8px;
+        background: #0b1f33;
+    }
+
+    /* 🔥 TOPBAR SWITCH */
+    .topbar-full {
+        display: none !important;
+    }
+
+    .topbar-icons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 10px 12px;
+        background: #0b1f33;
+
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 8px;
+    }
+
+    /* LOGO LEFT */
+    .topbar-icons::before {
+        content: "AD";
+        flex-shrink: 0;
+
+        font-weight: bold;
+        background: white;
+        color: #0b1f33;
+
+        padding: 6px 10px;
+        border-radius: 6px;
+
+        margin-right: 10px;
+    }
+
+    /* KEEP ICONS INLINE */
+    .topbar-icons>* {
+        flex-shrink: 0;
+    }
+
+    /* ICON SIZE */
+    .topbar-icons .icon-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+}
+
+/* ================================
+   SMALL MOBILE
+================================ */
+
+@media(max-width:480px) {
+    .icon-btn {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+/* ================================
+   FIX: TOPBAR NAV LINKS (DESKTOP)
+================================ */
+
+.topbar-full button {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+
+    color: white !important;
+    padding: 6px 10px;
+    border-radius: 6px;
+
+    transition: 0.2s ease;
+}
+
+/* Hover effect (clean) */
+.topbar-full button:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Logout slight highlight (optional but nice) */
+.topbar-full button.text-red-600 {
+    color: #ff6b6b !important;
+}
+
+.topbar-full button.text-red-600:hover {
+    background: rgba(255, 0, 0, 0.15) !important;
+}
+
+/* ================================
+   FIX: TOPBAR RIGHT CONTROLS SIZE
+================================ */
+
+.topbar-full select {
+    height: 38px;
+    padding: 0 10px;
+    border-radius: 8px;
+}
+
+/* Make action buttons same height as selects */
+.topbar-full button {
+    height: 38px;
+    padding: 0 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+}
