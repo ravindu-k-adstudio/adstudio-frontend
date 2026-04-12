@@ -17,8 +17,7 @@ import {
 } from "recharts";
 import Footer from "../components/Footer";
 
-// const API_URL = "http://localhost:5000/api";
-const API_URL = "http://192.168.1.28:5000/api"; // your IP
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Dashboard() {
     const { user, token, logout } = useAuth();

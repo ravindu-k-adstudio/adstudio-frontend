@@ -8,8 +8,7 @@ import translations from "../data/translations";
 import { useAuth } from "../context/AuthContext";
 import "../styles/adstudio-responsive.css";
 
-// const API_URL = "http://localhost:5000/api";
-const API_URL = "http://192.168.1.28:5000/api"; // your IP
+const API_URL = import.meta.env.VITE_API_URL;
 
 const getCanvasDimensions = size => {
     const sizes = {

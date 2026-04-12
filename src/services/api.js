@@ -1,23 +1,4 @@
-// const API_URL = "http://localhost:5000/api";
-
-// export const upgradePlan = async (plan, token) => {
-//     const res = await fetch(`${API_URL}/user/upgrade`, {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${token}`
-//         },
-//         body: JSON.stringify({ plan })
-//     });
-
-//     return res.json();
-// };
-
-// 
-
-// const API = "http://localhost:5000/api";
-
-const API = "http://192.168.1.28:5000/api";
+const API = import.meta.env.VITE_API_URL;
 
 export async function signup(data) {
     const res = await fetch(`${API}/auth/signup`, {
