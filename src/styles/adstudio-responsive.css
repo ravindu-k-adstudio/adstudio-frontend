@@ -1,5 +1,11 @@
 /* ================================ ADSTUDIO FINAL (ULTIMATE FIX v2) ================================ */
 /* GLOBAL */
+html,
+body {
+    overflow: hidden;
+    /* 🔥 stops page scroll affecting canvas */
+}
+
 .studio-layout {
     display: flex;
     width: 100%;

@@ -463,6 +463,18 @@ const Canvas = forwardRef(function Canvas(
 
 
     return (
+        // <div
+        //     ref={containerRef}
+        //     style={{
+        //         flex: 1,
+        //         display: "flex",
+        //         justifyContent: "center",
+        //         alignItems: "center",
+        //         position: "relative",
+        //         overflow: "auto",
+        //         background: "#f1f5f9"
+        //     }}
+        // >
         <div
             ref={containerRef}
             style={{
@@ -471,8 +483,9 @@ const Canvas = forwardRef(function Canvas(
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
-                overflow: "auto",
-                background: "#f1f5f9"
+                overflow: "hidden", // 🔥 FIX
+                background: "#f1f5f9",
+                touchAction: "none" // 🔥 MOBILE FIX
             }}
         >
 
@@ -566,7 +579,7 @@ const Canvas = forwardRef(function Canvas(
 
             {/* CENTERING WRAPPER */}
 
-            <div
+            {/* <div
                 style={{
                     display: "flex",
                     justifyContent: "center",
@@ -575,15 +588,37 @@ const Canvas = forwardRef(function Canvas(
                     minHeight: "100%",
                     padding: 40
                 }}
+            > */}
+            <div
+                style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    pointerEvents: "none" // 🔥 IMPORTANT
+                }}
             >
 
                 {/* SCALE WRAPPER */}
 
-                <div
+                {/* <div
                     style={{
                         transform: `scale(${finalScale})`,
                         transformOrigin: "center center",
                         transition: "transform 0.2s ease"
+                    }}
+                > */}
+                <div
+                    style={{
+                        transform: `scale(${finalScale})`,
+                        transformOrigin: "center center",
+                        transition: "transform 0.2s ease",
+                        pointerEvents: "auto" // 🔥 FIX CLICK / TOUCH
                     }}
                 >
 
