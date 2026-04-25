@@ -475,6 +475,19 @@ const Canvas = forwardRef(function Canvas(
         //         background: "#f1f5f9"
         //     }}
         // >
+        // <div
+        //     ref={containerRef}
+        //     style={{
+        //         flex: 1,
+        //         display: "flex",
+        //         justifyContent: "center",
+        //         alignItems: "center",
+        //         position: "relative",
+        //         overflow: "hidden", // 🔥 FIX
+        //         background: "#f1f5f9",
+        //         touchAction: "none" // 🔥 MOBILE FIX
+        //     }}
+        // >
         <div
             ref={containerRef}
             style={{
@@ -483,19 +496,33 @@ const Canvas = forwardRef(function Canvas(
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
-                overflow: "hidden", // 🔥 FIX
+                overflow: "hidden", // 🔥 STOP DRIFT
                 background: "#f1f5f9",
-                touchAction: "none" // 🔥 MOBILE FIX
+                paddingBottom: "90px" // 🔥 SPACE FOR BOTTOM TOOLBAR
             }}
         >
 
             {/* ZOOM CONTROLLER */}
 
             <div
+                // style={{
+                //     position: "absolute",
+                //     bottom: 20,
+                //     right: 25,
+                //     display: "flex",
+                //     alignItems: "center",
+                //     gap: 10,
+                //     background: "#ffffff",
+                //     padding: "8px 12px",
+                //     borderRadius: 10,
+                //     boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+                //     zIndex: 20
+                // }}
                 style={{
                     position: "absolute",
-                    bottom: 20,
-                    right: 25,
+                    bottom: "110px", // 👈 key fix
+                    left: "50%",
+                    transform: "translateX(-50%)", // 👈 center it like your design #2
                     display: "flex",
                     alignItems: "center",
                     gap: 10,
@@ -589,7 +616,7 @@ const Canvas = forwardRef(function Canvas(
                     padding: 40
                 }}
             > */}
-            <div
+            {/* <div
                 style={{
                     position: "absolute",
                     top: "50%",
@@ -601,6 +628,16 @@ const Canvas = forwardRef(function Canvas(
                     justifyContent: "center",
                     alignItems: "center",
                     pointerEvents: "none" // 🔥 IMPORTANT
+                }}
+            > */}
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%", // 🔥 FIX CENTERING
+                    padding: "20px 10px"
                 }}
             >
 
