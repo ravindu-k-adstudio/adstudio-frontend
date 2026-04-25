@@ -463,31 +463,6 @@ const Canvas = forwardRef(function Canvas(
 
 
     return (
-        // <div
-        //     ref={containerRef}
-        //     style={{
-        //         flex: 1,
-        //         display: "flex",
-        //         justifyContent: "center",
-        //         alignItems: "center",
-        //         position: "relative",
-        //         overflow: "auto",
-        //         background: "#f1f5f9"
-        //     }}
-        // >
-        // <div
-        //     ref={containerRef}
-        //     style={{
-        //         flex: 1,
-        //         display: "flex",
-        //         justifyContent: "center",
-        //         alignItems: "center",
-        //         position: "relative",
-        //         overflow: "hidden", // 🔥 FIX
-        //         background: "#f1f5f9",
-        //         touchAction: "none" // 🔥 MOBILE FIX
-        //     }}
-        // >
         <div
             ref={containerRef}
             style={{
@@ -496,33 +471,19 @@ const Canvas = forwardRef(function Canvas(
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
-                overflow: "hidden", // 🔥 STOP DRIFT
-                background: "#f1f5f9",
-                paddingBottom: "90px" // 🔥 SPACE FOR BOTTOM TOOLBAR
+                overflow: "auto",
+                background: "#f1f5f9"
             }}
         >
+
 
             {/* ZOOM CONTROLLER */}
 
             <div
-                // style={{
-                //     position: "absolute",
-                //     bottom: 20,
-                //     right: 25,
-                //     display: "flex",
-                //     alignItems: "center",
-                //     gap: 10,
-                //     background: "#ffffff",
-                //     padding: "8px 12px",
-                //     borderRadius: 10,
-                //     boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
-                //     zIndex: 20
-                // }}
                 style={{
                     position: "absolute",
-                    bottom: "110px", // 👈 key fix
-                    left: "50%",
-                    transform: "translateX(-50%)", // 👈 center it like your design #2
+                    bottom: 20,
+                    right: 25,
                     display: "flex",
                     alignItems: "center",
                     gap: 10,
@@ -606,7 +567,7 @@ const Canvas = forwardRef(function Canvas(
 
             {/* CENTERING WRAPPER */}
 
-            {/* <div
+            <div
                 style={{
                     display: "flex",
                     justifyContent: "center",
@@ -615,49 +576,18 @@ const Canvas = forwardRef(function Canvas(
                     minHeight: "100%",
                     padding: 40
                 }}
-            > */}
-            {/* <div
-                style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    pointerEvents: "none" // 🔥 IMPORTANT
-                }}
-            > */}
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "100%", // 🔥 FIX CENTERING
-                    padding: "20px 10px"
-                }}
             >
 
                 {/* SCALE WRAPPER */}
 
-                {/* <div
+                <div
                     style={{
                         transform: `scale(${finalScale})`,
                         transformOrigin: "center center",
                         transition: "transform 0.2s ease"
                     }}
-                > */}
-                <div
-                    style={{
-                        transform: `scale(${finalScale})`,
-                        transformOrigin: "center center",
-                        transition: "transform 0.2s ease",
-                        pointerEvents: "auto" // 🔥 FIX CLICK / TOUCH
-                    }}
                 >
+
 
                     <div
                         style={{
@@ -710,65 +640,6 @@ const Canvas = forwardRef(function Canvas(
 
                             {/* BLOCKS */}
 
-                            {/* <Layer>
-                                {blocks.map(b => {
-                                    const shape = getBlockShape(b);
-
-                                    return shape ?
-                                        <shape.type
-                                            {...shape.props}
-                                            key={b.id}
-                                            onClick={e => {
-                                                e.cancelBubble = true;
-                                                setSelectedId(b.id);
-                                                selectedNodeRef.current = e.target;
-                                            }}
-                                            onDragEnd={(e) => {
-                                                const { x, y } = e.target.position();
-
-                                                setBlocks(prev =>
-                                                    prev.map(item =>
-                                                        item.id === b.id ? { ...item, x, y } : item
-                                                    )
-                                                );
-
-                                                pushHistory();
-                                            }}
-                                            onTap={e => {
-                                                e.cancelBubble = true;
-                                                setSelectedId(b.id);
-                                                selectedNodeRef.current = e.target;
-                                            }}
-
-                                            onTransformEnd={(e) => {
-                                                const node = e.target;
-
-                                                const scaleX = node.scaleX();
-                                                const scaleY = node.scaleY();
-
-                                                node.scaleX(1);
-                                                node.scaleY(1);
-
-                                                const updated = {
-                                                    x: node.x(),
-                                                    y: node.y(),
-                                                    width: Math.max(20, b.width * scaleX),
-                                                    height: Math.max(20, b.height * scaleY),
-                                                    rotation: node.rotation()
-                                                };
-
-                                                setBlocks(prev =>
-                                                    prev.map(item =>
-                                                        item.id === b.id ? { ...item, ...updated } : item
-                                                    )
-                                                );
-
-                                                pushHistory();
-                                            }}
-
-                                        /> : null;
-                                })}
-                            </Layer> */}
                             <Layer>
                                 {blocks.map(b => {
                                     const shape = getBlockShape(b);
@@ -896,22 +767,7 @@ const Canvas = forwardRef(function Canvas(
                             {/* SHAPES */}
 
                             <Layer>
-                                {/* {shapes.map(s =>
-                                    s.type === "circle" ? <Circle key={s.id} {...s} /> :
-                                        s.type === "rectangle" ? <Rect key={s.id} {...s} /> :
-                                            s.type === "line" || s.type === "free" ? renderLine(s) :
-                                                null
-                                )}
 
-                                {draftShape &&
-                                    draftShape.type &&
-                                    draftShape.type !== "line" &&
-                                    draftShape.type !== "free" && (
-
-                                        draftShape.type === "circle"
-                                            ? <Circle {...draftShape} />
-                                            : <Rect {...draftShape} />
-                                    )} */}
                                 {shapes.map(s => {
 
                                     // ❌ skip lines & brush (complex)
