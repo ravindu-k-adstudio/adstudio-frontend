@@ -389,7 +389,7 @@ export default function RightPanel({
                     >
                         <FaSquare />
                     </button>
-                    {isMobile && <span className="icon-label">Shapes</span>}
+                    {isMobile && <span className="icon-label">Draw</span>}
                 </div>
 
                 <div className="icon-item">
