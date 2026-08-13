@@ -1,294 +1,3 @@
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { useAuth } from "../context/AuthContext";
-// import sampleAd from "../assets/sample-ad.png";
-
-// export default function Signup() {
-//     const [name, setName] = useState("");
-//     const [email, setEmail] = useState("");
-//     const [password, setPassword] = useState("");
-//     const [error, setError] = useState("");
-
-//     const { signup } = useAuth();
-//     const navigate = useNavigate();
-
-//     const submit = async (e) => {
-//         e.preventDefault();
-//         setError("");
-
-//         try {
-//             await signup(name, email, password, "starter");
-//             navigate("/adstudio");
-//         } catch (err) {
-//             setError(err.message || "Signup failed");
-//         }
-//     };
-
-//     return (
-//         <div className="min-h-screen flex items-center justify-center bg-white px-4">
-//             <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl">
-
-//                 {/* 🔥 IMAGE (VISIBLE ON MOBILE ALSO) */}
-//                 <div className="w-full md:w-1/2 h-[220px] sm:h-[280px] md:h-auto relative">
-//                     <img
-//                         src={sampleAd}
-//                         alt="Sample Ad"
-//                         className="w-full h-full object-cover"
-//                     />
-
-//                     {/* 🔥 Overlay Text (fixed responsiveness) */}
-//                     <div className="absolute inset-0 flex items-center justify-center text-center bg-black/30 px-4">
-//                         <h1 className="text-white text-lg sm:text-xl md:text-2xl font-bold leading-tight">
-//                             Create High-Converting Ads <br /> For Any Business
-//                         </h1>
-//                     </div>
-//                 </div>
-
-//                 {/* FORM */}
-//                 <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-center space-y-6">
-
-//                     <h1 className="text-2xl md:text-3xl font-bold text-[#0b1f33] text-center md:text-left">
-//                         Create Account
-//                     </h1>
-
-//                     {error && <p className="text-red-600 text-center md:text-left">{error}</p>}
-
-//                     <form onSubmit={submit} className="flex flex-col gap-4">
-//                         <input
-//                             type="text"
-//                             placeholder="Name"
-//                             className="w-full p-3 rounded-lg border border-gray-300"
-//                             value={name}
-//                             onChange={e => setName(e.target.value)}
-//                             required
-//                         />
-
-//                         <input
-//                             type="email"
-//                             placeholder="Email"
-//                             className="w-full p-3 rounded-lg border border-gray-300"
-//                             value={email}
-//                             onChange={e => setEmail(e.target.value)}
-//                             required
-//                         />
-
-//                         <input
-//                             type="password"
-//                             placeholder="Password"
-//                             className="w-full p-3 rounded-lg border border-gray-300"
-//                             value={password}
-//                             onChange={e => setPassword(e.target.value)}
-//                             required
-//                         />
-
-//                         <button
-//                             type="submit"
-//                             className="w-full py-3 bg-[#0b1f33] text-white font-semibold rounded-lg hover:opacity-90 transition"
-//                         >
-//                             Sign Up
-//                         </button>
-//                     </form>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
-// 
-
-// new update
-
-// // import { useState } from "react";
-// // import { useNavigate } from "react-router-dom";
-// // import { useAuth } from "../context/AuthContext";
-// // import sampleAd from "../assets/sample-ad.png";
-
-// // export default function Signup() {
-// //     const [name, setName] = useState("");
-// //     const [email, setEmail] = useState("");
-// //     const [password, setPassword] = useState("");
-// //     const [error, setError] = useState("");
-
-// //     const { signup } = useAuth();
-// //     const navigate = useNavigate();
-
-// //     const submit = async (e) => {
-// //         e.preventDefault();
-// //         setError("");
-
-// //         try {
-// //             // ✅ FIX: pass arguments correctly + default plan
-// //             await signup(name, email, password, "starter");
-
-// //             // go to pricing to upgrade/change plan
-// //             navigate("/adstudio");
-// //         } catch (err) {
-// //             setError(err.message || "Signup failed");
-// //         }
-// //     };
-
-// //     return (
-// //         <div className="min-h-screen flex items-center justify-center bg-white">
-// //             <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl">
-
-// //                 {/* Left side image */}
-// //                 <div className="hidden md:block md:w-1/2 relative">
-// //                     <img
-// //                         src={sampleAd}
-// //                         alt="Sample Ad"
-// //                         className="w-full h-full object-cover opacity-90"
-// //                     />
-// //                 </div>
-
-// //                 {/* Right side form */}
-// //                 <div className="w-full md:w-1/2 p-8 flex flex-col justify-center space-y-6 backdrop-blur-xl bg-white/30">
-// //                     <h1 className="absolute top-2 right-90 text-2xl md:text-3xl font-bold text-[#0b1f33]">
-// //                         Create High-Converting Ads <br /> For Any Bussines
-// //                     </h1>
-
-
-// //                     <h1 className="text-3xl font-bold text-[#0b1f33]">
-// //                         Create Account
-// //                     </h1>
-
-// //                     {error && <p className="text-red-600">{error}</p>}
-
-// //                     <form onSubmit={submit} className="flex flex-col gap-4">
-// //                         <input
-// //                             type="text"
-// //                             placeholder="Name"
-// //                             className="w-full p-3 rounded-lg border border-gray-300"
-// //                             value={name}
-// //                             onChange={e => setName(e.target.value)}
-// //                             required
-// //                         />
-
-// //                         <input
-// //                             type="email"
-// //                             placeholder="Email"
-// //                             className="w-full p-3 rounded-lg border border-gray-300"
-// //                             value={email}
-// //                             onChange={e => setEmail(e.target.value)}
-// //                             required
-// //                         />
-
-// //                         <input
-// //                             type="password"
-// //                             placeholder="Password"
-// //                             className="w-full p-3 rounded-lg border border-gray-300"
-// //                             value={password}
-// //                             onChange={e => setPassword(e.target.value)}
-// //                             required
-// //                         />
-
-// //                         <button
-// //                             type="submit"
-// //                             className="w-full py-3 bg-[#0b1f33] text-white font-semibold rounded-lg"
-// //                         >
-// //                             Sign Up
-// //                         </button>
-// //                     </form>
-// //                 </div>
-// //             </div>
-// //         </div>
-// //     );
-// // }
-
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { useAuth } from "../context/AuthContext";
-// import sampleAd from "../assets/sample-ad.png";
-
-// export default function Signup() {
-//     const [name, setName] = useState("");
-//     const [email, setEmail] = useState("");
-//     const [password, setPassword] = useState("");
-//     const [error, setError] = useState("");
-
-//     const { signup } = useAuth();
-//     const navigate = useNavigate();
-
-//     const submit = async (e) => {
-//         e.preventDefault();
-//         setError("");
-
-//         try {
-//             await signup(name, email, password, "starter");
-//             navigate("/adstudio");
-//         } catch (err) {
-//             setError(err.message || "Signup failed");
-//         }
-//     };
-
-//     return (
-//         <div className="min-h-screen flex items-center justify-center bg-white px-4">
-//             <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl">
-
-//                 {/* 🔥 IMAGE (VISIBLE ON MOBILE ALSO) */}
-//                 <div className="w-full md:w-1/2 h-[220px] sm:h-[280px] md:h-auto relative">
-//                     <img
-//                         src={sampleAd}
-//                         alt="Sample Ad"
-//                         className="w-full h-full object-cover"
-//                     />
-
-//                     {/* 🔥 Overlay Text (fixed responsiveness) */}
-//                     <div className="absolute inset-0 flex items-center justify-center text-center bg-black/30 px-4">
-//                         <h1 className="text-white text-lg sm:text-xl md:text-2xl font-bold leading-tight">
-//                             Create High-Converting Ads <br /> For Any Business
-//                         </h1>
-//                     </div>
-//                 </div>
-
-//                 {/* FORM */}
-//                 <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-center space-y-6">
-
-//                     <h1 className="text-2xl md:text-3xl font-bold text-[#0b1f33] text-center md:text-left">
-//                         Create Account
-//                     </h1>
-
-//                     {error && <p className="text-red-600 text-center md:text-left">{error}</p>}
-
-//                     <form onSubmit={submit} className="flex flex-col gap-4">
-//                         <input
-//                             type="text"
-//                             placeholder="Name"
-//                             className="w-full p-3 rounded-lg border border-gray-300"
-//                             value={name}
-//                             onChange={e => setName(e.target.value)}
-//                             required
-//                         />
-
-//                         <input
-//                             type="email"
-//                             placeholder="Email"
-//                             className="w-full p-3 rounded-lg border border-gray-300"
-//                             value={email}
-//                             onChange={e => setEmail(e.target.value)}
-//                             required
-//                         />
-
-//                         <input
-//                             type="password"
-//                             placeholder="Password"
-//                             className="w-full p-3 rounded-lg border border-gray-300"
-//                             value={password}
-//                             onChange={e => setPassword(e.target.value)}
-//                             required
-//                         />
-
-//                         <button
-//                             type="submit"
-//                             className="w-full py-3 bg-[#0b1f33] text-white font-semibold rounded-lg hover:opacity-90 transition"
-//                         >
-//                             Sign Up
-//                         </button>
-//                     </form>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -298,20 +7,61 @@ export default function Signup() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    // validation part update karanna20260701
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const emailRegex =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const emailValid = emailRegex.test(email.trim());
+    const passwordValid = password.length >= 6;
+    const nameValid = name.trim().length >= 2;
+
+    const formValid =
+        nameValid &&
+        emailValid &&
+        passwordValid;
 
     const { signup } = useAuth();
     const navigate = useNavigate();
 
     const submit = async (e) => {
         e.preventDefault();
+
         setError("");
 
+        if (!nameValid) {
+            setError("Please enter your full name.");
+            return;
+        }
+
+        if (!emailValid) {
+            setError("Please enter a valid email address.");
+            return;
+        }
+
+        if (!passwordValid) {
+            setError("Password must contain at least 6 characters.");
+            return;
+        }
+
         try {
-            await signup(name, email, password, "starter");
+            setLoading(true);
+
+            await signup(
+                name.trim(),
+                email.trim().toLowerCase(),
+                password,
+                "starter"
+            );
+
             navigate("/adstudio");
         } catch (err) {
             setError(err.message || "Signup failed");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -323,6 +73,34 @@ export default function Signup() {
                     "linear-gradient(135deg, #071426 0%, #0b1f33 35%, #12385d 70%, #1e4f7a 100%)"
             }}
         >
+            {/* back button update karanna 20260701 */}
+            <button
+                onClick={() => navigate("/")}
+                className="
+        absolute
+        top-6
+        left-6
+        z-50
+        flex
+        items-center
+        gap-2
+        px-5
+        py-3
+        rounded-2xl
+        border
+        border-white/15
+        bg-white/10
+        backdrop-blur-xl
+        text-white
+        hover:bg-white/15
+        hover:border-cyan-400/50
+        hover:scale-105
+        transition-all
+        duration-300
+    "
+            >
+                ← Back to Home
+            </button>
 
             {/* PREMIUM GLOW EFFECTS */}
 

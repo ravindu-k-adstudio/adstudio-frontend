@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-// import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 export default function Footer() {
@@ -24,6 +23,16 @@ export default function Footer() {
                         <Link to="/" className="hover:text-white transition">Home</Link>
                         <Link to="/pricing" className="hover:text-white transition">Pricing</Link>
                         <Link to="/contact" className="hover:text-white transition">Contact</Link>
+                        <div className="flex gap-6">
+
+                            <Link
+                                to="/privacy-policy"
+                                className="hover:text-cyan-400"
+                            >
+                                Privacy Policy
+                            </Link>
+
+                        </div>
                     </div>
                 </div>
 
@@ -44,12 +53,14 @@ export default function Footer() {
 
                         <div className="flex items-center gap-2">
                             <MapPin size={16} />
-                            <span>Your Address Here</span>
+                            <span>Eco Softwares</span>
+                            <span>Galle rd,Aluthgama</span>
+                            <span>Sri Lanka</span>
                         </div>
 
                         <div className="flex items-center gap-2">
                             <Phone size={16} />
-                            <span>+94 77 XXX XXXX</span>
+                            <span>+94 78 670 8128</span>
                         </div>
 
                         <div className="flex items-center gap-2">
@@ -89,7 +100,7 @@ export default function Footer() {
 
                     {/* COPYRIGHT */}
                     <p className="text-sm text-gray-400 text-center">
-                        © {new Date().getFullYear()} AdStudio. All rights reserved.
+                        © {new Date().getFullYear()} Eco Softwares | AdStudio | All rights reserved.
                     </p>
 
                 </div>

@@ -1,8 +1,11 @@
 import { useEffect, useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { PLANS } from "../data/plans";
+
+import logo from "../assets/adstudio-logo.png";
 import {
     PieChart,
     Pie,
@@ -280,8 +283,71 @@ export default function Dashboard() {
                     </div>
                 </aside>
 
-                <Footer />
+                {/* FOOTER */}
+                <footer className="bg-[#07111d] text-gray-300 py-16">
+
+                    <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
+
+                        <div>
+                            <div className="flex items-center gap-3 mb-4">
+                                <img
+                                    src={logo}
+                                    alt="AdStudio"
+                                    className="w-12 h-12"
+                                />
+
+                                <h3 className="text-white text-2xl font-bold">
+                                    AdStudio
+                                </h3>
+                            </div>
+
+                            <p className="text-sm leading-relaxed">
+                                Create professional advertisements for any business with ease.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 className="font-semibold mb-4 text-white">
+                                Product
+                            </h4>
+
+                            <ul className="space-y-2 text-sm">
+                                <li><Link to="/pricing">Pricing</Link></li>
+                                <li><Link to="/adstudio">Ad Studio</Link></li>
+                                <li><Link to="/dashboard">Dashboard</Link></li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 className="font-semibold mb-4 text-white">
+                                Account
+                            </h4>
+
+                            <ul className="space-y-2 text-sm">
+                                <li><Link to="/login">Login</Link></li>
+                                <li><Link to="/signup">Sign Up</Link></li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 className="font-semibold mb-4 text-white">
+                                Contact
+                            </h4>
+
+                            <p className="text-sm">
+                                support@adstudio.app
+                            </p>
+                        </div>
+                    </div>
+
+                    <p className="text-center text-sm text-gray-500 mt-12">
+                        © {new Date().getFullYear()} AdStudio. All rights reserved.
+                    </p>
+                </footer>
+
             </div>
+
         </>
+
     );
 }

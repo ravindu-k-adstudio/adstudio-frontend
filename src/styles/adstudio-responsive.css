@@ -1,11 +1,5 @@
 /* ================================ ADSTUDIO FINAL (ULTIMATE FIX v2) ================================ */
 /* GLOBAL */
-html,
-body {
-    overflow: hidden;
-    /* 🔥 stops page scroll affecting canvas */
-}
-
 .studio-layout {
     display: flex;
     width: 100%;
@@ -17,19 +11,20 @@ body {
 /* ================================ DESKTOP PANELS ================================ */
 .leftpanel-full,
 .rightpanel-full {
-    width: 300px;
+    width: 340px;
     min-width: 260px;
     height: calc(100vh - 60px);
     background: white;
     padding: 18px;
     overflow-y: auto;
     border-right: 1px solid #ddd;
+
 }
 
 /* SCROLL */
 .leftpanel-full::-webkit-scrollbar,
 .rightpanel-full::-webkit-scrollbar {
-    width: 6px;
+    width: 10px;
 }
 
 .leftpanel-full::-webkit-scrollbar-thumb,
