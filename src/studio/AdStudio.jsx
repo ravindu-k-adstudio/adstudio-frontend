@@ -1,4 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+import TemplateBrowser from "../components/TemplateBrowser";
+import templates from "../data/templates"
+import { TEMPLATE_SIZES } from "../data/templates";
 import { useNavigate, useLocation } from "react-router-dom";
 import TopBar from "./TopBar";
 import LeftPanel from "./LeftPanel";
@@ -8,6 +11,7 @@ import translations from "../data/translations";
 import { useAuth } from "../context/AuthContext";
 import "../styles/adstudio-responsive.css";
 import { CANVAS_SIZES } from "../config/canvasSizes";
+
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -30,8 +34,10 @@ export default function AdStudio() {
     const [images, setImages] = useState([]);
     const [shapes, setShapes] = useState([]);
     const [blocks, setBlocks] = useState([]);
+    const [borders, setBorders] = useState([]);
     const [background, setBackground] = useState(null);
     const [selectedId, setSelectedId] = useState(null);
+    const [showTemplates, setShowTemplates] = useState(false);
 
     const [tool, setTool] = useState("select");
     const [lineType, setLineType] = useState("default");
@@ -184,6 +190,7 @@ export default function AdStudio() {
             setImages([]);
             setShapes([]);
             setBlocks([]);
+            setBorders([]);
             setBackground(null);
             return;
         }
@@ -195,12 +202,12 @@ export default function AdStudio() {
                 setTexts(parsed.texts || []);
                 setShapes(parsed.shapes || []);
                 setBlocks(parsed.blocks || []);
+                setBorders(parsed.borders || []);
 
                 if (parsed.background?.type === "image" && parsed.background.src) {
                     const img = new window.Image();
                     img.crossOrigin = "anonymous"; // 🔥 ADD THIS LINE
                     img.src = parsed.background.src;
-                    // img.onload = () => setBackground({ ...parsed.background, image: img });
                     img.onload = () =>
                         setBackground({
                             ...parsed.background,
@@ -270,6 +277,7 @@ export default function AdStudio() {
         const serialized = {
             ...snap,
             images: snap.images.map(i => ({ ...i, image: undefined })),
+            borders: snap.borders || [],
             background: snap.background?.type === "image"
                 ? { ...snap.background, image: undefined }
                 : snap.background
@@ -322,6 +330,7 @@ export default function AdStudio() {
         setTexts(state.texts);
         setShapes(state.shapes);
         setBlocks(state.blocks);
+        setBorders(state.borders || []);
         setImages(restoredImages);
     };
 
@@ -343,8 +352,573 @@ export default function AdStudio() {
         setShapes(s => s.filter(x => x.id !== selectedId));
         setBlocks(b => b.filter(x => x.id !== selectedId));
         setSelectedId(null);
-        pushHistory({ texts, images, shapes, blocks, background });
+        pushHistory({ texts, images, shapes, blocks, borders, background });
     };
+
+    // /////////////////////////////////////template////////////////////////////////////////////////
+    const makeId = prefix =>
+        `${prefix}-${Date.now()}-${Math.random()
+            .toString(36)
+            .slice(2, 9)}`;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Safe image loader
+    |--------------------------------------------------------------------------
+    */
+
+    const loadTemplateImage = src => {
+
+        return new Promise(resolve => {
+
+            if (!src) {
+                resolve(null);
+                return;
+            }
+
+            const img = new window.Image();
+
+            img.crossOrigin = "anonymous";
+
+            let finished = false;
+
+            const finish = result => {
+
+                if (finished) return;
+
+                finished = true;
+
+                resolve(result);
+
+            };
+
+            img.onload = () => {
+
+                finish(img);
+
+            };
+
+            img.onerror = () => {
+
+                console.warn(
+                    "Template image failed:",
+                    src
+                );
+
+                /*
+                |--------------------------------------------------------------------------
+                | Do NOT reject the whole template.
+                |--------------------------------------------------------------------------
+                */
+
+                finish(null);
+
+            };
+
+            img.src = src;
+
+        });
+
+    };
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Fallback image
+    |--------------------------------------------------------------------------
+    */
+
+    const createFallbackImage = () => {
+
+        const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="600"
+             height="400"
+             viewBox="0 0 600 400">
+
+            <defs>
+                <linearGradient id="g"
+                    x1="0"
+                    y1="0"
+                    x2="1"
+                    y2="1">
+
+                    <stop offset="0"
+                          stop-color="#0b1f33"/>
+
+                    <stop offset="1"
+                          stop-color="#0ea5e9"/>
+
+                </linearGradient>
+            </defs>
+
+            <rect
+                width="600"
+                height="400"
+                fill="url(#g)"
+            />
+
+            <circle
+                cx="300"
+                cy="160"
+                r="70"
+                fill="rgba(255,255,255,.18)"
+            />
+
+            <text
+                x="300"
+                y="275"
+                text-anchor="middle"
+                fill="white"
+                font-size="34"
+                font-family="Arial"
+                font-weight="bold"
+            >
+                AdStudio
+            </text>
+
+            <text
+                x="300"
+                y="315"
+                text-anchor="middle"
+                fill="rgba(255,255,255,.75)"
+                font-size="18"
+                font-family="Arial"
+            >
+                Replace Image
+            </text>
+
+        </svg>
+    `;
+
+        const img = new window.Image();
+
+        img.src =
+            `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+
+        return img;
+    };
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | LOAD TEMPLATE
+    |--------------------------------------------------------------------------
+    */
+
+    const loadTemplate = async template => {
+
+        if (!template) {
+            throw new Error("Invalid template");
+        }
+
+        const selectedSize =
+            template.selectedSize ||
+            adSize ||
+            "square";
+
+        const dimensions =
+            TEMPLATE_SIZES[selectedSize];
+
+        if (!dimensions) {
+            throw new Error(
+                `Unsupported template size: ${selectedSize}`
+            );
+        }
+
+        const [canvasWidth, canvasHeight] =
+            dimensions;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 1. Load background
+        |--------------------------------------------------------------------------
+        */
+
+        let backgroundImage =
+            await loadTemplateImage(
+                template.background?.src
+            );
+
+        if (!backgroundImage) {
+            backgroundImage =
+                createFallbackImage();
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 2. Load all template images
+        |--------------------------------------------------------------------------
+        |
+        | IMPORTANT:
+        | Every image becomes the same structure used by your normal
+        | Canvas image layer.
+        |--------------------------------------------------------------------------
+        */
+
+        const imagePromises =
+            (template.images || []).map(
+                async item => {
+
+                    let image =
+                        await loadTemplateImage(
+                            item.src
+                        );
+
+                    if (!image) {
+                        image =
+                            createFallbackImage();
+                    }
+
+                    return {
+
+                        id: makeId(
+                            item.type || "image"
+                        ),
+
+                        type: "image",
+
+                        image,
+
+                        src: item.src,
+
+                        x:
+                            (item.nx ?? 0) *
+                            canvasWidth,
+
+                        y:
+                            (item.ny ?? 0) *
+                            canvasHeight,
+
+                        width:
+                            (item.nw ?? 0.2) *
+                            canvasWidth,
+
+                        height:
+                            (item.nh ?? 0.2) *
+                            canvasHeight,
+
+                        rotation:
+                            item.rotation || 0,
+
+                        /*
+                        | Helpful metadata.
+                        */
+                        assetType:
+                            item.type || "image",
+
+                        social:
+                            item.social || null
+
+                    };
+
+                }
+            );
+
+
+        const templateImages =
+            await Promise.all(imagePromises);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 3. Convert texts
+        |--------------------------------------------------------------------------
+        */
+
+        const templateTexts =
+            (template.texts || []).map(item => {
+
+                const width =
+                    Math.max(
+                        40,
+                        (item.nw ?? 0.5) *
+                        canvasWidth
+                    );
+
+                const fontSize =
+                    Math.max(
+                        8,
+                        (item.fontScale ?? 0.04) *
+                        Math.min(
+                            canvasWidth,
+                            canvasHeight
+                        )
+                    );
+
+                return {
+
+                    id: makeId("text"),
+
+                    type: "text",
+
+                    text: item.text || "Text",
+
+                    x:
+                        (item.nx ?? 0.05) *
+                        canvasWidth,
+
+                    y:
+                        (item.ny ?? 0.05) *
+                        canvasHeight,
+
+                    width,
+
+                    fontSize,
+
+                    fill:
+                        item.fill ||
+                        "#ffffff",
+
+                    fontFamily:
+                        item.fontFamily ||
+                        "Poppins",
+
+                    fontStyle:
+                        item.fontStyle ||
+                        "normal",
+
+                    align:
+                        item.align ||
+                        "left",
+
+                    underline:
+                        !!item.underline,
+
+                    letterSpacing:
+                        item.letterSpacing ||
+                        0,
+
+                    rotation:
+                        item.rotation ||
+                        0
+
+                };
+
+            });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 4. Convert blocks
+        |--------------------------------------------------------------------------
+        |
+        | Your Canvas getBlockShape() receives:
+        | shape, x, y, width, height, fill, rotation.
+        |--------------------------------------------------------------------------
+        */
+
+        const templateBlocks =
+            (template.blocks || []).map(item => {
+
+                return {
+
+                    id: makeId("block"),
+
+                    shape:
+                        item.shape ||
+                        "rectangle",
+
+                    x:
+                        (item.nx ?? 0) *
+                        canvasWidth,
+
+                    y:
+                        (item.ny ?? 0) *
+                        canvasHeight,
+
+                    width:
+                        Math.max(
+                            5,
+                            (item.nw ?? 0.2) *
+                            canvasWidth
+                        ),
+
+                    height:
+                        Math.max(
+                            5,
+                            (item.nh ?? 0.2) *
+                            canvasHeight
+                        ),
+
+                    rotation:
+                        item.rotation ||
+                        0,
+
+                    fill:
+                        item.fill ||
+                        "rgba(0,0,0,0.4)"
+
+                };
+
+            });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 5. Background
+        |--------------------------------------------------------------------------
+        */
+
+        const newBackground = {
+
+            type: "image",
+
+            src:
+                template.background?.src ||
+                "",
+
+            image:
+                backgroundImage,
+
+            value:
+                template.background?.value ||
+                "#111827",
+
+            x: 0,
+
+            y: 0,
+
+            width:
+                canvasWidth,
+
+            height:
+                canvasHeight,
+
+            rotation: 0
+
+        };
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 6. IMPORTANT:
+        | Change editor size BEFORE putting elements on canvas.
+        |--------------------------------------------------------------------------
+        */
+
+        setAdSize(selectedSize);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 7. Replace current design
+        |--------------------------------------------------------------------------
+        */
+
+        setTexts(templateTexts);
+
+        setImages(templateImages);
+
+        setShapes([]);
+
+        setBlocks(templateBlocks);
+
+        setBackground(newBackground);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 8. Clear selection
+        |--------------------------------------------------------------------------
+        */
+
+        setSelectedId(null);
+
+        selectedNodeRef.current = null;
+
+        setEditingBackground(false);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 9. Exit drawing mode
+        |--------------------------------------------------------------------------
+        */
+
+        setTool("select");
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 10. History snapshot
+        |--------------------------------------------------------------------------
+        */
+
+        setTimeout(() => {
+
+            try {
+
+                pushHistory();
+
+            } catch (error) {
+
+                console.warn(
+                    "Template history snapshot skipped:",
+                    error
+                );
+
+            }
+
+        }, 150);
+
+    };
+
+
+    /* ================= TEMPLATE IMAGE REPLACEMENT ================= */
+
+    const replaceTemplateImage = (imageId, file) => {
+        if (!file) return;
+
+        if (!file.type.startsWith("image/")) {
+            alert("Please select an image file.");
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = event => {
+            const src = event.target.result;
+
+            const img = new window.Image();
+
+            img.onload = () => {
+
+                setImages(prev =>
+                    prev.map(item =>
+                        item.id === imageId
+                            ? {
+                                ...item,
+                                image: img,
+                                src
+                            }
+                            : item
+                    )
+                );
+
+                setTimeout(() => {
+                    pushHistory();
+                }, 0);
+            };
+
+            img.onerror = () => {
+                alert("The selected image could not be loaded.");
+            };
+
+            img.src = src;
+        };
+
+        reader.onerror = () => {
+            alert("Could not read the selected image.");
+        };
+
+        reader.readAsDataURL(file);
+    };
+
+
 
     /* ---------------- SAVE ---------------- */
     const saveAd = async () => {
@@ -377,6 +951,7 @@ export default function AdStudio() {
                     images: payloadImages,
                     shapes,
                     blocks,
+                    borders,
                     background: payloadBackground
                 }),
                 image,
@@ -411,6 +986,9 @@ export default function AdStudio() {
         }
     };
 
+
+
+
     return (
         <div className="h-screen flex flex-col bg-white overflow-hidden">
             <TopBar
@@ -423,6 +1001,7 @@ export default function AdStudio() {
                 onNavigate={p => navigate(p === "home" ? "/" : `/${p}`)}
                 adId={adId}
                 setAdId={setAdId}
+                onOpenTemplates={() => setShowTemplates(true)}
             />
 
             <div className="studio-layout">
@@ -448,10 +1027,13 @@ export default function AdStudio() {
                     setTexts={setTexts}
                     images={images}
                     setImages={setImages}
+                    onReplaceImage={replaceTemplateImage}
                     shapes={shapes}
                     setShapes={setShapes}
                     blocks={blocks}
                     setBlocks={setBlocks}
+                    borders={borders}
+                    setBorders={setBorders}
                     background={background}
                     selectedId={selectedId}
                     setSelectedId={setSelectedId}
@@ -475,6 +1057,13 @@ export default function AdStudio() {
                     t={t}
                     texts={texts}
                     setTexts={setTexts}
+
+                    borders={borders}
+                    setBorders={setBorders}
+
+                    canvasWidth={width}
+                    canvasHeight={height}
+
                     selectedId={selectedId}
                     tool={tool}
                     setTool={setTool}
@@ -491,9 +1080,16 @@ export default function AdStudio() {
                     isMobile={isMobile}
                     activeSection={activeSection}
                     setActiveSection={setActiveSection}
+                    onOpenTemplates={() => setShowTemplates(true)}
                 />
             </div>
+            {showTemplates && (
+                <TemplateBrowser
+                    adSize={adSize}
+                    onUseTemplate={loadTemplate}
+                    onClose={() => setShowTemplates(false)}
+                />
+            )}
         </div>
     );
 }
-

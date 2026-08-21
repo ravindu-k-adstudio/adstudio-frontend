@@ -169,10 +169,14 @@ const Canvas = forwardRef(function Canvas(
         setTexts,
         images,
         setImages,
+        onReplaceImage,
         shapes,
         setShapes,
         blocks,
         setBlocks,
+        borders = [],
+        setBorders,
+
         background,
         selectedId,
         setSelectedId,
@@ -215,6 +219,9 @@ const Canvas = forwardRef(function Canvas(
     const selectedNodeRef = useRef(null);
     const containerRef = useRef(null);
     const canvasWrapperRef = useRef(null);
+
+    const imageInputRef = useRef(null);
+    const replaceImageIdRef = useRef(null);
 
     // Background drag tracking
     const backgroundDraggingRef = useRef(false);
@@ -341,6 +348,40 @@ const Canvas = forwardRef(function Canvas(
         if (wasDragging) {
             pushHistory();
         }
+    };
+
+    /* ================= TEMPLATE IMAGE REPLACEMENT ================= */
+
+    const openImageReplacement = imageId => {
+
+        if (!imageId) return;
+
+        replaceImageIdRef.current = imageId;
+
+        if (imageInputRef.current) {
+            imageInputRef.current.value = "";
+            imageInputRef.current.click();
+        }
+    };
+
+    const handleReplacementFile = e => {
+
+        const file = e.target.files?.[0];
+
+        const imageId = replaceImageIdRef.current;
+
+        if (!file || !imageId) {
+            replaceImageIdRef.current = null;
+            return;
+        }
+
+        if (onReplaceImage) {
+            onReplaceImage(imageId, file);
+        }
+
+        replaceImageIdRef.current = null;
+
+        e.target.value = "";
     };
 
     useEffect(() => {
@@ -679,7 +720,9 @@ const Canvas = forwardRef(function Canvas(
         texts.find(t => t.id === selectedId) ||
         images.find(i => i.id === selectedId) ||
         shapes.find(s => s.id === selectedId) ||
-        blocks.find(b => b.id === selectedId);
+        blocks.find(b => b.id === selectedId) ||
+        borders.find(b => b.id === selectedId);
+
 
     /* ================= DELETE FUNCTION ================= */
 
@@ -690,6 +733,7 @@ const Canvas = forwardRef(function Canvas(
         setImages(prev => prev.filter(i => i.id !== selectedId));
         setShapes(prev => prev.filter(s => s.id !== selectedId));
         setBlocks(prev => prev.filter(b => b.id !== selectedId));
+        setBorders(prev => prev.filter(b => b.id !== selectedId));
 
         setSelectedId(null);
         selectedNodeRef.current = null;
@@ -712,6 +756,14 @@ const Canvas = forwardRef(function Canvas(
                     "linear-gradient(135deg, #071426 0%, #0b1f33 35%, #102b46 70%, #16385c 100%)"
             }}
         >
+
+            <input
+                ref={imageInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleReplacementFile}
+            />
 
 
 
@@ -934,18 +986,22 @@ const Canvas = forwardRef(function Canvas(
                                     <KonvaImage
                                         image={background.image}
 
-                                        listening={!DRAW_TOOLS.includes(tool)}
-
                                         x={background.x ?? 0}
                                         y={background.y ?? 0}
+
                                         width={background.width ?? W}
                                         height={background.height ?? H}
 
+                                        crop={background.crop}
+
                                         rotation={background.rotation || 0}
+
+                                        listening={!DRAW_TOOLS.includes(tool)}
 
                                         draggable={editingBackground}
 
                                         onDblClick={(e) => {
+
                                             if (DRAW_TOOLS.includes(tool)) return;
 
                                             e.cancelBubble = true;
@@ -953,7 +1009,9 @@ const Canvas = forwardRef(function Canvas(
                                             const node = e.target;
 
                                             setEditingBackground(true);
+
                                             setSelectedId("background");
+
                                             selectedNodeRef.current = node;
 
                                             requestAnimationFrame(() => {
@@ -962,6 +1020,7 @@ const Canvas = forwardRef(function Canvas(
                                         }}
 
                                         onDblTap={(e) => {
+
                                             if (DRAW_TOOLS.includes(tool)) return;
 
                                             e.cancelBubble = true;
@@ -969,7 +1028,9 @@ const Canvas = forwardRef(function Canvas(
                                             const node = e.target;
 
                                             setEditingBackground(true);
+
                                             setSelectedId("background");
+
                                             selectedNodeRef.current = node;
 
                                             requestAnimationFrame(() => {
@@ -977,37 +1038,17 @@ const Canvas = forwardRef(function Canvas(
                                             });
                                         }}
 
-                                        onDragStart={(e) => {
+                                        onDragEnd={(e) => {
+
                                             if (!editingBackground) {
                                                 e.target.stopDrag();
                                                 return;
                                             }
 
-                                            e.cancelBubble = true;
-
-                                            backgroundDraggingRef.current = true;
-
-                                            setSelectedId("background");
-                                            selectedNodeRef.current = e.target;
-                                        }}
-
-                                        onDragMove={(e) => {
-                                            if (!backgroundDraggingRef.current) return;
-
-                                            e.cancelBubble = true;
-                                        }}
-
-                                        onDragEnd={(e) => {
-                                            if (!backgroundDraggingRef.current) {
-                                                e.target.stopDrag();
-                                                return;
-                                            }
-
-                                            e.cancelBubble = true;
-
                                             const node = e.target;
 
-                                            const { x, y } = node.position();
+                                            const { x, y } =
+                                                node.position();
 
                                             setBackground(prev => ({
                                                 ...prev,
@@ -1015,26 +1056,17 @@ const Canvas = forwardRef(function Canvas(
                                                 y
                                             }));
 
-                                            // STOP KONVA DRAGGING IMMEDIATELY
                                             node.stopDrag();
                                             node.draggable(false);
 
-                                            backgroundDraggingRef.current = false;
-
-                                            // EXIT EDITING MODE
                                             setEditingBackground(false);
-                                            setSelectedId(null);
-                                            selectedNodeRef.current = null;
 
-                                            if (trRef.current) {
-                                                trRef.current.nodes([]);
-                                                trRef.current.getLayer()?.batchDraw();
-                                            }
+                                            setSelectedId(null);
+
+                                            selectedNodeRef.current = null;
 
                                             pushHistory();
                                         }}
-
-
                                     />
                                 )}
                             </Layer>
@@ -1107,58 +1139,158 @@ const Canvas = forwardRef(function Canvas(
                             {/* IMAGES */}
 
                             <Layer listening={!DRAW_TOOLS.includes(tool)}>
+
                                 {images.map(img => (
                                     <KonvaImage
                                         key={img.id}
-                                        {...img}
-                                        draggable
+
+                                        x={img.x}
+                                        y={img.y}
+
+                                        width={img.width}
+                                        height={img.height}
+
+                                        rotation={img.rotation || 0}
+
                                         image={img.image}
-                                        onClick={e => {
-                                            setEditingBackground(false);
+
+                                        onDblClick={e => {
+
+                                            if (DRAW_TOOLS.includes(tool)) return;
+
+                                            // Only template logo and template decorative photos
+                                            if (
+                                                img.assetType !== "logo" &&
+                                                img.assetType !== "photo"
+                                            ) {
+                                                return;
+                                            }
+
                                             e.cancelBubble = true;
+
+                                            setEditingBackground(false);
+
                                             setSelectedId(img.id);
+
                                             selectedNodeRef.current = e.target;
+
+                                            openImageReplacement(img.id);
                                         }}
 
-                                        onDragEnd={(e) => {
-                                            const { x, y } = e.target.position();
+                                        onDblTap={e => {
+
+                                            if (DRAW_TOOLS.includes(tool)) return;
+
+                                            // Only template logo and template decorative photos
+                                            if (
+                                                img.assetType !== "logo" &&
+                                                img.assetType !== "photo"
+                                            ) {
+                                                return;
+                                            }
+
+                                            e.cancelBubble = true;
+
+                                            setEditingBackground(false);
+
+                                            setSelectedId(img.id);
+
+                                            selectedNodeRef.current = e.target;
+
+                                            openImageReplacement(img.id);
+                                        }}
+
+                                        draggable={!DRAW_TOOLS.includes(tool)}
+
+                                        listening={!DRAW_TOOLS.includes(tool)}
+
+                                        onClick={e => {
+
+                                            setEditingBackground(false);
+
+                                            e.cancelBubble = true;
+
+                                            setSelectedId(img.id);
+
+                                            selectedNodeRef.current =
+                                                e.target;
+                                        }}
+
+                                        onTap={e => {
+
+                                            setEditingBackground(false);
+
+                                            e.cancelBubble = true;
+
+                                            setSelectedId(img.id);
+
+                                            selectedNodeRef.current =
+                                                e.target;
+                                        }}
+
+                                        onDragEnd={e => {
+
+                                            const { x, y } =
+                                                e.target.position();
 
                                             setImages(prev =>
                                                 prev.map(item =>
-                                                    item.id === img.id ? { ...item, x, y } : item
+                                                    item.id === img.id
+                                                        ? {
+                                                            ...item,
+                                                            x,
+                                                            y
+                                                        }
+                                                        : item
                                                 )
                                             );
 
                                             pushHistory();
                                         }}
 
-                                        onTap={e => {
-                                            setEditingBackground(false);
-                                            e.cancelBubble = true;
-                                            setSelectedId(img.id);
-                                            selectedNodeRef.current = e.target;
-                                        }}
+                                        onTransformEnd={e => {
 
-                                        onTransformEnd={(e) => {
                                             const node = e.target;
 
-                                            const scaleX = node.scaleX();
-                                            const scaleY = node.scaleY();
+                                            const scaleX =
+                                                node.scaleX();
+
+                                            const scaleY =
+                                                node.scaleY();
+
+                                            const newWidth =
+                                                Math.max(
+                                                    20,
+                                                    node.width() *
+                                                    scaleX
+                                                );
+
+                                            const newHeight =
+                                                Math.max(
+                                                    20,
+                                                    node.height() *
+                                                    scaleY
+                                                );
 
                                             node.scaleX(1);
                                             node.scaleY(1);
 
-                                            const updated = {
-                                                x: node.x(),
-                                                y: node.y(),
-                                                width: Math.max(20, node.width() * scaleX),
-                                                height: Math.max(20, node.height() * scaleY),
-                                                rotation: node.rotation()
-                                            };
-
                                             setImages(prev =>
                                                 prev.map(item =>
-                                                    item.id === img.id ? { ...item, ...updated } : item
+                                                    item.id === img.id
+                                                        ? {
+                                                            ...item,
+
+                                                            x: node.x(),
+                                                            y: node.y(),
+
+                                                            width: newWidth,
+                                                            height: newHeight,
+
+                                                            rotation:
+                                                                node.rotation()
+                                                        }
+                                                        : item
                                                 )
                                             );
 
@@ -1167,8 +1299,242 @@ const Canvas = forwardRef(function Canvas(
 
                                     />
                                 ))}
+
                             </Layer>
 
+                            {/* ================= BORDERS ================= */}
+
+                            <Layer listening={!DRAW_TOOLS.includes(tool)}>
+                                {borders.map(border => {
+
+                                    const isSelected = selectedId === border.id;
+
+                                    const dash =
+                                        border.style === "dashed"
+                                            ? [18, 10]
+                                            : border.style === "dotted"
+                                                ? [3, 8]
+                                                : undefined;
+
+                                    if (border.style === "double") {
+                                        return (
+                                            <Fragment key={border.id}>
+
+                                                {/* OUTER BORDER */}
+                                                <Rect
+                                                    x={border.x}
+                                                    y={border.y}
+                                                    width={border.width}
+                                                    height={border.height}
+                                                    stroke={border.stroke}
+                                                    strokeWidth={border.strokeWidth}
+                                                    cornerRadius={border.cornerRadius || 0}
+                                                    dash={undefined}
+                                                    fillEnabled={false}
+                                                    draggable
+
+                                                    onClick={e => {
+                                                        if (DRAW_TOOLS.includes(tool)) return;
+
+                                                        setEditingBackground(false);
+
+                                                        e.cancelBubble = true;
+
+                                                        setSelectedId(border.id);
+                                                        selectedNodeRef.current = e.target;
+                                                    }}
+
+                                                    onTap={e => {
+                                                        if (DRAW_TOOLS.includes(tool)) return;
+
+                                                        setEditingBackground(false);
+
+                                                        e.cancelBubble = true;
+
+                                                        setSelectedId(border.id);
+                                                        selectedNodeRef.current = e.target;
+                                                    }}
+
+                                                    onDragEnd={e => {
+                                                        const { x, y } = e.target.position();
+
+                                                        setBorders(prev =>
+                                                            prev.map(item =>
+                                                                item.id === border.id
+                                                                    ? { ...item, x, y }
+                                                                    : item
+                                                            )
+                                                        );
+
+                                                        pushHistory();
+                                                    }}
+
+                                                    onTransformEnd={e => {
+                                                        const node = e.target;
+
+                                                        const scaleX = node.scaleX();
+                                                        const scaleY = node.scaleY();
+
+                                                        node.scaleX(1);
+                                                        node.scaleY(1);
+
+                                                        const updated = {
+                                                            x: node.x(),
+                                                            y: node.y(),
+                                                            width: Math.max(
+                                                                20,
+                                                                node.width() * scaleX
+                                                            ),
+                                                            height: Math.max(
+                                                                20,
+                                                                node.height() * scaleY
+                                                            )
+                                                        };
+
+                                                        setBorders(prev =>
+                                                            prev.map(item =>
+                                                                item.id === border.id
+                                                                    ? { ...item, ...updated }
+                                                                    : item
+                                                            )
+                                                        );
+
+                                                        pushHistory();
+                                                    }}
+                                                />
+
+                                                {/* INNER BORDER */}
+                                                <Rect
+                                                    x={
+                                                        border.x +
+                                                        border.strokeWidth * 3
+                                                    }
+                                                    y={
+                                                        border.y +
+                                                        border.strokeWidth * 3
+                                                    }
+                                                    width={Math.max(
+                                                        1,
+                                                        border.width -
+                                                        border.strokeWidth * 6
+                                                    )}
+                                                    height={Math.max(
+                                                        1,
+                                                        border.height -
+                                                        border.strokeWidth * 6
+                                                    )}
+                                                    stroke={border.stroke}
+                                                    strokeWidth={Math.max(
+                                                        1,
+                                                        border.strokeWidth / 2
+                                                    )}
+                                                    cornerRadius={Math.max(
+                                                        0,
+                                                        (border.cornerRadius || 0) -
+                                                        border.strokeWidth * 2
+                                                    )}
+                                                    listening={false}
+                                                />
+
+                                            </Fragment>
+                                        );
+                                    }
+
+                                    return (
+                                        <Rect
+                                            key={border.id}
+
+                                            x={border.x}
+                                            y={border.y}
+
+                                            width={border.width}
+                                            height={border.height}
+
+                                            stroke={border.stroke}
+                                            strokeWidth={border.strokeWidth}
+
+                                            dash={dash}
+
+                                            cornerRadius={border.cornerRadius || 0}
+
+                                            fillEnabled={false}
+
+                                            draggable
+
+                                            onClick={e => {
+                                                if (DRAW_TOOLS.includes(tool)) return;
+
+                                                setEditingBackground(false);
+
+                                                e.cancelBubble = true;
+
+                                                setSelectedId(border.id);
+                                                selectedNodeRef.current = e.target;
+                                            }}
+
+                                            onTap={e => {
+                                                if (DRAW_TOOLS.includes(tool)) return;
+
+                                                setEditingBackground(false);
+
+                                                e.cancelBubble = true;
+
+                                                setSelectedId(border.id);
+                                                selectedNodeRef.current = e.target;
+                                            }}
+
+                                            onDragEnd={e => {
+                                                const { x, y } = e.target.position();
+
+                                                setBorders(prev =>
+                                                    prev.map(item =>
+                                                        item.id === border.id
+                                                            ? { ...item, x, y }
+                                                            : item
+                                                    )
+                                                );
+
+                                                pushHistory();
+                                            }}
+
+                                            onTransformEnd={e => {
+                                                const node = e.target;
+
+                                                const scaleX = node.scaleX();
+                                                const scaleY = node.scaleY();
+
+                                                node.scaleX(1);
+                                                node.scaleY(1);
+
+                                                const updated = {
+                                                    x: node.x(),
+                                                    y: node.y(),
+
+                                                    width: Math.max(
+                                                        20,
+                                                        node.width() * scaleX
+                                                    ),
+
+                                                    height: Math.max(
+                                                        20,
+                                                        node.height() * scaleY
+                                                    )
+                                                };
+
+                                                setBorders(prev =>
+                                                    prev.map(item =>
+                                                        item.id === border.id
+                                                            ? { ...item, ...updated }
+                                                            : item
+                                                    )
+                                                );
+
+                                                pushHistory();
+                                            }}
+                                        />
+                                    );
+                                })}
+                            </Layer>
 
                             {/* SHAPES */}
 
@@ -1487,4 +1853,5 @@ const Canvas = forwardRef(function Canvas(
 });
 
 export default Canvas;
+
 
