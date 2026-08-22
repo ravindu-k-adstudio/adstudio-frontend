@@ -10,13 +10,21 @@ import {
     FaPlus,
     FaTrash,
     FaFont,
-    FaPalette
+    FaPalette,
+    FaLayerGroup
 } from "react-icons/fa";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 
 export default function RightPanel({
     texts = [],
+    onOpenTemplates,
+    borders = [],
+    setBorders,
+
+    canvasWidth = 420,
+    canvasHeight = 420,
+
     activeSection,
     setActiveSection,
     setTexts,
@@ -36,6 +44,7 @@ export default function RightPanel({
 }) {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [showLetterSpacing, setShowLetterSpacing] = useState(false);
+
 
     useEffect(() => {
         const resize = () => setIsMobile(window.innerWidth < 768);
@@ -117,6 +126,31 @@ export default function RightPanel({
 
 
             <div className={`rightpanel-full ${activeSection ? "active" : ""}`}>
+
+                <button
+                    onClick={onOpenTemplates}
+                    className="
+        w-full
+        flex
+        items-center
+        justify-center
+        gap-2
+        py-2.5
+        rounded-xl
+        bg-gradient-to-r
+        from-[#0b1f33]
+        to-[#12385d]
+        text-white
+        shadow-lg
+        hover:-translate-y-0.5
+        transition
+    "
+                >
+                    <FaLayerGroup />
+                    Templates
+                </button>
+
+
 
 
                 {show("text") && (
@@ -223,7 +257,8 @@ export default function RightPanel({
                                 <option style={{ fontFamily: "Great Vibes" }}>Great Vibes</option>
                             </select>
 
-                            <div className="grid grid-cols-2 gap-2">
+                            {/* <div className="grid grid-cols-2 gap-2"> */}
+                            <div className="grid grid-cols-4 gap-2">
 
                                 {/* Bold */}
                                 <button
@@ -242,15 +277,15 @@ export default function RightPanel({
 
                                         updateText("fontStyle", styles.join(" ") || "normal");
                                     }}
-                                    className={`w-full py-2.5 rounded-xl border font-medium transition-all duration-300
-        hover:-translate-y-0.5 hover:shadow-lg active:scale-95
-        disabled:opacity-40
+                                    className={`aspect-square w-full rounded-lg border font-semibold text-sm
+transition-all duration-200 hover:-translate-y-0.5
+hover:shadow-lg active:scale-95 disabled:opacity-40
         ${selectedText?.fontStyle?.includes("bold")
                                             ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-cyan-400 shadow-cyan-500/30"
                                             : "bg-white text-slate-700 border-slate-300 hover:border-cyan-400 hover:text-cyan-600"
                                         }`}
                                 >
-                                    Bold
+                                    B
                                 </button>
 
                                 {/* Underline */}
@@ -259,15 +294,15 @@ export default function RightPanel({
                                     onClick={() =>
                                         updateText("underline", !selectedText?.underline)
                                     }
-                                    className={`w-full py-2.5 rounded-xl border font-medium transition-all duration-300
-        hover:-translate-y-0.5 hover:shadow-lg active:scale-95
-        disabled:opacity-40
+                                    className={`aspect-square w-full rounded-lg border font-semibold text-sm
+transition-all duration-200 hover:-translate-y-0.5
+hover:shadow-lg active:scale-95 disabled:opacity-40
         ${selectedText?.underline
                                             ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-cyan-400 shadow-cyan-500/30"
                                             : "bg-white text-slate-700 border-slate-300 hover:border-cyan-400 hover:text-cyan-600"
                                         }`}
                                 >
-                                    Underline
+                                    U
                                 </button>
 
                                 {/* Italic */}
@@ -287,30 +322,30 @@ export default function RightPanel({
 
                                         updateText("fontStyle", styles.join(" ") || "normal");
                                     }}
-                                    className={`w-full py-2.5 rounded-xl border font-medium transition-all duration-300
-        hover:-translate-y-0.5 hover:shadow-lg active:scale-95
-        disabled:opacity-40
+                                    className={`aspect-square w-full rounded-lg border font-semibold text-sm
+transition-all duration-200 hover:-translate-y-0.5
+hover:shadow-lg active:scale-95 disabled:opacity-40
         ${selectedText?.fontStyle?.includes("italic")
                                             ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-cyan-400 shadow-cyan-500/30"
                                             : "bg-white text-slate-700 border-slate-300 hover:border-cyan-400 hover:text-cyan-600"
                                         }`}
                                 >
-                                    Italic
+                                    I
                                 </button>
 
                                 {/* Letter Spacing */}
                                 <button
                                     disabled={disabled}
                                     onClick={() => setShowLetterSpacing(prev => !prev)}
-                                    className={`w-full py-2.5 rounded-xl border font-medium transition-all duration-300
-        hover:-translate-y-0.5 hover:shadow-lg active:scale-95
-        disabled:opacity-40
+                                    className={`aspect-square w-full rounded-lg border font-semibold text-sm
+transition-all duration-200 hover:-translate-y-0.5
+hover:shadow-lg active:scale-95 disabled:opacity-40
         ${showLetterSpacing
                                             ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-cyan-400 shadow-cyan-500/30"
                                             : "bg-white text-slate-700 border-slate-300 hover:border-cyan-400 hover:text-cyan-600"
                                         }`}
                                 >
-                                    Letter Spacing
+                                    L↔s
                                 </button>
 
                             </div>
@@ -374,6 +409,156 @@ export default function RightPanel({
                         <FaTrash /> {t.delete || "Delete"}
                     </button>
                 )}
+
+
+                {/* ================= BORDER TOOLS ================= */}
+
+                {show("border") && (
+                    <>
+                        <h3 className="font-semibold text-lg">
+                            Border
+                        </h3>
+
+                        <button
+                            onClick={() => {
+                                if (!setBorders) return;
+
+                                const id = Date.now();
+
+                                setBorders(prev => [
+                                    ...prev,
+                                    {
+                                        id,
+                                        type: "border",
+
+                                        x: 10,
+                                        y: 10,
+
+                                        width: Math.max(20, canvasWidth - 20),
+                                        height: Math.max(20, canvasHeight - 20),
+
+                                        stroke: "#0b1f33",
+                                        strokeWidth: 4,
+                                        style: "solid",
+                                        cornerRadius: 0
+                                    }
+                                ]);
+                            }}
+                            className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-[#0b1f33] text-white shadow"
+                        >
+                            <FaPlus />
+                            Add Border
+                        </button>
+
+                        {(() => {
+                            const selectedBorder =
+                                borders.find(b => b.id === selectedId) || null;
+
+                            if (!selectedBorder) {
+                                return (
+                                    <div className="text-sm text-slate-500 mt-2 text-center">
+                                        Select a border to edit it
+                                    </div>
+                                );
+                            }
+
+                            const updateBorder = (key, value) => {
+                                setBorders(prev =>
+                                    prev.map(b =>
+                                        b.id === selectedBorder.id
+                                            ? { ...b, [key]: value }
+                                            : b
+                                    )
+                                );
+                            };
+
+                            return (
+                                <div className="space-y-3 mt-3">
+
+                                    {/* BORDER STYLE */}
+                                    <div>
+                                        <label className="text-sm font-medium">
+                                            Border Style
+                                        </label>
+
+                                        <select
+                                            value={selectedBorder.style || "solid"}
+                                            onChange={e =>
+                                                updateBorder("style", e.target.value)
+                                            }
+                                            className="w-full px-3 py-2 rounded-md border border-[#0b1f33]/40"
+                                        >
+                                            <option value="solid">Solid</option>
+                                            <option value="dashed">Dashed</option>
+                                            <option value="dotted">Dotted</option>
+                                            <option value="double">Double</option>
+                                        </select>
+                                    </div>
+
+                                    {/* BORDER COLOR */}
+                                    <div>
+                                        <label className="text-sm font-medium">
+                                            Border Color
+                                        </label>
+
+                                        <input
+                                            type="color"
+                                            value={selectedBorder.stroke || "#0b1f33"}
+                                            onChange={e =>
+                                                updateBorder("stroke", e.target.value)
+                                            }
+                                            className="w-full h-9 rounded border"
+                                        />
+                                    </div>
+
+                                    {/* BORDER WIDTH */}
+                                    <div>
+                                        <label className="text-sm font-medium">
+                                            Border Width ({selectedBorder.strokeWidth || 1}px)
+                                        </label>
+
+                                        <input
+                                            type="range"
+                                            min="1"
+                                            max="30"
+                                            value={selectedBorder.strokeWidth || 1}
+                                            onChange={e =>
+                                                updateBorder(
+                                                    "strokeWidth",
+                                                    Number(e.target.value)
+                                                )
+                                            }
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                    {/* CORNER RADIUS */}
+                                    <div>
+                                        <label className="text-sm font-medium">
+                                            Corner Radius ({selectedBorder.cornerRadius || 0}px)
+                                        </label>
+
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="100"
+                                            value={selectedBorder.cornerRadius || 0}
+                                            onChange={e =>
+                                                updateBorder(
+                                                    "cornerRadius",
+                                                    Number(e.target.value)
+                                                )
+                                            }
+                                            className="w-full"
+                                        />
+                                    </div>
+
+                                </div>
+                            );
+                        })()}
+                    </>
+                )}
+
 
                 {/* {show("draw") && ( */}
                 {show("shapes") && (
@@ -471,6 +656,24 @@ export default function RightPanel({
             <div className="rightpanel-icons">
 
                 <div className="icon-item">
+
+                    <button
+                        className={`icon-btn ${activeSection === "templates" ? "active" : ""
+                            }`}
+                        onClick={onOpenTemplates}
+                    >
+                        <FaLayerGroup />
+                    </button>
+
+                    {isMobile && (
+                        <span className="icon-label">
+                            Templates
+                        </span>
+                    )}
+
+                </div>
+
+                <div className="icon-item">
                     <button
                         className={`icon-btn ${activeSection === "text" ? "active" : ""}`}
                         onClick={() => toggleSection("text")}
@@ -478,6 +681,20 @@ export default function RightPanel({
                         <FaFont />
                     </button>
                     {isMobile && <span className="icon-label">Text</span>}
+                </div>
+
+                <div className="icon-item">
+                    <button
+                        className={`icon-btn ${activeSection === "border" ? "active" : ""
+                            }`}
+                        onClick={() => toggleSection("border")}
+                    >
+                        <FaSquare />
+                    </button>
+
+                    {isMobile && (
+                        <span className="icon-label">Border</span>
+                    )}
                 </div>
 
                 <div className="icon-item">
