@@ -434,17 +434,17 @@ export default function Home() {
                 ============================================================ */}
 
                 <section
-                    className="relative w-full max-w-[1600px] mx-auto h-[calc(100vh-88px)] min-h-[640px] max-h-[860px] px-4 sm:px-6 lg:px-8 xl:px-10 text-white overflow-hidden"
+                    className="relative w-full max-w-[1600px] mx-auto min-h-0 lg:h-[calc(100vh-88px)] lg:min-h-[620px] lg:max-h-[860px] px-4 sm:px-6 lg:px-8 xl:px-10 py-6 sm:py-8 lg:py-0 text-white overflow-hidden"
                 >
-                    <div className="grid h-full grid-cols-1 lg:grid-cols-[0.82fr_1.18fr] xl:grid-cols-[0.8fr_1.2fr] gap-6 lg:gap-8 xl:gap-10 items-center">
+                    <div className="grid min-h-0 grid-cols-1 lg:h-full lg:grid-cols-[0.82fr_1.18fr] xl:grid-cols-[0.8fr_1.2fr] gap-7 sm:gap-9 lg:gap-8 xl:gap-10 items-center">
 
                         {/* LEFT HERO CONTENT */}
-                        <div className="relative z-20 flex items-center h-full py-8 lg:py-10">
+                        <div className="relative z-20 flex items-center h-auto lg:h-full py-0 lg:py-10">
                             <motion.div
                                 initial={{ opacity: 0, x: -35 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                                className="w-full max-w-[575px]"
+                                className="w-full max-w-[575px] lg:pb-2"
                             >
                                 <div className="inline-flex max-w-full items-center gap-2 px-4 py-2 rounded-full bg-[#08264b]/80 border border-cyan-400/70 backdrop-blur-xl shadow-[0_0_25px_rgba(34,211,238,0.22)] text-white text-xs sm:text-sm font-semibold mb-5">
                                     <span className="text-base">🚀</span>
@@ -491,7 +491,7 @@ export default function Home() {
                             One large, fixed-proportion portrait advertisement.
                             No side cards. No filled carousel background. */}
                         <div
-                            className="relative w-full h-full flex items-center justify-center min-h-0"
+                            className="relative w-full h-[min(620px,78vw)] min-h-[500px] sm:h-[min(680px,76vw)] sm:min-h-[540px] lg:h-full lg:min-h-0 flex items-center justify-center"
                             onMouseEnter={() => setHeroPaused(true)}
                             onMouseLeave={() => setHeroPaused(false)}
                         >
@@ -509,7 +509,7 @@ export default function Home() {
                             />
 
                             {/* Everything inside this viewport is centered */}
-                            <div className="absolute inset-x-[7%] sm:inset-x-[8%] lg:inset-x-[9%] top-[6%] bottom-[6%] flex items-center justify-center overflow-hidden rounded-[2rem]">
+                            <div className="absolute inset-x-[3%] sm:inset-x-[6%] lg:inset-x-[9%] top-[5%] bottom-[5%] flex items-center justify-center overflow-hidden rounded-[2rem]">
                                 <AnimatePresence mode="wait" initial={false}>
                                     <motion.div
                                         key={`hero-ad-${heroSlide}`}
@@ -517,7 +517,7 @@ export default function Home() {
                                         animate={{ opacity: 1, scale: 1, x: 0, rotate: 0 }}
                                         exit={{ opacity: 0, scale: 0.94, x: -42, rotate: -0.8 }}
                                         transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
-                                        className="relative shrink-0 h-[min(76vh,600px)] aspect-[0.76] rounded-[1.45rem] overflow-hidden border border-white/90 bg-[#091522] shadow-[0_28px_75px_rgba(0,0,0,0.65),0_0_32px_rgba(255,255,255,0.26)]"
+                                        className="relative shrink-0 w-[82vw] max-w-[350px] aspect-[0.76] h-auto max-h-[520px] sm:w-auto sm:h-[min(68vh,570px)] sm:max-h-none sm:max-w-none lg:h-[min(76vh,600px)] lg:max-h-none rounded-[1.45rem] overflow-hidden border border-white/90 bg-[#091522] shadow-[0_28px_75px_rgba(0,0,0,0.65),0_0_32px_rgba(255,255,255,0.26)]"
                                     >
                                         {(() => {
                                             const ad = heroAds[heroSlide];
@@ -655,7 +655,7 @@ export default function Home() {
                             </button>
 
                             {/* CATEGORY / COUNT */}
-                            <div className="absolute top-[7%] left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/30 border border-white/25 backdrop-blur-md whitespace-nowrap">
+                            <div className="absolute top-[7%] sm:top-[7%] left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/30 border border-white/25 backdrop-blur-md whitespace-nowrap">
                                 <span className="w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(103,232,249,0.9)]" />
                                 <span className="text-[8px] sm:text-[10px] font-bold text-white/90">
                                     {heroAds[heroSlide].category}
@@ -679,6 +679,19 @@ export default function Home() {
                                             }`}
                                     />
                                 ))}
+                            </div>
+
+                            {/* Subtle desktop-only information accents around the carousel. */}
+                            <div className="hidden xl:flex absolute left-[1.2%] top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 flex-col gap-2 pointer-events-none">
+                                <div className="px-3 py-2 rounded-xl border border-white/20 bg-white/[0.035] backdrop-blur-md text-[9px] font-semibold text-white/75 shadow-[0_0_20px_rgba(255,255,255,0.06)] rotate-[-90deg] origin-center whitespace-nowrap">
+                                    PROFESSIONAL TEMPLATES
+                                </div>
+                            </div>
+
+                            <div className="hidden xl:flex absolute right-[1.2%] top-1/2 -translate-y-1/2 translate-x-1/2 z-20 flex-col gap-2 pointer-events-none">
+                                <div className="px-3 py-2 rounded-xl border border-cyan-300/20 bg-cyan-300/[0.035] backdrop-blur-md text-[9px] font-semibold text-cyan-100/75 shadow-[0_0_20px_rgba(34,211,238,0.08)] rotate-90 origin-center whitespace-nowrap">
+                                    READY FOR SOCIAL MEDIA
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -764,7 +777,7 @@ export default function Home() {
                                 bottom-0
                                 w-52
                                 h-52
-                                // bg-blue-500/20
+                                bg-blue-500
                                 blur-3xl
                                 animate-pulse
                             />
