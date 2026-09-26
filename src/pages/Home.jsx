@@ -13,6 +13,7 @@ import {
     FaMapMarkerAlt
 } from "react-icons/fa";
 import logo from "../assets/adstudio-logo.png";
+import group_profile from "../assets/group_profile.png";
 
 export default function Home() {
 
@@ -461,15 +462,21 @@ export default function Home() {
 
                                 <div className="mt-4 w-[230px] sm:w-[290px] h-1 rounded-full bg-gradient-to-r from-cyan-400 via-cyan-300 to-transparent shadow-[0_0_18px_rgba(34,211,238,0.8)]" />
 
-                                <p className="text-base sm:text-lg text-blue-100 mt-6 leading-relaxed max-w-[545px]">
+                                <p className="text-base sm:text-lg text-blue-100 mt-4 leading-relaxed max-w-[545px]">
                                     Ad Studio helps businesses create stunning, professional advertisements in minutes without hiring expensive designers or agencies.
                                 </p>
 
-                                <p className="text-sm sm:text-base text-cyan-200 mt-4 leading-relaxed max-w-[525px]">
+                                <p className="text-sm sm:text-base text-cyan-200 mt-2 leading-relaxed max-w-[525px]">
                                     Perfect for restaurants, hotels, retail stores, photographers, startups, and social media marketers.
                                 </p>
 
-                                <div className="mt-7 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                                <div className='inline-flex items-center gap-2 border border-gray-300 p--1.5 pr-4 rounded-full mt-2 p-2 ml-20 '>
+                                    <img src={group_profile} alt="" className='w-20' />
+                                    <p className='text-xs font-medium'>Trusted buy 10K+ people</p>
+
+                                </div>
+
+                                <div className="mt-2 flex flex-col sm:flex-row gap-3 sm:gap-4">
                                     <Link
                                         to="/adstudio"
                                         className="bg-gradient-to-r from-blue-500 to-blue-600 text-center text-white px-7 py-3.5 rounded-2xl font-semibold shadow-[0_15px_40px_rgba(37,99,235,0.45)] hover:from-blue-400 hover:to-blue-600 hover:-translate-y-1 transition-all duration-300"
@@ -1172,16 +1179,23 @@ export default function Home() {
                 ============================================================ */}
 
                 <section className="bg-gray-50 py-24">
-
-                    <h2 className="
+                    <div className="flex flex-col items-center mb-2 -mt-20">
+                        <h2 className="
                         text-3xl
                         font-bold
                         text-center
                         mb-16
                         text-gray-900
                     ">
-                        Trusted By Growing Businesses
-                    </h2>
+                            Trusted By Growing Businesses
+                        </h2>
+                        <div className=' -mt-11 inline-flex items-center gap-2 border border-gray-300 p--1.5 pr-4 rounded-full  p-2 ml-20 '>
+                            <img src={group_profile} alt="" className='w-20' />
+                            <p className='text-xs font-medium'>Trusted buy 10K+ people</p>
+
+                        </div>
+
+                    </div>
 
                     <div className="
                         max-w-6xl

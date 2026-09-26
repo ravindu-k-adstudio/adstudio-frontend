@@ -8,35 +8,126 @@ export default function PricingPage() {
     const navigate = useNavigate();
     const { user } = useAuth();
 
-    const handlePayment = (plan) => {
+    const handlePayment = async (plan) => {
         if (!user) {
             navigate("/login");
             return;
         }
 
-        const amount = plan.price.replace(/[^\d]/g, "");
+        try {
+            const API_URL =
+                import.meta.env.VITE_API_URL ||
+                "http://192.168.1.28:5000/api";
 
-        const sellerId = "255979618218";
+            const token =
+                localStorage.getItem("token");
 
-        const orderId = "ORDER_" + new Date().getTime();
+            if (!token) {
+                navigate("/login");
+                return;
+            }
 
-        const checkoutUrl =
-            `https://secure.2checkout.com/order/checkout.php?` +
-            `seller_id=${sellerId}` +
-            `&mode=TEST` +
-            `&li_0_type=product` +
-            `&li_0_name=AdStudio ${plan.name}` +
-            `&li_0_price=${amount}` +
-            `&li_0_quantity=1` +
-            `&currency_code=USD` +
-            `&merchant_order_id=${orderId}` +
-            `&custom_1=${user.id}` +
-            `&custom_2=${plan.key}` +
-            `&return_url=http://localhost:3000/adstudio`;
+            const res = await fetch(
+                `${API_URL}/payment/create`,
+                {
+                    method: "POST",
 
-        window.location.href = checkoutUrl;
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        Authorization:
+                            `Bearer ${token}`
+                    },
+
+                    body: JSON.stringify({
+                        plan: plan.key
+                    })
+                }
+            );
+
+            const data =
+                await res.json();
+
+            if (!res.ok) {
+
+                if (
+                    data.code ===
+                    "CUSTOMER_DETAILS_REQUIRED"
+                ) {
+                    alert(
+                        "Please complete your phone, address and city before making a payment."
+                    );
+
+                    /*
+                     * Later this can navigate to your
+                     * profile/customer-details page.
+                     */
+
+                    return;
+                }
+
+                throw new Error(
+                    data.message ||
+                    "Unable to start payment."
+                );
+            }
+
+            /*
+             * PayHere uses a normal HTML POST form.
+             *
+             * Do not send the Merchant Secret from React.
+             * The backend has already generated the hash.
+             */
+
+            const form =
+                document.createElement("form");
+
+            form.method = "POST";
+
+            form.action =
+                data.checkoutUrl;
+
+            Object.entries(
+                data.payment
+            ).forEach(
+                ([key, value]) => {
+
+                    const input =
+                        document.createElement(
+                            "input"
+                        );
+
+                    input.type = "hidden";
+
+                    input.name = key;
+
+                    input.value =
+                        value ?? "";
+
+                    form.appendChild(
+                        input
+                    );
+                }
+            );
+
+            document.body.appendChild(form);
+
+            form.submit();
+
+        } catch (error) {
+
+            console.error(
+                "PAYHERE PAYMENT ERROR:",
+                error
+            );
+
+            alert(
+                error.message ||
+                "Unable to start payment."
+            );
+        }
     };
-
     return (
         <div className="relative  min-h-screen overflow-hidden bg-[#08182d] text-white flex flex-col">
 

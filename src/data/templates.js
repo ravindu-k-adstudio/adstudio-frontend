@@ -1,741 +1,28 @@
-// /*
-// |--------------------------------------------------------------------------
-// | AdStudio Template Library
-// |--------------------------------------------------------------------------
-// | 60 templates
-// | 12 business categories x 5 visual styles
-// |
-// | IMPORTANT:
-// | Template coordinates are NORMALIZED (0 -> 1).
-// | They are converted to the selected canvas size when loaded.
-// |--------------------------------------------------------------------------
-// */
 
-// export const TEMPLATE_SIZES = {
-//     square: [420, 420],
-//     portrait: [420, 520],
-//     landscape: [620, 420],
-
-//     visitingCard: [320, 180],
-//     businessCard: [350, 200],
-
-//     bookmark: [220, 520],
-
-//     instagramPost: [420, 420],
-//     instagramStory: [320, 570],
-
-//     facebookCover: [620, 240]
-// };
-
-// export const TEMPLATE_SIZE_NAMES = {
-//     square: "Square",
-//     portrait: "Portrait",
-//     landscape: "Landscape",
-//     visitingCard: "Visiting Card",
-//     businessCard: "Business Card",
-//     bookmark: "Bookmark",
-//     instagramPost: "Instagram Post",
-//     instagramStory: "Instagram Story",
-//     facebookCover: "Facebook Cover"
-// };
-
-// export const BUSINESS_TYPES = [
-//     "All",
-//     "Restaurant",
-//     "Cafe",
-//     "Fashion",
-//     "Photography",
-//     "Resort",
-//     "Fitness",
-//     "Beauty",
-//     "Auto",
-//     "Grocery",
-//     "Real Estate",
-//     "Travel",
-//     "Education"
-// ];
-
-// /*
-// |--------------------------------------------------------------------------
-// | Reliable photo sources
-// |--------------------------------------------------------------------------
-// | These are direct image files.
-// |--------------------------------------------------------------------------
-// */
-
-// const PHOTOS = {
-//     Restaurant: [
-//         "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1200&q=85"
-//     ],
-
-//     Cafe: [
-//         "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=85"
-//     ],
-
-//     Fashion: [
-//         "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=85"
-//     ],
-
-//     Photography: [
-//         "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=1200&q=85"
-//     ],
-
-//     Resort: [
-//         "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85"
-//     ],
-
-//     Fitness: [
-//         "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1200&q=85"
-//     ],
-
-//     Beauty: [
-//         "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1200&q=85"
-//     ],
-
-//     Auto: [
-//         "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=85"
-//     ],
-
-//     Grocery: [
-//         "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1518843875459-f738682238a6?auto=format&fit=crop&w=1200&q=85"
-//     ],
-
-//     "Real Estate": [
-//         "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85"
-//     ],
-
-//     Travel: [
-//         "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1200&q=85"
-//     ],
-
-//     Education: [
-//         "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=85",
-//         "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=85"
-//     ]
-// };
-
-// /*
-// |--------------------------------------------------------------------------
-// | Sample business information
-// |--------------------------------------------------------------------------
-// */
-
-// const BUSINESS_DATA = {
-//     Restaurant: {
-//         name: "Tasty Bites",
-//         tagline: "Delicious Food • Great Ambience",
-//         offer: "20% OFF",
-//         description: "Fresh flavours prepared with passion.",
-//         phone: "222-333-4444",
-//         email: "info@tastybites.com",
-//         website: "www.tastybites.com",
-//         address: "rd,tessan,jr-colorabo"
-//     },
-
-//     Cafe: {
-//         name: "Cafe Mocha",
-//         tagline: "Brewed To Perfection",
-//         offer: "BEST COFFEE IN TOWN",
-//         description: "Premium coffee, fresh pastries and good moments.",
-//         phone: "123-456-7890",
-//         email: "info@cafemocha.com",
-//         website: "www.cafemocha.com"
-//     },
-
-//     Fashion: {
-//         name: "Urban Vogue",
-//         tagline: "Trendy Styles • New Season",
-//         offer: "UP TO 40% OFF",
-//         description: "Discover your next signature look.",
-//         phone: "111-222-3333",
-//         email: "hello@urbanvogue.com",
-//         website: "www.urbanvogue.com"
-//     },
-
-//     Photography: {
-//         name: "Elite Pics",
-//         tagline: "Professional • Creative • Timeless",
-//         offer: "BOOK YOUR SESSION",
-//         description: "Portraits, weddings, events and commercial photography.",
-//         phone: "123-456-7890",
-//         email: "hello@elitepics.com",
-//         website: "www.elitepics.com"
-//     },
-
-//     Resort: {
-//         name: "Paradise Resort",
-//         tagline: "Luxury • Escape • Relax",
-//         offer: "SUMMER SPECIAL",
-//         description: "Unforgettable stays surrounded by nature.",
-//         phone: "888-999-7777",
-//         email: "stay@paradiseresort.com",
-//         website: "www.paradiseresort.com"
-//     },
-
-//     Fitness: {
-//         name: "PowerFit Gym",
-//         tagline: "GET FIT • STAY STRONG",
-//         offer: "JOIN TODAY",
-//         description: "Modern equipment. Expert trainers. Real results.",
-//         phone: "987-654-3210",
-//         email: "info@powerfitgym.com",
-//         website: "www.powerfitgym.com"
-//     },
-
-//     Beauty: {
-//         name: "Glamour Salon",
-//         tagline: "Pamper Yourself • Look Your Best",
-//         offer: "BEAUTY SPECIAL",
-//         description: "Hair, beauty and styling services for every occasion.",
-//         phone: "222-666-9998",
-//         email: "hello@glamoursalon.com",
-//         website: "www.glamoursalon.com"
-//     },
-
-//     Auto: {
-//         name: "AutoCare",
-//         tagline: "Expert Repairs • Honest Service",
-//         offer: "FREE CHECKUP",
-//         description: "Reliable service for every journey.",
-//         phone: "888-777-6666",
-//         email: "service@autocare.com",
-//         website: "www.autocare.com"
-//     },
-
-//     Grocery: {
-//         name: "Fresh Mart",
-//         tagline: "Fresh • Organic • Local",
-//         offer: "FRESH EVERY DAY",
-//         description: "Farm-fresh fruits, vegetables and everyday essentials.",
-//         phone: "883-355-1111",
-//         email: "hello@freshmart.com",
-//         website: "www.freshmart.com"
-//     },
-
-//     "Real Estate": {
-//         name: "Prime Properties",
-//         tagline: "Find A Place To Call Home",
-//         offer: "NEW LISTINGS",
-//         description: "Premium homes, apartments and investment properties.",
-//         phone: "555-222-8888",
-//         email: "sales@primeproperties.com",
-//         website: "www.primeproperties.com"
-//     },
-
-//     Travel: {
-//         name: "WanderMore",
-//         tagline: "Explore • Discover • Experience",
-//         offer: "TRAVEL DEALS",
-//         description: "Curated journeys for unforgettable memories.",
-//         phone: "555-444-7777",
-//         email: "hello@wandermore.com",
-//         website: "www.wandermore.com"
-//     },
-
-//     Education: {
-//         name: "Bright Future Academy",
-//         tagline: "Learn • Grow • Succeed",
-//         offer: "NEW INTAKE",
-//         description: "Quality education designed for tomorrow.",
-//         phone: "555-333-8888",
-//         email: "info@brightfuture.com",
-//         website: "www.brightfuture.com"
-//     }
-// };
-
-// /*
-// |--------------------------------------------------------------------------
-// | Small SVG assets
-// |--------------------------------------------------------------------------
-// | These never depend on an external server, so logos/social icons
-// | cannot cause the template loader to fail.
-// |--------------------------------------------------------------------------
-// */
-
-// const svgData = svg =>
-//     `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
-
-// export const SOCIAL_ICONS = {
-//     facebook: svgData(`
-//         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-//             <rect width="100" height="100" rx="20" fill="#1877F2"/>
-//             <path fill="white" d="M58 85V55h10l2-12H58v-7c0-4 2-6 7-6h6V19c-3-1-7-1-11-1-11 0-18 7-18 18v7H30v12h12v30z"/>
-//         </svg>
-//     `),
-
-//     instagram: svgData(`
-//         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-//             <defs>
-//                 <linearGradient id="g" x1="0" y1="1" x2="1" y2="0">
-//                     <stop offset="0" stop-color="#feda75"/>
-//                     <stop offset=".5" stop-color="#d62976"/>
-//                     <stop offset="1" stop-color="#4f5bd5"/>
-//                 </linearGradient>
-//             </defs>
-//             <rect width="100" height="100" rx="24" fill="url(#g)"/>
-//             <rect x="25" y="25" width="50" height="50" rx="14" fill="none" stroke="white" stroke-width="7"/>
-//             <circle cx="50" cy="50" r="12" fill="none" stroke="white" stroke-width="7"/>
-//             <circle cx="68" cy="32" r="4" fill="white"/>
-//         </svg>
-//     `),
-
-//     youtube: svgData(`
-//         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-//             <rect x="8" y="20" width="84" height="60" rx="16" fill="#FF0000"/>
-//             <path fill="white" d="M43 36l25 14-25 14z"/>
-//         </svg>
-//     `),
-
-//     whatsapp: svgData(`
-//         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-//             <circle cx="50" cy="50" r="42" fill="#25D366"/>
-//             <path fill="white" d="M30 72l4-14a26 26 0 1 1 10 9zm18-17c8 4 11 5 13 2l3-4-7-4-3 3c-2 1-5-1-8-3s-5-5-4-7l2-3-4-6-4 2c-4 2-5 8-1 14 3 5 8 9 13 11z"/>
-//         </svg>
-//     `),
-
-//     linkedin: svgData(`
-//         <svg xmlns="https://www.iconpacks.net/icons/5/free-whatsapp-green-square-logo-icon-15994-thumb.png" viewBox="0 0 100 100">
-//             <rect width="100" height="100" rx="15" fill="#0A66C2"/>
-//             <path fill="white" d="M25 38h13v38H25zm6-19a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm15 19h12v5h.2c2-4 7-7 13-7 14 0 17 9 17 21v19H75V60c0-7 0-15-9-15s-10 7-10 15v16H46z"/>
-//         </svg>
-//     `)
-//     // http://www.w3.org/2000/svg
-// };
-
-// const logoSVG = (name, color) =>
-//     svgData(`
-//         <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-//             <rect width="300" height="300" rx="70" fill="${color}"/>
-//             <circle cx="150" cy="105" r="55" fill="white" opacity=".95"/>
-//             <path d="M80 230 Q150 155 220 230" fill="none" stroke="white" stroke-width="20" stroke-linecap="round"/>
-//             <text x="150" y="275" text-anchor="middle" fill="white" font-size="25" font-family="Arial" font-weight="700">${name.slice(0, 8)}</text>
-//         </svg>
-//     `);
-
-// /*
-// |--------------------------------------------------------------------------
-// | Palette by business
-// |--------------------------------------------------------------------------
-// */
-
-// const PALETTES = {
-//     Restaurant: ["#8b2f1f", "#f59e0b"],
-//     Cafe: ["#5b341d", "#d6a15d"],
-//     Fashion: ["#9d174d", "#f9a8d4"],
-//     Photography: ["#172033", "#60a5fa"],
-//     Resort: ["#0f766e", "#facc15"],
-//     Fitness: ["#111827", "#ef4444"],
-//     Beauty: ["#7c2d5a", "#f0abfc"],
-//     Auto: ["#1f2937", "#f97316"],
-//     Grocery: ["#166534", "#84cc16"],
-//     "Real Estate": ["#1e3a8a", "#d4af37"],
-//     Travel: ["#075985", "#38bdf8"],
-//     Education: ["#3730a3", "#fbbf24"]
-// };
-
-// const STYLES = ["hero", "split", "badge", "minimal", "dark"];
-
-// const STYLE_NAMES = {
-//     hero: "Hero",
-//     split: "Split",
-//     badge: "Promo",
-//     minimal: "Minimal",
-//     dark: "Dark"
-// };
-
-// /*
-// |--------------------------------------------------------------------------
-// | Build one template
-// |--------------------------------------------------------------------------
-// */
-
-// const createTemplate = (business, style, number, photoIndex) => {
-
-//     const data = BUSINESS_DATA[business];
-//     const palette = PALETTES[business];
-
-//     const backgroundSrc =
-//         PHOTOS[business][photoIndex % PHOTOS[business].length];
-
-//     const extraSrc =
-//         PHOTOS[business][(photoIndex + 1) % PHOTOS[business].length];
-
-//     const id =
-//         `${business.toLowerCase().replace(/\s+/g, "-")}-${style}-${number}`;
-
-//     /*
-//     |--------------------------------------------------------------------------
-//     | All coordinates below are percentages of the canvas.
-//     |--------------------------------------------------------------------------
-//     */
-
-//     let texts = [];
-//     let shapes = [];
-//     let images = [];
-
-//     /*
-//     |--------------------------------------------------------------------------
-//     | Background
-//     |--------------------------------------------------------------------------
-//     */
-
-//     const background = {
-//         type: "image",
-//         src: backgroundSrc,
-//         value: "#111827",
-//         x: 0,
-//         y: 0,
-//         width: 1,
-//         height: 1,
-//         rotation: 0
-//     };
-
-//     /*
-//     |--------------------------------------------------------------------------
-//     | Common logo
-//     |--------------------------------------------------------------------------
-//     */
-
-//     images.push({
-//         type: "logo",
-//         src: logoSVG(data.name, palette[0]),
-//         nx: 0.055,
-//         ny: 0.055,
-//         nw: 0.14,
-//         nh: 0.14,
-//         rotation: 0
-//     });
-
-//     /*
-//     |--------------------------------------------------------------------------
-//     | Social icons
-//     |--------------------------------------------------------------------------
-//     */
-
-//     const socialKeys = ["facebook", "instagram", "whatsapp"];
-
-//     socialKeys.forEach((key, index) => {
-//         images.push({
-//             type: "social",
-//             social: key,
-//             src: SOCIAL_ICONS[key],
-//             nx: 0.70 + index * 0.085,
-//             ny: 0.88,
-//             nw: 0.055,
-//             nh: 0.055,
-//             rotation: 0
-//         });
-//     });
-
-//     /*
-//     |--------------------------------------------------------------------------
-//     | Decorative image
-//     |--------------------------------------------------------------------------
-//     */
-
-//     images.push({
-//         type: "photo",
-//         src: extraSrc,
-//         nx: style === "split" ? 0.57 : 0.72,
-//         ny: 0.10,
-//         nw: style === "split" ? 0.35 : 0.22,
-//         nh: style === "split" ? 0.62 : 0.24,
-//         rotation: style === "badge" ? 4 : 0
-//     });
-
-//     /*
-//     |--------------------------------------------------------------------------
-//     | Decorative blocks
-//     |--------------------------------------------------------------------------
-//     */
-
-//     shapes.push({
-//         shape: "rectangle",
-//         nx: 0.0,
-//         ny: 0.76,
-//         nw: 1,
-//         nh: 0.24,
-//         fill:
-//             style === "minimal"
-//                 ? "rgba(255,255,255,0.90)"
-//                 : "rgba(0,0,0,0.68)",
-//         rotation: 0
-//     });
-
-//     shapes.push({
-//         shape: "rectangle",
-//         nx: 0.0,
-//         ny: 0.0,
-//         nw: 0.012,
-//         nh: 1,
-//         fill: palette[1],
-//         rotation: 0
-//     });
-
-//     /*
-//     |--------------------------------------------------------------------------
-//     | Main text
-//     |--------------------------------------------------------------------------
-//     */
-
-//     texts.push({
-//         role: "businessName",
-//         text: data.name,
-//         nx: 0.055,
-//         ny: 0.25,
-//         nw: style === "split" ? 0.48 : 0.62,
-//         fontScale: style === "minimal" ? 0.09 : 0.10,
-//         fill: "#ffffff",
-//         fontFamily: "Poppins",
-//         fontStyle: "bold",
-//         align: "left",
-//         underline: false,
-//         letterSpacing: 0
-//     });
-
-//     texts.push({
-//         role: "tagline",
-//         text: data.tagline,
-//         nx: 0.06,
-//         ny: 0.40,
-//         nw: style === "split" ? 0.45 : 0.58,
-//         fontScale: 0.045,
-//         fill: "#ffffff",
-//         fontFamily: "Montserrat",
-//         fontStyle: "bold",
-//         align: "left",
-//         underline: false,
-//         letterSpacing: 0
-//     });
-
-//     texts.push({
-//         role: "description",
-//         text: data.description,
-//         nx: 0.06,
-//         ny: 0.50,
-//         nw: style === "split" ? 0.45 : 0.55,
-//         fontScale: 0.027,
-//         fill: "#ffffff",
-//         fontFamily: "Poppins",
-//         fontStyle: "normal",
-//         align: "left",
-//         underline: false,
-//         letterSpacing: 0
-//     });
-
-//     texts.push({
-//         role: "offer",
-//         text: data.offer,
-//         nx: 0.06,
-//         ny: 0.62,
-//         nw: 0.50,
-//         fontScale: 0.055,
-//         fill: palette[1],
-//         fontFamily: "Poppins",
-//         fontStyle: "bold",
-//         align: "left",
-//         underline: false,
-//         letterSpacing: 1
-//     });
-
-//     texts.push({
-//         role: "contact",
-//         text: `Call: ${data.phone}  •  ${data.website}`,
-//         nx: 0.055,
-//         ny: 0.81,
-//         nw: 0.60,
-//         fontScale: 0.028,
-//         fill: style === "minimal" ? "#111827" : "#ffffff",
-//         fontFamily: "Poppins",
-//         fontStyle: "normal",
-//         align: "left",
-//         underline: false,
-//         letterSpacing: 0
-//     });
-
-//     /*
-//     |--------------------------------------------------------------------------
-//     | Style-specific changes
-//     |--------------------------------------------------------------------------
-//     */
-
-//     if (style === "split") {
-//         shapes.push({
-//             shape: "rectangle",
-//             nx: 0.51,
-//             ny: 0,
-//             nw: 0.49,
-//             nh: 1,
-//             fill: "rgba(0,0,0,0.20)",
-//             rotation: 0
-//         });
-//     }
-
-//     if (style === "badge") {
-//         shapes.push({
-//             shape: "circle",
-//             nx: 0.68,
-//             ny: 0.50,
-//             nw: 0.20,
-//             nh: 0.20,
-//             fill: palette[1],
-//             rotation: 0
-//         });
-
-//         texts.push({
-//             role: "badge",
-//             text: "SPECIAL",
-//             nx: 0.70,
-//             ny: 0.56,
-//             nw: 0.16,
-//             fontScale: 0.035,
-//             fill: "#111827",
-//             fontFamily: "Poppins",
-//             fontStyle: "bold",
-//             align: "center",
-//             underline: false,
-//             letterSpacing: 0
-//         });
-//     }
-
-//     if (style === "minimal") {
-//         background.value = "#f8fafc";
-
-//         /*
-//         | Use a dark translucent overlay to keep the photo elegant.
-//         */
-//         shapes[0].fill = "rgba(255,255,255,0.88)";
-
-//         texts.forEach(t => {
-//             if (
-//                 t.role !== "contact" &&
-//                 t.role !== "offer"
-//             ) {
-//                 t.fill = "#111827";
-//             }
-//         });
-//     }
-
-//     if (style === "dark") {
-//         shapes.push({
-//             shape: "rectangle",
-//             nx: 0.03,
-//             ny: 0.18,
-//             nw: 0.58,
-//             nh: 0.52,
-//             fill: "rgba(0,0,0,0.62)",
-//             rotation: 0
-//         });
-//     }
-
-//     return {
-//         id,
-//         name: `${data.name} — ${STYLE_NAMES[style]}`,
-//         businessType: business,
-//         style,
-//         description: data.description,
-
-//         /*
-//         | All sizes are supported.
-//         | The loader converts normalized positions to actual dimensions.
-//         */
-//         sizes: Object.keys(TEMPLATE_SIZES),
-
-//         background,
-//         texts,
-//         images,
-//         blocks: shapes
-//     };
-// };
-
-// /*
-// |--------------------------------------------------------------------------
-// | 60 templates
-// |--------------------------------------------------------------------------
-// */
-
-// export const templates = [];
-
-// let templateNumber = 1;
-
-// Object.keys(BUSINESS_DATA).forEach((business, businessIndex) => {
-
-//     STYLES.forEach((style, styleIndex) => {
-
-//         templates.push(
-//             createTemplate(
-//                 business,
-//                 style,
-//                 templateNumber++,
-//                 (businessIndex + styleIndex) % 3
-//             )
-//         );
-
-//     });
-
-// });
-
-// /*
-// |--------------------------------------------------------------------------
-// | Safety check
-// |--------------------------------------------------------------------------
-// */
-
-// if (templates.length !== 60) {
-//     console.error(
-//         `AdStudio template library expected 60 templates but found ${templates.length}`
-//     );
-// }
-
-// export default templates;
-
-
-////////////////////////////////////////////////////////////////////////////
-/*
-|--------------------------------------------------------------------------
-| AdStudio Template Library
-|--------------------------------------------------------------------------
-| 96 templates
-| 12 business categories x 8 different visual layouts
-|
-| Coordinates:
-| nx / ny / nw / nh = normalized 0 -> 1
-|
-| IMPORTANT:
-| - Bottom contact area is reserved.
-| - Bottom block is ONLY white or dark.
-| - Contact includes phone, email, address and website.
-| - Every template contains Facebook, WhatsApp, YouTube,
-|   LinkedIn, Instagram and TikTok.
-| - All social icons are square and equal size.
-| - Four-edge border stays close to the canvas edge.
-| - Every category uses different photos.
-| - Each of the 8 layouts has different positioning/decorations.
-|--------------------------------------------------------------------------
-*/
+/* ============================================================
+   ADSTUDIO — PREMIUM TEMPLATE LIBRARY
+   ============================================================
+
+   13 BUSINESS TYPES
+   ×
+   12 DISTINCT DESIGN MODELS
+   =
+   156 TEMPLATES
+
+   IMPORTANT:
+   - Normalized coordinates are used everywhere.
+   - Real editor borders are stored in `borders`.
+   - Border is NOT simulated using four blocks.
+   - Contact panel uses ~50% transparency.
+   - Social icons are real SVG artwork.
+   - Promotion badges are separate editable image + text.
+   - Other category uses gradient backgrounds only.
+   ============================================================ */
+
+
+/* ============================================================
+   TEMPLATE SIZES
+   ============================================================ */
 
 export const TEMPLATE_SIZES = {
     square: [420, 420],
@@ -753,17 +40,27 @@ export const TEMPLATE_SIZES = {
     facebookCover: [620, 240]
 };
 
+
 export const TEMPLATE_SIZE_NAMES = {
     square: "Square",
     portrait: "Portrait",
     landscape: "Landscape",
+
     visitingCard: "Visiting Card",
     businessCard: "Business Card",
+
     bookmark: "Bookmark",
+
     instagramPost: "Instagram Post",
     instagramStory: "Instagram Story",
+
     facebookCover: "Facebook Cover"
 };
+
+
+/* ============================================================
+   BUSINESS TYPES
+   ============================================================ */
 
 export const BUSINESS_TYPES = [
     "All",
@@ -778,728 +75,516 @@ export const BUSINESS_TYPES = [
     "Grocery",
     "Real Estate",
     "Travel",
-    "Education"
+    "Education",
+    "Other"
 ];
 
-/*
-|--------------------------------------------------------------------------
-| PHOTO LIBRARY
-|--------------------------------------------------------------------------
-*/
 
-const PHOTOS = {
-    Restaurant: [
-        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1521305916504-4a1121188589?auto=format&fit=crop&w=1400&q=85"
-    ],
-
-    Cafe: [
-        "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1511081692775-05d0f180a065?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1400&q=85"
-    ],
-
-    Fashion: [
-        "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1400&q=85"
-    ],
-
-    Photography: [
-        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1502982720700-bfff97f2ecac?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1516724562728-afc824a36e84?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=85"
-    ],
-
-    Resort: [
-        "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1493552152660-f915ab47ae9d?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1400&q=85"
-    ],
-
-    Fitness: [
-        "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1546483875-ad9014c88eba?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1558611848-73f7eb4001a1?auto=format&fit=crop&w=1400&q=85"
-    ],
-
-    Beauty: [
-        "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1519415387722-a1c3bb7c9cfb?auto=format&fit=crop&w=1400&q=85"
-    ],
-
-    Auto: [
-        "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1486006920555-c77dcf18193c?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1504222490345-c075b6008014?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1551830820-330a71b99659?auto=format&fit=crop&w=1400&q=85"
-    ],
-
-    Grocery: [
-        "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1506617420156-8e4536971650?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1601598851547-4302969d6f4b?auto=format&fit=crop&w=1400&q=85"
-    ],
-
-    "Real Estate": [
-        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1400&q=85"
-    ],
-
-    Travel: [
-        "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1521292270410-a8c4d716d518?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1400&q=85"
-    ],
-
-    Education: [
-        "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1400&q=85",
-        "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1400&q=85"
-    ]
-};
-
-/*
-|--------------------------------------------------------------------------
-| BUSINESS DATA
-|--------------------------------------------------------------------------
-*/
+/* ============================================================
+   BUSINESS CONTENT
+   ============================================================ */
 
 const BUSINESS_DATA = {
+
     Restaurant: {
-        name: "Tasty Bites",
-        tagline: "Delicious Food • Great Ambience",
-        offer: "20% OFF",
-        description: "Fresh flavours prepared with passion.",
-        phone: "222-333-4444",
-        email: "info@tastybites.com",
-        address: "123 Main Street",
-        website: "www.tastybites.com"
+        name: "Urban Table",
+        tagline: "Bold Flavours. Beautifully Served.",
+        description: "Fresh ingredients, signature dishes and memorable dining experiences.",
+        offer: "30% OFF",
+
+        phone: "+94 77 123 4567",
+        email: "hello@urbantable.lk",
+        address: "24 Galle Road, Colombo",
+        website: "www.urbantable.lk",
+
+        contactAccent: "#FFB703"
     },
 
     Cafe: {
-        name: "Cafe Mocha",
-        tagline: "Brewed To Perfection",
+        name: "Brew & Bloom",
+        tagline: "Small Moments. Great Coffee.",
+        description: "Fresh coffee, handcrafted drinks and delicious bites made every day.",
         offer: "BUY 1 GET 1",
-        description: "Premium coffee, fresh pastries and good moments.",
-        phone: "123-456-7890",
-        email: "info@cafemocha.com",
-        address: "123 Main Street",
-        website: "www.cafemocha.com"
+
+        phone: "+94 77 234 5678",
+        email: "hello@brewandbloom.lk",
+        address: "18 Flower Road, Colombo",
+        website: "www.brewandbloom.lk",
+
+        contactAccent: "#D69E2E"
     },
 
     Fashion: {
-        name: "Urban Vogue",
-        tagline: "Trendy Styles • New Season",
-        offer: "UP TO 40% OFF",
-        description: "Discover your next signature look.",
-        phone: "111-222-3333",
-        email: "hello@urbanvogue.com",
-        address: "123 Main Street",
-        website: "www.urbanvogue.com"
+        name: "Mode District",
+        tagline: "Wear The Moment.",
+        description: "Contemporary collections designed for confident everyday style.",
+        offer: "40% OFF",
+
+        phone: "+94 77 345 6789",
+        email: "hello@modedistrict.lk",
+        address: "45 Ward Place, Colombo",
+        website: "www.modedistrict.lk",
+
+        contactAccent: "#FF4D8D"
     },
 
     Photography: {
-        name: "Elite Pics",
-        tagline: "Professional • Creative • Timeless",
-        offer: "BOOK YOUR SESSION",
-        description: "Portraits, weddings, events and commercial photography.",
-        phone: "123-456-7890",
-        email: "hello@elitepics.com",
-        address: "123 Main Street",
-        website: "www.elitepics.com"
+        name: "Frame House",
+        tagline: "Beautiful Light. Real Emotion.",
+        description: "Portraits, events and stories captured with timeless detail.",
+        offer: "20% OFF",
+
+        phone: "+94 77 456 7890",
+        email: "hello@framehouse.lk",
+        address: "12 Park Road, Colombo",
+        website: "www.framehouse.lk",
+
+        contactAccent: "#8B5CF6"
     },
 
     Resort: {
-        name: "Paradise Resort",
-        tagline: "Luxury • Escape • Relax",
-        offer: "20% OFF STAYS",
-        description: "Unforgettable stays surrounded by nature.",
-        phone: "888-999-7777",
-        email: "stay@paradiseresort.com",
-        address: "123 Main Street",
-        website: "www.paradiseresort.com"
+        name: "Azure Escape",
+        tagline: "Wake Up Somewhere Wonderful.",
+        description: "Relax, explore and create unforgettable memories by the coast.",
+        offer: "STAY 3 • PAY 2",
+
+        phone: "+94 77 567 8901",
+        email: "reservations@azureescape.lk",
+        address: "25 Beach Road, Galle",
+        website: "www.azureescape.lk",
+
+        contactAccent: "#22D3EE"
     },
 
     Fitness: {
-        name: "PowerFit Gym",
-        tagline: "GET FIT • STAY STRONG",
-        offer: "JOIN TODAY",
-        description: "Modern equipment. Expert trainers. Real results.",
-        phone: "987-654-3210",
-        email: "info@powerfitgym.com",
-        address: "123 Main Street",
-        website: "www.powerfitgym.com"
+        name: "Pulse Athletics",
+        tagline: "Energy Starts Today.",
+        description: "Train smarter with expert coaching, modern equipment and real results.",
+        offer: "FREE DAY PASS",
+
+        phone: "+94 77 678 9012",
+        email: "hello@pulseathletics.lk",
+        address: "31 Main Street, Colombo",
+        website: "www.pulseathletics.lk",
+
+        contactAccent: "#A3E635"
     },
 
     Beauty: {
-        name: "Glamour Salon",
-        tagline: "Pamper Yourself • Look Your Best",
-        offer: "BEAUTY SPECIAL",
-        description: "Hair, beauty and styling services for every occasion.",
-        phone: "222-666-9998",
-        email: "hello@glamoursalon.com",
-        address: "123 Main Street",
-        website: "www.glamoursalon.com"
+        name: "Lumière Beauty",
+        tagline: "Glow With Confidence.",
+        description: "Premium beauty, hair and wellness services created around you.",
+        offer: "20% OFF",
+
+        phone: "+94 77 789 0123",
+        email: "hello@lumierebeauty.lk",
+        address: "16 Flower Road, Colombo",
+        website: "www.lumierebeauty.lk",
+
+        contactAccent: "#F472B6"
     },
 
     Auto: {
-        name: "AutoCare",
-        tagline: "Expert Repairs • Honest Service",
-        offer: "FREE CHECKUP",
-        description: "Reliable service for every journey.",
-        phone: "888-777-6666",
-        email: "service@autocare.com",
-        address: "123 Main Street",
-        website: "www.autocare.com"
+        name: "DriveLab",
+        tagline: "Precision For Every Drive.",
+        description: "Professional vehicle care, servicing and detailing you can trust.",
+        offer: "15% OFF",
+
+        phone: "+94 77 890 1234",
+        email: "service@drivelab.lk",
+        address: "72 High Level Road, Colombo",
+        website: "www.drivelab.lk",
+
+        contactAccent: "#38BDF8"
     },
 
     Grocery: {
-        name: "Fresh Mart",
-        tagline: "Fresh • Organic • Local",
-        offer: "FRESH EVERY DAY",
-        description: "Farm-fresh fruits, vegetables and everyday essentials.",
-        phone: "883-355-1111",
-        email: "hello@freshmart.com",
-        address: "123 Main Street",
-        website: "www.freshmart.com"
+        name: "FreshMart",
+        tagline: "Fresh Finds For Every Day.",
+        description: "Fresh produce, everyday essentials and great value under one roof.",
+        offer: "SAVE TODAY",
+
+        phone: "+94 77 901 2345",
+        email: "hello@freshmart.lk",
+        address: "10 Market Street, Colombo",
+        website: "www.freshmart.lk",
+
+        contactAccent: "#4ADE80"
     },
 
     "Real Estate": {
-        name: "Prime Properties",
-        tagline: "Find A Place To Call Home",
-        offer: "NEW LISTINGS",
-        description: "Premium homes, apartments and investment properties.",
-        phone: "555-222-8888",
-        email: "sales@primeproperties.com",
-        address: "123 Main Street",
-        website: "www.primeproperties.com"
+        name: "Prime Living",
+        tagline: "A Home That Fits Your Future.",
+        description: "Discover exceptional homes, apartments and investment opportunities.",
+        offer: "NEW LISTING",
+
+        phone: "+94 77 112 2334",
+        email: "hello@primeliving.lk",
+        address: "55 Union Place, Colombo",
+        website: "www.primeliving.lk",
+
+        contactAccent: "#F59E0B"
     },
 
     Travel: {
-        name: "WanderMore",
-        tagline: "Explore • Discover • Experience",
-        offer: "TRAVEL DEALS",
-        description: "Curated journeys for unforgettable memories.",
-        phone: "555-444-7777",
-        email: "hello@wandermore.com",
-        address: "123 Main Street",
-        website: "www.wandermore.com"
+        name: "Voyage Studio",
+        tagline: "Your Next Story Starts Here.",
+        description: "Curated journeys, unforgettable destinations and effortless travel planning.",
+        offer: "BOOK & SAVE",
+
+        phone: "+94 77 223 3445",
+        email: "hello@voyagestudio.lk",
+        address: "28 Duplication Road, Colombo",
+        website: "www.voyagestudio.lk",
+
+        contactAccent: "#2DD4BF"
     },
 
     Education: {
-        name: "Bright Future Academy",
-        tagline: "Learn • Grow • Succeed",
-        offer: "NEW INTAKE",
-        description: "Quality education designed for tomorrow.",
-        phone: "555-333-8888",
-        email: "info@brightfuture.com",
-        address: "123 Main Street",
-        website: "www.brightfuture.com"
+        name: "NextStep Academy",
+        tagline: "Learn Today. Lead Tomorrow.",
+        description: "Practical learning, expert guidance and skills built for the future.",
+        offer: "ENROLL NOW",
+
+        phone: "+94 77 334 4556",
+        email: "info@nextstepacademy.lk",
+        address: "40 Education Road, Colombo",
+        website: "www.nextstepacademy.lk",
+
+        contactAccent: "#60A5FA"
+    },
+
+    Other: {
+        name: "Nova Studio",
+        tagline: "Make Your Brand Impossible To Ignore.",
+        description: "Flexible promotional layouts for modern businesses and creators.",
+        offer: "SPECIAL OFFER",
+
+        phone: "+94 77 445 5667",
+        email: "hello@novastudio.lk",
+        address: "22 Business Street, Colombo",
+        website: "www.novastudio.lk",
+
+        contactAccent: "#00D9FF"
     }
 };
 
-/*
-|--------------------------------------------------------------------------
-| PALETTES
-|--------------------------------------------------------------------------
-*/
+/* ============================================================
+   COLOR SYSTEM
+   ============================================================ */
 
 const PALETTES = {
-    Restaurant: ["#8b2f1f", "#f59e0b"],
-    Cafe: ["#5b341d", "#d6a15d"],
-    Fashion: ["#9d174d", "#f9a8d4"],
-    Photography: ["#172033", "#60a5fa"],
-    Resort: ["#0f766e", "#facc15"],
-    Fitness: ["#111827", "#ef4444"],
-    Beauty: ["#7c2d5a", "#f0abfc"],
-    Auto: ["#1f2937", "#f97316"],
-    Grocery: ["#166534", "#84cc16"],
-    "Real Estate": ["#1e3a8a", "#d4af37"],
-    Travel: ["#075985", "#38bdf8"],
-    Education: ["#3730a3", "#fbbf24"]
-};
 
-/*
-|--------------------------------------------------------------------------
-| FONT FAMILIES
-|--------------------------------------------------------------------------
-|
-| Different categories use different visual identities.
-| Google/system fallback fonts are used so the templates remain safe
-| even when a particular web font has not been loaded.
-|--------------------------------------------------------------------------
-*/
-
-const FONT_FAMILIES = {
     Restaurant: [
-        "Playfair Display",
-        "Cormorant Garamond",
-        "Libre Baskerville",
-        "DM Serif Display",
-        "Bree Serif",
-        "Montserrat",
-        "Poppins",
-        "Lora"
+        "#FF4D00",
+        "#FFB703",
+        "#FFF3D6",
+        "#7C2D12"
     ],
 
     Cafe: [
-        "Lobster Two",
-        "Bree Serif",
-        "Josefin Sans",
-        "Lora",
-        "Poppins",
-        "Montserrat",
-        "Libre Baskerville",
-        "Playfair Display"
+        "#B45309",
+        "#F59E0B",
+        "#FDE68A",
+        "#3F2A1D"
     ],
 
     Fashion: [
-        "Josefin Sans",
-        "Pinyon Script",
-        "Montserrat",
-        "Playfair Display",
-        "DM Sans",
-        "Bodoni 72",
-        "Cormorant Garamond",
-        "Lora"
+        "#EC4899",
+        "#8B5CF6",
+        "#FCE7F3",
+        "#111827"
     ],
 
     Photography: [
-        "Libre Baskerville",
-        "Pinyon Script",
-        "Cormorant Garamond",
-        "Montserrat",
-        "Josefin Sans",
-        "Playfair Display",
-        "Lora",
-        "DM Sans"
+        "#8B5CF6",
+        "#C084FC",
+        "#F5F3FF",
+        "#171717"
     ],
 
     Resort: [
-        "Playfair Display",
-        "Cormorant Garamond",
-        "Josefin Sans",
-        "Lora",
-        "Libre Baskerville",
-        "Pinyon Script",
-        "Montserrat",
-        "DM Sans"
+        "#06B6D4",
+        "#14B8A6",
+        "#CCFBF1",
+        "#0F172A"
     ],
 
     Fitness: [
-        "Montserrat",
-        "Oswald",
-        "Bebas Neue",
-        "Poppins",
-        "Josefin Sans",
-        "DM Sans",
-        "Bree Serif",
-        "Roboto"
+        "#84CC16",
+        "#22C55E",
+        "#ECFCCB",
+        "#111827"
     ],
 
     Beauty: [
-        "Pinyon Script",
-        "Playfair Display",
-        "Lora",
-        "Cormorant Garamond",
-        "Josefin Sans",
-        "Libre Baskerville",
-        "Montserrat",
-        "Poppins"
+        "#EC4899",
+        "#F472B6",
+        "#FCE7F3",
+        "#831843"
     ],
 
     Auto: [
-        "Oswald",
-        "Montserrat",
-        "Bebas Neue",
-        "Roboto",
-        "DM Sans",
-        "Poppins",
-        "Josefin Sans",
-        "Bree Serif"
+        "#0EA5E9",
+        "#2563EB",
+        "#BAE6FD",
+        "#0F172A"
     ],
 
     Grocery: [
-        "Poppins",
-        "Josefin Sans",
-        "Lora",
-        "Montserrat",
-        "Bree Serif",
-        "DM Sans",
-        "Libre Baskerville",
-        "Playfair Display"
+        "#16A34A",
+        "#84CC16",
+        "#DCFCE7",
+        "#14532D"
     ],
 
     "Real Estate": [
-        "Playfair Display",
-        "Libre Baskerville",
-        "Cormorant Garamond",
-        "Montserrat",
-        "Lora",
-        "Josefin Sans",
-        "DM Sans",
-        "Poppins"
+        "#D97706",
+        "#F59E0B",
+        "#FEF3C7",
+        "#292524"
     ],
 
     Travel: [
-        "Poppins",
-        "Josefin Sans",
-        "Lora",
-        "Montserrat",
-        "Playfair Display",
-        "DM Sans",
-        "Cormorant Garamond",
-        "Bree Serif"
+        "#14B8A6",
+        "#06B6D4",
+        "#CCFBF1",
+        "#0F172A"
     ],
 
     Education: [
-        "Poppins",
-        "Montserrat",
-        "Josefin Sans",
-        "Bree Serif",
-        "DM Sans",
-        "Libre Baskerville",
-        "Lora",
-        "Playfair Display"
+        "#2563EB",
+        "#60A5FA",
+        "#DBEAFE",
+        "#172554"
+    ],
+
+    Other: [
+        "#00D9FF",
+        "#7C3AED",
+        "#EC4899",
+        "#0F172A"
     ]
 };
 
-/*
-|--------------------------------------------------------------------------
-| STYLE ACCENT VARIATIONS
-|--------------------------------------------------------------------------
-|
-| The original category palette is retained, but each of the eight
-| layouts gets a slightly different visual treatment.
-|--------------------------------------------------------------------------
-*/
 
-const STYLE_ACCENT_VARIATIONS = [
-    { hue: -8, saturation: 1.00, lightness: 1.00 },
-    { hue: 12, saturation: 0.92, lightness: 1.04 },
-    { hue: -18, saturation: 1.08, lightness: 0.96 },
-    { hue: 22, saturation: 0.88, lightness: 1.08 },
-    { hue: -28, saturation: 1.12, lightness: 0.92 },
-    { hue: 30, saturation: 0.96, lightness: 1.06 },
-    { hue: 8, saturation: 1.12, lightness: 0.98 },
-    { hue: -38, saturation: 0.90, lightness: 1.10 }
-];
+/* ============================================================
+   PHOTO LIBRARY
+   ============================================================ */
 
-/*
-|--------------------------------------------------------------------------
-| COLOR HELPERS
-|--------------------------------------------------------------------------
-*/
+const PHOTOS = {
 
-const clamp = (
-    value,
-    min,
-    max
-) =>
-    Math.min(
-        max,
-        Math.max(
-            min,
-            value
-        )
-    );
+    Restaurant: [
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
+        "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+        "https://images.unsplash.com/photo-1555396273-367ea4eb4db5",
+        "https://images.unsplash.com/photo-1547592180-85f173990554",
+        "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38",
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9",
+        "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f",
+        "https://images.unsplash.com/photo-1521305916504-4a1121188589",
+        "https://images.unsplash.com/photo-1513104890138-7c749659a591",
+        "https://images.unsplash.com/photo-1559339352-11d035aa65de",
+        "https://images.unsplash.com/photo-1498654896293-37aacf113fd9",
+        "https://images.unsplash.com/photo-1482049016688-2d3e1b311543"
+    ],
 
-const hexToHsl = hex => {
+    Cafe: [
+        "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb",
+        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085",
+        "https://images.unsplash.com/photo-1445116572660-236099ec97a0",
+        "https://images.unsplash.com/photo-1442512595331-e89e73853f31",
+        "https://images.unsplash.com/photo-1511081692775-05d0f180a065",
+        "https://images.unsplash.com/photo-1554118811-1e0d58224f24",
+        "https://images.unsplash.com/photo-1521017432531-fbd92d768814",
+        "https://images.unsplash.com/photo-1509042239860-f550ce710b93",
+        "https://images.unsplash.com/photo-1498804103079-a6351b050096",
+        "https://images.unsplash.com/photo-1512568400610-62da28bc8a13",
+        "https://images.unsplash.com/photo-1461988320302-91bde864fc4e",
+        "https://images.unsplash.com/photo-1495867033461-6f5b7d7e7a3a"
+    ],
 
-    const clean =
-        hex.replace(
-            "#",
-            ""
-        );
+    Fashion: [
+        "https://images.unsplash.com/photo-1445205170230-053b83016050",
+        "https://images.unsplash.com/photo-1483985988355-763728e1935b",
+        "https://images.unsplash.com/photo-1490481651871-ab68de25d43d",
+        "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
+        "https://images.unsplash.com/photo-1441986300917-64674bd600d8",
+        "https://images.unsplash.com/photo-1485968579580-b6d095142e6e",
+        "https://images.unsplash.com/photo-1496747611176-843222e1e57c",
+        "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3",
+        "https://images.unsplash.com/photo-1485230895905-ec40ba36b2bc",
+        "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3",
+        "https://images.unsplash.com/photo-1506629905607-31b5d4b8c1c8",
+        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f"
+    ],
 
-    const bigint =
-        parseInt(
-            clean,
-            16
-        );
+    Photography: [
+        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32",
+        "https://images.unsplash.com/photo-1502982720700-bfff97f2ecac",
+        "https://images.unsplash.com/photo-1516724562728-afc824a36e84",
+        "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4",
+        "https://images.unsplash.com/photo-1452587925148-ce544e77e70d",
+        "https://images.unsplash.com/photo-1452780212940-6f5c0d14d848",
+        "https://images.unsplash.com/photo-1517841905240-472988babdf9",
+        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3",
+        "https://images.unsplash.com/photo-1495121605193-b116b5b9c5fe",
+        "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+        "https://images.unsplash.com/photo-1500534623283-312aade485b7",
+        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+    ],
 
-    let r =
-        ((bigint >> 16) & 255) / 255;
+    Resort: [
+        "https://images.unsplash.com/photo-1564501049412-61c2a3083791",
+        "https://images.unsplash.com/photo-1540541338287-41700207dee6",
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+        "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2",
+        "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+        "https://images.unsplash.com/photo-1493552152660-f915ab47ae9d",
+        "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4",
+        "https://images.unsplash.com/photo-1500375592092-40eb2168fd21",
+        "https://images.unsplash.com/photo-1470770841072-f978cf4d019e",
+        "https://images.unsplash.com/photo-1498503182468-3b51cbb6e2c2",
+        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+        "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1"
+    ],
 
-    let g =
-        ((bigint >> 8) & 255) / 255;
+    Fitness: [
+        "https://images.unsplash.com/photo-1534438327276-14e5300c3a48",
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b",
+        "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e",
+        "https://images.unsplash.com/photo-1538805060514-97d9cc17730c",
+        "https://images.unsplash.com/photo-1517836357463-d25dfeac3438",
+        "https://images.unsplash.com/photo-1546483875-ad9014c88eba",
+        "https://images.unsplash.com/photo-1574680096145-d05b474e2155",
+        "https://images.unsplash.com/photo-1558611848-73f7eb4001a1",
+        "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61",
+        "https://images.unsplash.com/photo-1599058917212-d750089bc07e",
+        "https://images.unsplash.com/photo-1517964603305-11c0f6f66012",
+        "https://images.unsplash.com/photo-1517838277536-f5f99be5019f"
+    ],
 
-    let b =
-        (bigint & 255) / 255;
+    Beauty: [
+        "https://images.unsplash.com/photo-1560066984-138dadb4c035",
+        "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f",
+        "https://images.unsplash.com/photo-1562322140-8baeececf3df",
+        "https://images.unsplash.com/photo-1600948836101-f9ffda59d250",
+        "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f",
+        "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e",
+        "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937",
+        "https://images.unsplash.com/photo-1519415387722-a1c3bb7c9cfb",
+        "https://images.unsplash.com/photo-1487412912498-0447578fcca8",
+        "https://images.unsplash.com/photo-1526045478516-99145907023c",
+        "https://images.unsplash.com/photo-1595476108010-2d1a3f5d4a8f",
+        "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908"
+    ],
 
-    const max =
-        Math.max(r, g, b);
+    Auto: [
+        "https://images.unsplash.com/photo-1487754180451-c456f719a1fc",
+        "https://images.unsplash.com/photo-1503376780353-7e6692767b70",
+        "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7",
+        "https://images.unsplash.com/photo-1486006920555-c77dcf18193c",
+        "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d",
+        "https://images.unsplash.com/photo-1504222490345-c075b6008014",
+        "https://images.unsplash.com/photo-1493238792000-8113da705763",
+        "https://images.unsplash.com/photo-1551830820-330a71b99659",
+        "https://images.unsplash.com/photo-1511919884226-fd3cad34687c",
+        "https://images.unsplash.com/photo-1504215680853-026ed2a45def",
+        "https://images.unsplash.com/photo-1517142089942-ba376ce32a0e",
+        "https://images.unsplash.com/photo-1494905998402-395d579af36f"
+    ],
 
-    const min =
-        Math.min(r, g, b);
+    Grocery: [
+        "https://images.unsplash.com/photo-1542838132-92c53300491e",
+        "https://images.unsplash.com/photo-1579113800032-c38bd7635818",
+        "https://images.unsplash.com/photo-1519996529931-28324d5a630e",
+        "https://images.unsplash.com/photo-1488459716781-31db52582fe9",
+        "https://images.unsplash.com/photo-1610832958506-aa5636811d9b",
+        "https://images.unsplash.com/photo-1506617420156-8e4536971650",
+        "https://images.unsplash.com/photo-1553530666-ba11a7da3888",
+        "https://images.unsplash.com/photo-1601598851547-4302969d6f4b",
+        "https://images.unsplash.com/photo-1518977676601-b53f82aba655",
+        "https://images.unsplash.com/photo-1498837167922-ddd27525d352",
+        "https://images.unsplash.com/photo-1543168256-9a9c8a0c9a57",
+        "https://images.unsplash.com/photo-1580915411954-282cb1e6f2a2"
+    ],
 
-    let h = 0;
-    let s = 0;
+    "Real Estate": [
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c",
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3",
+        "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d",
+        "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde",
+        "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea",
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d",
+        "https://images.unsplash.com/photo-1600607688969-a5bfcd646154",
+        "https://images.unsplash.com/photo-1605146769289-440113cc3d00",
+        "https://images.unsplash.com/photo-1600566753191-17f0baa2a6c3",
+        "https://images.unsplash.com/photo-1600566753051-7e6f4c5b8c9f",
+        "https://images.unsplash.com/photo-1600566753376-12c8f3a2b9d8"
+    ],
 
-    const l =
-        (max + min) / 2;
+    Travel: [
+        "https://images.unsplash.com/photo-1500534623283-312aade485b7",
+        "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+        "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1",
+        "https://images.unsplash.com/photo-1469474968028-56623f02e42e",
+        "https://images.unsplash.com/photo-1521292270410-a8c4d716d518",
+        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+        "https://images.unsplash.com/photo-1488085061387-422e29b40080",
+        "https://images.unsplash.com/photo-1499856871958-5b9627545d1a",
+        "https://images.unsplash.com/photo-1527631746610-bca00a040d60",
+        "https://images.unsplash.com/photo-1503220317375-aaad61436b1b",
+        "https://images.unsplash.com/photo-1488646953014-85cb44e25828",
+        "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05"
+    ],
 
-    if (max !== min) {
-
-        const d =
-            max - min;
-
-        s =
-            l > 0.5
-                ? d / (2 - max - min)
-                : d / (max + min);
-
-        switch (max) {
-
-            case r:
-                h =
-                    (g - b) /
-                    d +
-                    (g < b ? 6 : 0);
-                break;
-
-            case g:
-                h =
-                    (b - r) /
-                    d +
-                    2;
-                break;
-
-            default:
-                h =
-                    (r - g) /
-                    d +
-                    4;
-                break;
-        }
-
-        h /= 6;
-    }
-
-    return [
-        h * 360,
-        s * 100,
-        l * 100
-    ];
+    Education: [
+        "https://images.unsplash.com/photo-1523240795612-9a054b0db644",
+        "https://images.unsplash.com/photo-1509062522246-3755977927d7",
+        "https://images.unsplash.com/photo-1524178232363-1fb2b075b655",
+        "https://images.unsplash.com/photo-1503676260728-1c00da094a0b",
+        "https://images.unsplash.com/photo-1523050854058-8df90110c9f1",
+        "https://images.unsplash.com/photo-1541339907198-e08756dedf3f",
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+        "https://images.unsplash.com/photo-1531482615713-2afd69097998",
+        "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b",
+        "https://images.unsplash.com/photo-1498243691581-b34c7d4b8a8b",
+        "https://images.unsplash.com/photo-1524178232363-1fb2b075b655",
+        "https://images.unsplash.com/photo-1521737604893-d14cc237f11d"
+    ]
 };
 
-const hslToHex = (
-    h,
-    s,
-    l
-) => {
 
-    h =
-        ((h % 360) + 360) % 360;
-
-    s =
-        clamp(
-            s,
-            0,
-            100
-        ) / 100;
-
-    l =
-        clamp(
-            l,
-            0,
-            100
-        ) / 100;
-
-    const c =
-        (1 -
-            Math.abs(
-                2 * l - 1
-            )) *
-        s;
-
-    const x =
-        c *
-        (1 -
-            Math.abs(
-                ((h / 60) % 2) -
-                1
-            ));
-
-    const m =
-        l - c / 2;
-
-    let r = 0;
-    let g = 0;
-    let b = 0;
-
-    if (h < 60) {
-        r = c;
-        g = x;
-    } else if (h < 120) {
-        r = x;
-        g = c;
-    } else if (h < 180) {
-        g = c;
-        b = x;
-    } else if (h < 240) {
-        g = x;
-        b = c;
-    } else if (h < 300) {
-        r = x;
-        b = c;
-    } else {
-        r = c;
-        b = x;
-    }
-
-    return (
-        "#" +
-        [r, g, b]
-            .map(
-                value =>
-                    Math.round(
-                        (value + m) *
-                        255
-                    )
-                        .toString(16)
-                        .padStart(2, "0")
-            )
-            .join("")
-    );
-};
-
-const shiftColor = (
-    color,
-    variation
-) => {
-
-    const [
-        h,
-        s,
-        l
-    ] =
-        hexToHsl(
-            color
-        );
-
-    return hslToHex(
-        h + variation.hue,
-        s * variation.saturation,
-        l * variation.lightness
-    );
-};
-
-const getTemplatePalette = (
-    business,
-    variant
-) => {
-
-    const base =
-        PALETTES[business];
-
-    const variation =
-        STYLE_ACCENT_VARIATIONS[
-        variant % STYLE_ACCENT_VARIATIONS.length
-        ];
-
-    return [
-        shiftColor(
-            base[0],
-            variation
-        ),
-        shiftColor(
-            base[1],
-            {
-                ...variation,
-                hue:
-                    variation.hue +
-                    18
-            }
-        )
-    ];
-};
-
-/*
-|--------------------------------------------------------------------------
-| SVG HELPERS
-|--------------------------------------------------------------------------
-*/
+/* ============================================================
+   SVG HELPERS
+   ============================================================ */
 
 const svgData = svg =>
     `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 
-/*
-|--------------------------------------------------------------------------
-| SOCIAL ICONS
-|--------------------------------------------------------------------------
-*/
+
+/* ============================================================
+   SOCIAL ICONS
+   ============================================================ */
 
 export const SOCIAL_ICONS = {
 
     facebook: svgData(`
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-            <rect width="100" height="100" rx="18" fill="#1877F2"/>
+            <defs>
+                <linearGradient id="fb" x1="0" y1="0" x2="1" y2="1">
+                    <stop stop-color="#4F8CFF"/>
+                    <stop offset="1" stop-color="#1877F2"/>
+                </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#fb)"/>
+            <rect x="5" y="5" width="90" height="90" rx="20"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="5"/>
             <path fill="white"
-                d="M58 85V55h10l2-12H58v-7c0-4 2-6 7-6h6V19c-3-1-7-1-11-1-11 0-18 7-18 18v7H30v12h12v30z"/>
+                  d="M57 86V56h10l2-12H57v-7c0-4 2-6 7-6h6V19c-3-1-7-1-11-1-11 0-18 7-18 18v8H30v12h11v30z"/>
         </svg>
     `),
 
@@ -1507,382 +592,996 @@ export const SOCIAL_ICONS = {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
             <defs>
                 <linearGradient id="ig" x1="0" y1="1" x2="1" y2="0">
-                    <stop offset="0" stop-color="#feda75"/>
-                    <stop offset=".5" stop-color="#d62976"/>
-                    <stop offset="1" stop-color="#4f5bd5"/>
+                    <stop stop-color="#FFD600"/>
+                    <stop offset=".35" stop-color="#FF7A00"/>
+                    <stop offset=".65" stop-color="#E1306C"/>
+                    <stop offset="1" stop-color="#833AB4"/>
                 </linearGradient>
             </defs>
-            <rect width="100" height="100" rx="22" fill="url(#ig)"/>
-            <rect x="24" y="24" width="52" height="52" rx="14"
-                fill="none" stroke="white" stroke-width="7"/>
+            <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#ig)"/>
+            <rect x="5" y="5" width="90" height="90" rx="20"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="5"/>
+            <rect x="25" y="25" width="50" height="50"
+                  rx="15"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="7"/>
             <circle cx="50" cy="50" r="12"
-                fill="none" stroke="white" stroke-width="7"/>
-            <circle cx="68" cy="32" r="4" fill="white"/>
+                    fill="none"
+                    stroke="white"
+                    stroke-width="7"/>
+            <circle cx="69" cy="31" r="4.5" fill="white"/>
         </svg>
     `),
 
     whatsapp: svgData(`
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-            <rect width="100" height="100" rx="18" fill="#25D366"/>
+            <defs>
+                <linearGradient id="wa" x1="0" y1="0" x2="1" y2="1">
+                    <stop stop-color="#5CF38B"/>
+                    <stop offset="1" stop-color="#16A34A"/>
+                </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#wa)"/>
+            <rect x="5" y="5" width="90" height="90" rx="20"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="5"/>
             <path fill="white"
-                d="M29 73l4-14a27 27 0 1 1 10 9zm20-18c7 4 10 5 13 2l3-4-7-4-3 3c-2 1-5-1-8-3s-5-5-4-7l2-3-4-6-4 2c-4 2-5 8-1 14 3 5 8 9 13 11z"/>
+                  d="M30 74l4-14a27 27 0 1 1 10 10zm19-18c8 4 11 5 14 1l3-4-7-4-4 3c-2 1-5-1-8-3s-5-5-4-7l2-3-4-6-4 2c-4 2-5 8-1 14 3 5 8 10 13 12z"/>
         </svg>
     `),
 
     youtube: svgData(`
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-            <rect width="100" height="100" rx="18" fill="#FF0000"/>
-            <path fill="white" d="M39 32l31 18-31 18z"/>
+            <defs>
+                <linearGradient id="yt" x1="0" y1="0" x2="1" y2="1">
+                    <stop stop-color="#FF4B4B"/>
+                    <stop offset="1" stop-color="#CC0000"/>
+                </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#yt)"/>
+            <rect x="5" y="5" width="90" height="90" rx="20"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="5"/>
+            <path fill="white" d="M40 33l31 17-31 17z"/>
         </svg>
     `),
 
     linkedin: svgData(`
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-            <rect width="100" height="100" rx="15" fill="#0A66C2"/>
+            <defs>
+                <linearGradient id="li" x1="0" y1="0" x2="1" y2="1">
+                    <stop stop-color="#38A9FF"/>
+                    <stop offset="1" stop-color="#0A66C2"/>
+                </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="96" height="96" rx="22" fill="url(#li)"/>
+            <rect x="5" y="5" width="90" height="90" rx="20"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="5"/>
             <path fill="white"
-                d="M24 39h13v38H24zm6-20a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm15 20h12v5h.2c2-4 7-7 13-7 14 0 17 9 17 21v19H75V60c0-7 0-15-9-15s-10 7-10 15v17H45z"/>
+                  d="M24 39h14v37H24zm7-20a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm15 20h13v5h.2c2-4 7-7 13-7 14 0 17 9 17 21v18H76V60c0-7 0-15-9-15s-10 7-10 15v16H46z"/>
         </svg>
     `),
 
     tiktok: svgData(`
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-            <rect width="100" height="100" rx="18" fill="#111111"/>
+            <rect x="2" y="2" width="96" height="96" rx="22" fill="#111111"/>
+            <rect x="5" y="5" width="90" height="90" rx="20"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="5"/>
             <path fill="#25F4EE"
-                d="M58 24c2 11 8 17 18 19v11c-7 0-13-2-18-6v20c0 11-8 18-19 18-11 0-19-7-19-18 0-11 8-19 20-19v11c-5 0-9 3-9 8 0 4 3 7 8 7 5 0 8-3 8-9V24z"/>
+                  d="M57 21v38a18 18 0 1 1-15-17v10a8 8 0 1 0 5 7V21z"/>
             <path fill="#FE2C55"
-                d="M61 24c3 9 8 14 17 16v7c-7-1-13-4-17-8z"/>
+                  d="M62 18c3 8 8 12 16 13v11c-6 0-12-2-16-6v26a18 18 0 1 1-15-17v10a8 8 0 1 0 5 7V18z"/>
             <path fill="white"
-                d="M55 24v45c0 7-4 12-11 12-4 0-8-3-8-7 0-5 4-8 9-8v-11c-12 0-20 8-20 19 0 11 8 18 19 18 11 0 19-7 19-18V45c5 5 11 7 18 7V43c-10-2-16-8-18-19z"/>
+                  d="M58 22v37a18 18 0 1 1-15-17v10a8 8 0 1 0 5 7V22z"/>
         </svg>
     `)
 };
 
-/*
-|--------------------------------------------------------------------------
-| CONTACT ICONS
-|--------------------------------------------------------------------------
-|
-| These are separate SVG images instead of emoji characters so the
-| icons remain sharp, consistent and visually aligned in Konva.
-|--------------------------------------------------------------------------
-*/
 
-const CONTACT_ICONS = {
+/* ============================================================
+   PROMOTION BADGE LIBRARY
+   ============================================================ */
 
-    phone: svgData(`
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="47" fill="COLOR"/>
-            <path
-                fill="white"
-                d="M31 20c-4 1-8 5-9 10-2 15 7 31 17 40 10 10 26 19 40 17 5-1 9-5 10-9l2-10c0-2-1-4-3-5l-13-6c-2-1-5 0-6 2l-4 6c-7-3-16-12-19-19l6-4c2-1 3-4 2-6l-6-13c-1-2-3-3-5-3z"
-            />
-        </svg>
-    `),
+const promotionSVG = (
+    type,
+    colorA,
+    colorB
+) => {
 
-    email: svgData(`
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="47" fill="COLOR"/>
-            <rect x="18" y="29" width="64" height="44" rx="6"
-                fill="none" stroke="white" stroke-width="7"/>
-            <path
-                d="M20 34l30 25 30-25"
-                fill="none"
-                stroke="white"
-                stroke-width="7"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            />
-        </svg>
-    `),
+    let body = "";
 
-    location: svgData(`
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="47" fill="COLOR"/>
-            <path
-                fill="white"
-                d="M50 16c-17 0-30 13-30 30 0 22 30 39 30 39s30-17 30-39c0-17-13-30-30-30zm0 43a13 13 0 1 1 0-26 13 13 0 0 1 0 26z"
-            />
-        </svg>
-    `),
+    if (type === "circle") {
 
-    website: svgData(`
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="47" fill="COLOR"/>
+        body = `
             <circle
-                cx="50"
-                cy="50"
-                r="29"
+                cx="150"
+                cy="150"
+                r="118"
+                fill="url(#g)"
+                stroke="white"
+                stroke-width="6"
+            />
+            <circle
+                cx="150"
+                cy="150"
+                r="92"
                 fill="none"
+                stroke="rgba(255,255,255,.65)"
+                stroke-width="3"
+                stroke-dasharray="8 8"
+            />
+        `;
+
+    }
+
+    if (type === "burst") {
+
+        body = `
+            <path
+                d="
+                M150 8
+                L174 37
+                L208 21
+                L214 57
+                L251 53
+                L244 89
+                L278 104
+                L253 131
+                L281 154
+                L249 175
+                L264 208
+                L228 215
+                L229 251
+                L194 240
+                L176 273
+                L150 246
+                L124 273
+                L106 240
+                L71 251
+                L72 215
+                L36 208
+                L51 175
+                L19 154
+                L47 131
+                L22 104
+                L56 89
+                L49 53
+                L86 57
+                L92 21
+                L126 37
+                Z"
+                fill="url(#g)"
+                stroke="white"
+                stroke-width="6"
+            />
+        `;
+
+    }
+
+    if (type === "capsule") {
+
+        body = `
+            <rect
+                x="20"
+                y="70"
+                width="260"
+                height="160"
+                rx="80"
+                fill="url(#g)"
+                stroke="white"
+                stroke-width="6"
+            />
+            <rect
+                x="42"
+                y="92"
+                width="216"
+                height="116"
+                rx="58"
+                fill="none"
+                stroke="rgba(255,255,255,.6)"
+                stroke-width="3"
+            />
+        `;
+
+    }
+
+    if (type === "ticket") {
+
+        body = `
+            <path
+                d="
+                M30 48
+                H270
+                V102
+                C250 102 250 132 270 132
+                V252
+                H30
+                V132
+                C50 132 50 102 30 102
+                Z"
+                fill="url(#g)"
+                stroke="white"
+                stroke-width="6"
+            />
+        `;
+
+    }
+
+    if (type === "hex") {
+
+        body = `
+            <path
+                d="
+                M150 16
+                L264 82
+                L264 218
+                L150 284
+                L36 218
+                L36 82
+                Z"
+                fill="url(#g)"
                 stroke="white"
                 stroke-width="6"
             />
             <path
-                d="M21 50h58M50 21c9 9 13 19 13 29s-4 20-13 29c-9-9-13-19-13-29s4-20 13-29z"
+                d="
+                M150 39
+                L242 92
+                L242 208
+                L150 261
+                L58 208
+                L58 92
+                Z"
                 fill="none"
-                stroke="white"
-                stroke-width="5"
+                stroke="rgba(255,255,255,.55)"
+                stroke-width="3"
             />
-        </svg>
-    `)
-};
+        `;
 
-const makeContactIcon = (
-    type,
-    color
-) =>
-    svgData(
-        CONTACT_ICONS[type]
-            .replace(
-                "COLOR",
-                color
-            )
-    );
+    }
 
-/*
-|--------------------------------------------------------------------------
-| LOGO
-|--------------------------------------------------------------------------
-*/
+    if (type === "arrow") {
 
-const logoSVG = (
-    name,
-    color,
-    variant = 0
-) => {
+        body = `
+            <path
+                d="
+                M25 60
+                H210
+                L278 150
+                L210 240
+                H25
+                L85 150
+                Z"
+                fill="url(#g)"
+                stroke="white"
+                stroke-width="6"
+            />
+        `;
 
-    const shapes = [
-
-        `<circle cx="150" cy="105" r="58" fill="white"/>`,
-
-        `<rect x="88" y="43" width="124" height="124" rx="32" fill="white"/>`,
-
-        `<polygon points="150,32 218,152 82,152" fill="white"/>`,
-
-        `<circle cx="150" cy="105" r="51" fill="white"/>`,
-
-        `<path d="M150 35 L205 90 L150 160 L95 90 Z" fill="white"/>`,
-
-        `<path d="M105 58 Q150 25 195 58 L195 145 Q150 180 105 145 Z" fill="white"/>`,
-
-        `<path d="M150 35 A70 70 0 1 0 150 175 A70 70 0 1 0 150 35Z" fill="white"/>`,
-
-        `<rect x="82" y="52" width="136" height="106" rx="52" fill="white"/>`
-    ];
-
-    const innerShape =
-        shapes[
-        variant %
-        shapes.length
-        ];
+    }
 
     return svgData(`
-        <svg xmlns="http://www.w3.org/2000/svg"
-             width="300"
-             height="300"
-             viewBox="0 0 300 300">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="300"
+            height="300"
+            viewBox="0 0 300 300"
+        >
+            <defs>
+                <linearGradient
+                    id="g"
+                    x1="0"
+                    y1="0"
+                    x2="1"
+                    y2="1"
+                >
+                    <stop
+                        offset="0"
+                        stop-color="${colorA}"
+                    />
+                    <stop
+                        offset="1"
+                        stop-color="${colorB}"
+                    />
+                </linearGradient>
+            </defs>
+
+            ${body}
+        </svg>
+    `);
+};
+
+
+export const DISCOUNT_TAG_LIBRARY = [
+
+    {
+        id: "circle-cyan",
+        name: "Electric Circle",
+        shape: "circle",
+        src: promotionSVG(
+            "circle",
+            "#00D9FF",
+            "#2563EB"
+        )
+    },
+
+    {
+        id: "circle-pink",
+        name: "Pink Circle",
+        shape: "circle",
+        src: promotionSVG(
+            "circle",
+            "#FF3CAC",
+            "#7C3AED"
+        )
+    },
+
+    {
+        id: "burst-orange",
+        name: "Orange Burst",
+        shape: "burst",
+        src: promotionSVG(
+            "burst",
+            "#FB923C",
+            "#EF4444"
+        )
+    },
+
+    {
+        id: "burst-green",
+        name: "Green Burst",
+        shape: "burst",
+        src: promotionSVG(
+            "burst",
+            "#A3E635",
+            "#16A34A"
+        )
+    },
+
+    {
+        id: "capsule-violet",
+        name: "Violet Capsule",
+        shape: "capsule",
+        src: promotionSVG(
+            "capsule",
+            "#8B5CF6",
+            "#EC4899"
+        )
+    },
+
+    {
+        id: "ticket-gold",
+        name: "Gold Ticket",
+        shape: "ticket",
+        src: promotionSVG(
+            "ticket",
+            "#F59E0B",
+            "#EF4444"
+        )
+    },
+
+    {
+        id: "hex-blue",
+        name: "Blue Hex",
+        shape: "hex",
+        src: promotionSVG(
+            "hex",
+            "#06B6D4",
+            "#2563EB"
+        )
+    },
+
+    {
+        id: "arrow-pink",
+        name: "Pink Arrow",
+        shape: "arrow",
+        src: promotionSVG(
+            "arrow",
+            "#F43F5E",
+            "#EC4899"
+        )
+    }
+];
+
+
+/* ============================================================
+   LOGO
+   ============================================================ */
+
+const logoSVG = (
+    business,
+    name,
+    accent,
+    secondary
+) => {
+
+    const initials = name
+        .split(/\s+/)
+        .map(word => word[0])
+        .join("")
+        .slice(0, 3)
+        .toUpperCase();
+
+    return svgData(`
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="360"
+            height="360"
+            viewBox="0 0 300 300"
+        >
+            <defs>
+
+                <linearGradient
+                    id="logo"
+                    x1="0"
+                    y1="0"
+                    x2="1"
+                    y2="1"
+                >
+                    <stop
+                        stop-color="${accent}"
+                    />
+                    <stop
+                        offset="1"
+                        stop-color="${secondary}"
+                    />
+                </linearGradient>
+
+            </defs>
 
             <rect
-                width="300"
-                height="300"
-                rx="72"
-                fill="${color}"
-            />
-
-            ${innerShape}
-
-            <path
-                d="M78 230 Q150 150 222 230"
-                fill="none"
-                stroke="${color}"
-                stroke-width="20"
-                stroke-linecap="round"
+                x="12"
+                y="12"
+                width="276"
+                height="276"
+                rx="70"
+                fill="#071426"
+                stroke="url(#logo)"
+                stroke-width="7"
             />
 
             <circle
                 cx="150"
-                cy="105"
-                r="10"
-                fill="${color}"
+                cy="140"
+                r="82"
+                fill="rgba(255,255,255,.04)"
+                stroke="rgba(255,255,255,.18)"
+                stroke-width="3"
+            />
+
+            <circle
+                cx="150"
+                cy="140"
+                r="47"
+                fill="none"
+                stroke="${accent}"
+                stroke-width="8"
+            />
+
+            <path
+                d="M116 140h68"
+                stroke="${secondary}"
+                stroke-width="8"
+                stroke-linecap="round"
+            />
+
+            <path
+                d="M150 106v68"
+                stroke="${accent}"
+                stroke-width="8"
+                stroke-linecap="round"
             />
 
             <text
                 x="150"
-                y="278"
+                y="264"
                 text-anchor="middle"
                 fill="white"
+                font-family="Poppins,Arial,sans-serif"
                 font-size="25"
-                font-family="Arial, sans-serif"
-                font-weight="700"
-                letter-spacing="1"
+                font-weight="900"
+                letter-spacing="4"
             >
-                ${name
-            .slice(0, 8)
-            .toUpperCase()}
+                ${initials}
             </text>
         </svg>
     `);
 };
 
-/*
-|--------------------------------------------------------------------------
-| TEMPLATE HELPERS
-|--------------------------------------------------------------------------
-*/
 
-const rect = (
-    nx,
-    ny,
-    nw,
-    nh,
+/* ============================================================
+   BASIC OBJECT HELPERS
+   ============================================================ */
+
+const textItem = ({
+    id,
+    role,
+    text,
+    x,
+    y,
+    width,
+    fontScale,
     fill,
+    fontFamily = "Poppins",
+    fontStyle = "normal",
+    align = "left",
+    letterSpacing = 0,
+    underline = false,
     rotation = 0
-) => ({
-    shape: "rectangle",
-    nx,
-    ny,
-    nw,
-    nh,
+}) => ({
+
+    id,
+    role,
+
+    type:
+        [
+            "phone",
+            "email",
+            "address",
+            "website"
+        ].includes(role)
+            ? "contact"
+            : role === "offer"
+                ? "text"
+                : "business",
+
+    text,
+
+    nx: x,
+    ny: y,
+    nw: width,
+
+    fontScale,
+
     fill,
+
+    fontFamily,
+    fontStyle,
+    align,
+
+    underline,
+
+    letterSpacing,
+
     rotation
+
 });
 
-const circle = (
-    nx,
-    ny,
-    nw,
-    nh,
-    fill
-) => ({
-    shape: "circle",
-    nx,
-    ny,
-    nw,
-    nh,
-    fill,
-    rotation: 0
-});
 
 const imageItem = ({
-    type = "photo",
+    type = "image",
     src,
     x,
     y,
     width,
     height,
     rotation = 0,
-    social = null
+    social = null,
+    linkedTextId = null,
+    iconType = null
 }) => ({
+
     type,
-    social,
+
     src,
+
     nx: x,
     ny: y,
+
     nw: width,
     nh: height,
-    rotation
+
+    rotation,
+
+    social,
+
+    linkedTextId,
+    iconType,
+
+    replaceable:
+        type === "photo" ||
+        type === "logo" ||
+        type === "promotion",
+
+    draggable: true,
+    resizable: true
 });
 
-const textItem = ({
-    id,
-    role,
-    type = "business",
-    text,
+
+/* ============================================================
+   REAL BORDER
+   ============================================================ */
+
+const createRealBorder = (
+    accent,
+    secondary,
+    variant = 0
+) => {
+
+    const colors = [
+        accent,
+        secondary,
+        "#FFFFFF",
+        accent
+    ];
+
+    const styles = [
+        "solid",
+        "double",
+        "dashed",
+        "dotted"
+    ];
+
+    return {
+        id:
+            `real-border-${variant}`,
+
+        type:
+            "border",
+
+        role:
+            "border",
+
+        nx:
+            0.012,
+
+        ny:
+            0.012,
+
+        nw:
+            0.976,
+
+        nh:
+            0.976,
+
+        stroke:
+            colors[variant % colors.length],
+
+        color:
+            colors[variant % colors.length],
+
+        strokeWidth:
+            variant % 4 === 1
+                ? 3
+                : 5,
+
+        style:
+            styles[variant % styles.length],
+
+        cornerRadius:
+            12,
+
+        editable:
+            true,
+
+        draggable:
+            true,
+
+        resizable:
+            true,
+
+        locked:
+            false
+    };
+};
+
+
+/* ============================================================
+   CONTACT ICON SVG
+   ============================================================ */
+
+const contactIconSVG = (
+    type,
+    color
+) => {
+
+    let path = "";
+
+    if (type === "phone") {
+
+        path = `
+            <path
+                d="
+                M42 22
+                C31 27 26 39 31 51
+                C39 70 55 82 74 86
+                C86 89 97 81 99 70
+                L79 61
+                L68 72
+                                C60 69 48 57 45 49
+                L56 38
+                Z"
+                fill="white"
+            />
+        `;
+
+    }
+
+    if (type === "email") {
+
+        path = `
+            <rect
+                x="20"
+                y="29"
+                width="60"
+                height="42"
+                rx="7"
+                fill="none"
+                stroke="white"
+                stroke-width="8"
+            />
+            <path
+                d="M22 35l28 22 28-22"
+                fill="none"
+                stroke="white"
+                stroke-width="8"
+            />
+        `;
+
+    }
+
+    if (type === "address") {
+
+        path = `
+            <path
+                d="
+                M50 91
+                C50 91 23 62 23 43
+                A27 27 0 1 1 77 43
+                C77 62 50 91 50 91
+                Z"
+                fill="white"
+            />
+            <circle
+                cx="50"
+                cy="43"
+                r="9"
+                fill="${color}"
+            />
+        `;
+
+    }
+
+    if (type === "website") {
+
+        path = `
+            <circle
+                cx="50"
+                cy="50"
+                r="31"
+                fill="none"
+                stroke="white"
+                stroke-width="7"
+            />
+            <path
+                d="M19 50h62M50 19c12 12 12 50 0 62M50 19c-12 12-12 50 0 62"
+                fill="none"
+                stroke="white"
+                stroke-width="6"
+            />
+        `;
+
+    }
+
+    return svgData(`
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            viewBox="0 0 100 100"
+        >
+            <rect
+                width="100"
+                height="100"
+                rx="24"
+                fill="${color}"
+            />
+            ${path}
+        </svg>
+    `);
+};
+
+
+/* ============================================================
+   CONTACT SYSTEM
+   ============================================================ */
+
+const addContacts = ({
+    images,
+    texts,
+    data,
+    accent,
+    textColor,
+    fontFamily,
     x,
     y,
     width,
-    fontScale,
-    fill = "#ffffff",
-    fontFamily = "Poppins",
-    fontStyle = "normal",
-    align = "left",
-    underline = false,
-    letterSpacing = 0
-}) => ({
-    ...(id !== undefined
-        ? { id }
-        : {}),
-    role,
-    type,
-    text,
-    nx: x,
-    ny: y,
-    nw: width,
-    fontScale,
-    fill,
-    fontFamily,
-    fontStyle,
-    align,
-    underline,
-    letterSpacing
-});
+    compact = false
+}) => {
 
-/*
-|--------------------------------------------------------------------------
-| EDGE BORDER
-|--------------------------------------------------------------------------
-*/
+    const rows = [
 
-const addBorder = (
-    blocks,
-    color,
-    thickness = 0.012
-) => {
+        {
+            id: 4,
+            role: "phone",
+            value: data.phone,
+            icon: "phone"
+        },
 
-    blocks.push(
-        rect(
-            0,
-            0,
-            1,
-            thickness,
-            color
-        )
-    );
+        {
+            id: 5,
+            role: "email",
+            value: data.email,
+            icon: "email"
+        },
 
-    blocks.push(
-        rect(
-            0,
-            1 - thickness,
-            1,
-            thickness,
-            color
-        )
-    );
+        {
+            id: 6,
+            role: "address",
+            value: data.address,
+            icon: "address"
+        },
 
-    blocks.push(
-        rect(
-            0,
-            0,
-            thickness,
-            1,
-            color
-        )
-    );
+        {
+            id: 7,
+            role: "website",
+            value: data.website,
+            icon: "website"
+        }
 
-    blocks.push(
-        rect(
-            1 - thickness,
-            0,
-            thickness,
-            1,
-            color
-        )
-    );
+    ];
+
+    const gap =
+        compact
+            ? 0.045
+            : 0.039;
+
+    rows.forEach((row, index) => {
+
+        const rowY =
+            y +
+            index * gap;
+
+        const iconSize =
+            compact
+                ? 0.043
+                : 0.035;
+
+        /*
+         * REAL CONTACT ICON
+         */
+
+        images.push({
+
+            ...imageItem({
+
+                type:
+                    "contactIcon",
+
+                src:
+                    contactIconSVG(
+                        row.icon,
+                        accent
+                    ),
+
+                x,
+
+                y:
+                    rowY -
+                    iconSize * 0.12,
+
+                width:
+                    iconSize,
+
+                height:
+                    iconSize,
+
+                linkedTextId:
+                    row.id,
+
+                iconType:
+                    row.icon
+
+            }),
+
+            id:
+                `contact-icon-${row.role}-${index}`,
+
+            linkedTextRole:
+                row.role,
+
+            editable:
+                true,
+
+            draggable:
+                true,
+
+            resizable:
+                true
+        });
+
+        /*
+         * REAL CONTACT TEXT
+         */
+
+        texts.push(
+            textItem({
+
+                id:
+                    row.id,
+
+                role:
+                    row.role,
+
+                type:
+                    "contact",
+
+                text:
+                    row.value || "",
+
+                x:
+                    x +
+                    iconSize +
+                    0.012,
+
+                y:
+                    rowY,
+
+                width:
+                    Math.max(
+                        0.05,
+                        width -
+                        iconSize -
+                        0.012
+                    ),
+
+                fontScale:
+                    compact
+                        ? 0.032
+                        : 0.025,
+
+                fill:
+                    textColor,
+
+                fontFamily,
+
+                fontStyle:
+                    row.role === "website"
+                        ? "normal"
+                        : "bold",
+
+                align:
+                    "left"
+            })
+        );
+
+    });
+
 };
 
-/*
-|--------------------------------------------------------------------------
-| SOCIAL ROW
-|--------------------------------------------------------------------------
-*/
 
-const addSocialRow = (
+/* ============================================================
+   SOCIAL ROW
+   ============================================================ */
+
+const addSocialRow = ({
     images,
-    startX,
+    x,
     y,
-    size = 0.038
-) => {
+    size = 0.035,
+    gap = 0.008
+}) => {
 
-    const socials = [
+    const keys = [
         "facebook",
         "whatsapp",
         "youtube",
@@ -1891,1704 +1590,2318 @@ const addSocialRow = (
         "tiktok"
     ];
 
-    const gap = 0.012;
-
-    /*
-    | Keep the row safely away from the right edge.
-    | This is intentionally farther left than the old version.
-    */
-
-    const adjustedStartX =
-        startX - 0.050;
-
-    socials.forEach(
-        (
-            social,
-            index
-        ) => {
+    keys.forEach(
+        (key, index) => {
 
             images.push(
+
                 imageItem({
+
                     type: "social",
-                    social,
+
+                    social: key,
+
                     src:
-                        SOCIAL_ICONS[
-                        social
-                        ],
+                        SOCIAL_ICONS[key],
 
                     x:
-                        adjustedStartX +
+                        x +
                         index *
-                        (size +
-                            gap),
+                        (
+                            size +
+                            gap
+                        ),
 
                     y,
 
                     width: size,
                     height: size
+
                 })
+
             );
 
         }
     );
+
 };
 
-/*
-|--------------------------------------------------------------------------
-| OFFER / PROMOTION DECORATIONS
-|--------------------------------------------------------------------------
-*/
 
-const addOfferBadge = ({
-    blocks,
-    texts,
-    text,
-    variant,
+/* ============================================================
+   LOGO
+   ============================================================ */
+
+const addLogo = ({
+    images,
+    business,
+    data,
     palette,
     x,
     y,
-    width = 0.27,
-    height = 0.065,
-    fontFamily = "Montserrat"
+    size
 }) => {
 
-    /*
-    | 0 = pill
-    | 1 = outlined card
-    | 2 = circle
-    | 3 = double-layer badge
-    | 4 = ribbon style
-    | 5 = rounded card
-    | 6 = angled badge
-    | 7 = clean premium badge
-    */
+    images.push(
 
-    if (variant === 0) {
+        imageItem({
 
-        blocks.push(
-            rect(
-                x,
-                y,
-                width,
-                height,
-                palette[1]
-            )
-        );
+            type: "logo",
 
-        blocks.push(
-            rect(
-                x + 0.012,
-                y + 0.010,
-                width - 0.024,
-                height - 0.020,
-                palette[0]
-            )
-        );
+            src:
+                logoSVG(
+                    business,
+                    data.name,
+                    palette[0],
+                    palette[1]
+                ),
 
-        texts.push(
-            textItem({
-                role: "offer",
-                text,
-                x:
-                    x + 0.018,
-                y:
-                    y + 0.017,
-                width:
-                    width - 0.036,
-                fontScale: 0.023,
-                fill: "#ffffff",
-                fontStyle: "bold",
-                fontFamily,
-                align: "center"
-            })
-        );
-
-        return;
-    }
-
-    if (variant === 1) {
-
-        blocks.push(
-            rect(
-                x,
-                y,
-                width,
-                height,
-                "#ffffff"
-            )
-        );
-
-        blocks.push(
-            rect(
-                x + 0.009,
-                y + 0.009,
-                width - 0.018,
-                height - 0.018,
-                palette[0]
-            )
-        );
-
-        texts.push(
-            textItem({
-                role: "offer",
-                text,
-                x:
-                    x + 0.018,
-                y:
-                    y + 0.017,
-                width:
-                    width - 0.036,
-                fontScale: 0.022,
-                fill: "#ffffff",
-                fontStyle: "bold",
-                fontFamily,
-                align: "center"
-            })
-        );
-
-        return;
-    }
-
-    if (variant === 2) {
-
-        blocks.push(
-            circle(
-                x,
-                y,
-                width,
-                height,
-                palette[1]
-            )
-        );
-
-        texts.push(
-            textItem({
-                role: "offer",
-                text,
-                x:
-                    x + 0.015,
-                y:
-                    y + 0.018,
-                width:
-                    width - 0.030,
-                fontScale: 0.020,
-                fill: "#111827",
-                fontStyle: "bold",
-                fontFamily,
-                align: "center"
-            })
-        );
-
-        return;
-    }
-
-    if (variant === 3) {
-
-        blocks.push(
-            circle(
-                x,
-                y,
-                width,
-                height,
-                palette[0]
-            )
-        );
-
-        blocks.push(
-            circle(
-                x + 0.014,
-                y + 0.014,
-                width - 0.028,
-                height - 0.028,
-                palette[1]
-            )
-        );
-
-        texts.push(
-            textItem({
-                role: "offer",
-                text,
-                x:
-                    x + 0.020,
-                y:
-                    y + 0.020,
-                width:
-                    width - 0.040,
-                fontScale: 0.019,
-                fill: "#111827",
-                fontStyle: "bold",
-                fontFamily,
-                align: "center"
-            })
-        );
-
-        return;
-    }
-
-    if (variant === 4) {
-
-        blocks.push(
-            rect(
-                x,
-                y,
-                width,
-                height,
-                palette[1]
-            )
-        );
-
-        blocks.push(
-            rect(
-                x + width - 0.035,
-                y,
-                0.035,
-                height,
-                palette[0]
-            )
-        );
-
-        texts.push(
-            textItem({
-                role: "offer",
-                text,
-                x:
-                    x + 0.018,
-                y:
-                    y + 0.018,
-                width:
-                    width - 0.055,
-                fontScale: 0.021,
-                fill: "#111827",
-                fontStyle: "bold",
-                fontFamily,
-                align: "center"
-            })
-        );
-
-        return;
-    }
-
-    if (variant === 5) {
-
-        blocks.push(
-            rect(
-                x,
-                y,
-                width,
-                height,
-                palette[0]
-            )
-        );
-
-        blocks.push(
-            rect(
-                x + 0.012,
-                y + 0.012,
-                width - 0.024,
-                height - 0.024,
-                palette[1]
-            )
-        );
-
-        texts.push(
-            textItem({
-                role: "offer",
-                text,
-                x:
-                    x + 0.025,
-                y:
-                    y + 0.020,
-                width:
-                    width - 0.050,
-                fontScale: 0.020,
-                fill: "#111827",
-                fontStyle: "bold",
-                fontFamily,
-                align: "center"
-            })
-        );
-
-        return;
-    }
-
-    if (variant === 6) {
-
-        blocks.push(
-            rect(
-                x,
-                y,
-                width,
-                height,
-                palette[1],
-                -4
-            )
-        );
-
-        texts.push(
-            textItem({
-                role: "offer",
-                text,
-                x:
-                    x + 0.015,
-                y:
-                    y + 0.017,
-                width:
-                    width - 0.030,
-                fontScale: 0.021,
-                fill: "#111827",
-                fontStyle: "bold",
-                fontFamily,
-                align: "center"
-            })
-        );
-
-        return;
-    }
-
-    blocks.push(
-        rect(
             x,
             y,
-            width,
-            height,
-            "#ffffff"
-        )
+
+            width: size,
+            height: size
+
+        })
+
     );
+
+};
+
+
+/* ============================================================
+   PROMOTION
+   ============================================================ */
+
+const addPromotion = ({
+    images,
+    texts,
+    data,
+    palette,
+    variant,
+    x,
+    y,
+    size,
+    fontFamily = "Poppins"
+}) => {
+
+    const tag =
+        DISCOUNT_TAG_LIBRARY[
+        variant %
+        DISCOUNT_TAG_LIBRARY.length
+        ];
+
+
+    const offerId =
+        `offer-${variant}-${x}-${y}`;
+
+
+    images.push({
+
+        ...imageItem({
+
+            type: "promotion",
+
+            src:
+                tag.src,
+
+            x,
+            y,
+
+            width: size,
+            height: size
+
+        }),
+
+        assetType: "promotion",
+
+        role: "promotion",
+
+        promotionId:
+            tag.id,
+
+        promotionShape:
+            tag.shape,
+
+        offerTextId:
+            offerId,
+
+        doubleClickAction:
+            "discountTagLibrary",
+
+        library:
+            "DISCOUNT_TAG_LIBRARY"
+
+    });
+
 
     texts.push(
+
         textItem({
+
+            id: offerId,
+
             role: "offer",
-            text,
+
+            text:
+                data.offer,
+
             x:
-                x + 0.018,
+                x +
+                size *
+                0.13,
+
             y:
-                y + 0.018,
+                y +
+                size *
+                0.38,
+
             width:
-                width - 0.036,
-            fontScale: 0.021,
-            fill: palette[0],
-            fontStyle: "bold",
+                size *
+                0.74,
+
+            fontScale:
+                0.040,
+
+            fill:
+                "#FFFFFF",
+
             fontFamily,
-            align: "center"
+
+            fontStyle:
+                "bold",
+
+            align:
+                "center"
+
         })
+
     );
+
 };
 
-/*
-|--------------------------------------------------------------------------
-| STYLE CONTENT VARIATIONS
-|--------------------------------------------------------------------------
-*/
 
-const STYLE_COPY = {
-    Restaurant: [
-        ["Fresh Taste • Every Day", "TODAY'S SPECIAL"],
-        ["Fine Dining • Great Moments", "CHEF'S CHOICE"],
-        ["Made Fresh For You", "20% OFF"],
-        ["Taste The Difference", "NEW MENU"],
-        ["Good Food • Good Mood", "LIMITED OFFER"],
-        ["Authentic Flavours", "WEEKEND SPECIAL"],
-        ["Your Table Awaits", "BOOK NOW"],
-        ["Fresh • Local • Delicious", "ORDER TODAY"]
-    ],
+/* ============================================================
+   PHOTO ACCENT
+   ============================================================ */
 
-    Cafe: [
-        ["Freshly Brewed Moments", "BUY 1 GET 1"],
-        ["Coffee • Pastries • Smiles", "MORNING DEAL"],
-        ["Your Daily Coffee Stop", "SPECIAL LATTE"],
-        ["Slow Down • Sip • Enjoy", "COFFEE TIME"],
-        ["Good Coffee. Great Company.", "10% OFF"],
-        ["Made With Love", "NEW FLAVOUR"],
-        ["Meet Me For Coffee", "HAPPY HOUR"],
-        ["A Better Way To Start", "BREAKFAST DEAL"]
-    ],
+const addPhoto = ({
+    images,
+    src,
+    x,
+    y,
+    width,
+    height,
+    rotation = 0
+}) => {
 
-    Fashion: [
-        ["New Season • New Style", "UP TO 40% OFF"],
-        ["Wear Your Confidence", "NEW ARRIVALS"],
-        ["Style That Speaks", "SHOP NOW"],
-        ["Everyday Looks • Elevated", "LIMITED DROP"],
-        ["Your Style. Your Story.", "SALE NOW"],
-        ["Modern Looks For You", "30% OFF"],
-        ["Fresh Fits • Fresh Energy", "NEW COLLECTION"],
-        ["Dress Bold. Feel Great.", "SHOP TODAY"]
-    ],
+    // Never create an image layer without a valid source.
+    // This is especially important for the gradient-only Other category.
+    if (!src) return;
 
-    Photography: [
-        ["Moments Worth Remembering", "BOOK YOUR SESSION"],
-        ["Stories Through Images", "NOW BOOKING"],
-        ["Your Moments • Our Lens", "WEDDING SPECIAL"],
-        ["Beautifully Captured", "BOOK TODAY"],
-        ["Frames That Tell Stories", "PORTRAIT DEAL"],
-        ["Timeless Visual Memories", "LIMITED SLOTS"],
-        ["Light • Emotion • Story", "CONTACT US"],
-        ["Your Story In Focus", "SESSION AVAILABLE"]
-    ],
+    images.push(
 
-    Resort: [
-        ["Luxury • Escape • Relax", "20% OFF STAYS"],
-        ["Your Perfect Escape", "SUMMER SPECIAL"],
-        ["Relax Beside Paradise", "WEEKEND DEAL"],
-        ["Stay. Relax. Remember.", "BOOK NOW"],
-        ["A Little More Paradise", "EARLY BIRD"],
-        ["Escape The Ordinary", "15% OFF"],
-        ["Where Every Stay Matters", "SPECIAL PACKAGE"],
-        ["Your Holiday Starts Here", "RESERVE TODAY"]
-    ],
+        imageItem({
 
-    Fitness: [
-        ["GET FIT • STAY STRONG", "JOIN TODAY"],
-        ["Stronger Every Day", "FREE TRIAL"],
-        ["Train Hard • Live Better", "NEW MEMBERS"],
-        ["Your Fitness Journey", "JOIN NOW"],
-        ["Build Strength • Build Confidence", "20% OFF"],
-        ["Move Better. Feel Better.", "START TODAY"],
-        ["Power Your Potential", "FREE SESSION"],
-        ["Results Start Here", "LIMITED OFFER"]
-    ],
+            type: "photo",
 
-    Beauty: [
-        ["Pamper Yourself • Shine Bright", "BEAUTY SPECIAL"],
-        ["Feel Beautiful Every Day", "20% OFF"],
-        ["Your Beauty. Your Moment.", "BOOK TODAY"],
-        ["Glow With Confidence", "NEW CLIENT OFFER"],
-        ["Beauty Made Personal", "SPECIAL PACKAGE"],
-        ["Relax • Refresh • Renew", "15% OFF"],
-        ["Look Your Best", "APPOINTMENTS OPEN"],
-        ["A Little Luxury For You", "BOOK NOW"]
-    ],
+            src,
 
-    Auto: [
-        ["Expert Repairs • Honest Service", "FREE CHECKUP"],
-        ["Drive With Confidence", "SERVICE SPECIAL"],
-        ["Care For Every Journey", "10% OFF"],
-        ["Reliable Service • Every Time", "BOOK SERVICE"],
-        ["Keep Your Car Ready", "BRAKE CHECK"],
-        ["Professional Auto Care", "NEW CUSTOMER"],
-        ["Performance Starts Here", "FREE INSPECTION"],
-        ["Your Car Deserves The Best", "SERVICE TODAY"]
-    ],
+            x,
+            y,
 
-    Grocery: [
-        ["Fresh • Organic • Local", "FRESH EVERY DAY"],
-        ["Better Food. Better Living.", "10% OFF"],
-        ["Freshness You Can Trust", "WEEKLY DEAL"],
-        ["Good Food For Every Home", "SHOP TODAY"],
-        ["Healthy Choices Made Easy", "SPECIAL OFFER"],
-        ["Fresh From Farm To Table", "SAVE TODAY"],
-        ["Everything Fresh. Everything Close.", "NEW DEALS"],
-        ["Your Everyday Fresh Market", "SHOP NOW"]
-    ],
+            width,
+            height,
 
-    "Real Estate": [
-        ["Find A Place To Call Home", "NEW LISTINGS"],
-        ["Better Homes • Better Living", "VIEW PROPERTY"],
-        ["Your Next Address Starts Here", "BOOK A VIEWING"],
-        ["Spaces Made For Life", "JUST LISTED"],
-        ["Invest In Your Future", "NEW PROPERTY"],
-        ["Premium Homes • Prime Locations", "VIEW NOW"],
-        ["A Better Place To Belong", "CONTACT AGENT"],
-        ["Property Made Simple", "BOOK TODAY"]
-    ],
+            rotation
 
-    Travel: [
-        ["Explore • Discover • Experience", "TRAVEL DEALS"],
-        ["Your Next Adventure Awaits", "BOOK NOW"],
-        ["See More. Live More.", "EARLY BIRD"],
-        ["Go Somewhere Beautiful", "20% OFF"],
-        ["Journeys Worth Remembering", "LIMITED DEAL"],
-        ["Discover Your Next Escape", "PLAN TODAY"],
-        ["Travel Far • Dream Big", "SPECIAL PACKAGE"],
-        ["Make Your Next Trip Count", "BOOK TODAY"]
-    ],
+        })
 
-    Education: [
-        ["Learn • Grow • Succeed", "NEW INTAKE"],
-        ["Build Your Future Today", "ENROLL NOW"],
-        ["Knowledge Opens Doors", "ADMISSIONS OPEN"],
-        ["Learn Today. Lead Tomorrow.", "JOIN NOW"],
-        ["Your Future Starts Here", "NEW BATCH"],
-        ["Education For Tomorrow", "APPLY TODAY"],
-        ["Grow Your Skills • Grow Your Future", "LIMITED SEATS"],
-        ["Learn More. Become More.", "REGISTER NOW"]
-    ]
+    );
+
 };
 
-/*
-|--------------------------------------------------------------------------
-| CREATE TEMPLATE
-|--------------------------------------------------------------------------
-*/
 
-const createTemplate = (
+/* ============================================================
+   DESIGN MODELS
+   ============================================================
+
+   These are intentionally very different.
+
+   01 — Split Editorial
+   02 — Hero Right
+   03 — Hero Left
+   04 — Center Product
+   05 — Diagonal Magazine
+   06 — Bottom Hero
+   07 — Vertical Story
+   08 — Collage
+   09 — Luxury Frame
+   10 — Typographic Poster
+   11 — Dynamic Promo
+   12 — Asymmetric Card
+   ============================================================ */
+
+const DESIGN_NAMES = [
+
+    "Split Editorial",
+
+    "Hero Right",
+
+    "Hero Left",
+
+    "Center Product",
+
+    "Diagonal Magazine",
+
+    "Bottom Hero",
+
+    "Vertical Story",
+
+    "Creative Collage",
+
+    "Luxury Frame",
+
+    "Typographic Poster",
+
+    "Dynamic Promo",
+
+    "Asymmetric Card"
+
+];
+
+
+/* ============================================================
+   FONT SYSTEM
+   ============================================================ */
+
+const FONT_FAMILIES = [
+
+    "Poppins",
+
+    "Montserrat",
+
+    "Playfair Display",
+
+    "DM Sans",
+
+    "Oswald",
+
+    "Raleway",
+
+    "Bebas Neue",
+
+    "Nunito",
+
+    "Lora",
+
+    "Inter",
+
+    "Roboto",
+
+    "Libre Baskerville"
+
+];
+
+
+/* ============================================================
+   RESPONSIVE SIZE PREPARATION
+   ============================================================ */
+
+const clone = value =>
+    JSON.parse(
+        JSON.stringify(value)
+    );
+
+
+export const prepareTemplateForSize = (
+    template,
+    selectedSize
+) => {
+
+    const output =
+        clone(template);
+
+
+    const isCard =
+        selectedSize ===
+        "visitingCard" ||
+        selectedSize ===
+        "businessCard";
+
+    const isBookmark =
+        selectedSize ===
+        "bookmark";
+
+    const isStory =
+        selectedSize ===
+        "instagramStory";
+
+
+    output.selectedSize =
+        selectedSize;
+
+
+    /*
+     * Small horizontal cards need slightly
+     * stronger typography and compact contacts.
+     */
+
+    if (isCard) {
+
+        output.texts =
+            output.texts.map(
+                text => {
+
+                    if (
+                        text.role ===
+                        "businessName"
+                    ) {
+
+                        return {
+                            ...text,
+                            fontScale:
+                                Math.max(
+                                    text.fontScale,
+                                    0.115
+                                )
+                        };
+
+                    }
+
+                    if (
+                        text.type ===
+                        "contact"
+                    ) {
+
+                        return {
+                            ...text,
+                            fontScale:
+                                Math.max(
+                                    text.fontScale,
+                                    0.040
+                                )
+                        };
+
+                    }
+
+                    return text;
+
+                }
+            );
+
+    }
+
+
+    if (isBookmark) {
+
+        output.texts =
+            output.texts.map(
+                text => {
+
+                    if (
+                        text.role ===
+                        "businessName"
+                    ) {
+
+                        return {
+                            ...text,
+                            fontScale:
+                                Math.max(
+                                    text.fontScale,
+                                    0.095
+                                )
+                        };
+
+                    }
+
+                    return text;
+
+                }
+            );
+
+    }
+
+
+    if (isStory) {
+
+        output.texts =
+            output.texts.map(
+                text => {
+
+                    if (
+                        text.role ===
+                        "businessName"
+                    ) {
+
+                        return {
+                            ...text,
+                            fontScale:
+                                Math.max(
+                                    text.fontScale,
+                                    0.105
+                                )
+                        };
+
+                    }
+
+                    return text;
+
+                }
+            );
+
+    }
+
+
+    return output;
+
+};
+
+
+/* ============================================================
+   BASE TEXT BUILDER
+   ============================================================ */
+
+const addMainText = ({
+    texts,
+    data,
+    variant,
+    palette,
+    titleX,
+    titleY,
+    titleWidth,
+    align = "left",
+    fontFamily
+}) => {
+
+    const titleColors = [
+        "#FFFFFF",
+        "#FFF7ED",
+        palette[2],
+        "#FFFFFF",
+        "#111827"
+    ];
+
+    const titleColor =
+        titleColors[
+        variant %
+        titleColors.length
+        ];
+
+
+    texts.push(
+
+        textItem({
+
+            id: 1,
+
+            role: "businessName",
+
+            text:
+                data.name,
+
+            x:
+                titleX,
+
+            y:
+                titleY,
+
+            width:
+                titleWidth,
+
+            fontScale:
+                0.115,
+
+            fill:
+                titleColor,
+
+            fontFamily,
+
+            fontStyle:
+                variant % 3 === 0
+                    ? "bold"
+                    : "normal",
+
+            align,
+
+            letterSpacing:
+                variant % 4 === 0
+                    ? 1.5
+                    : 0
+
+        })
+
+    );
+
+
+    texts.push(
+
+        textItem({
+
+            id: 2,
+
+            role: "tagline",
+
+            text:
+                data.tagline,
+
+            x:
+                titleX,
+
+            y:
+                titleY +
+                0.145,
+
+            width:
+                titleWidth,
+
+            fontScale:
+                0.047,
+
+            fill:
+                variant % 2 === 0
+                    ? "#FFFFFF"
+                    : palette[2],
+
+            fontFamily,
+
+            fontStyle:
+                "bold",
+
+            align
+
+        })
+
+    );
+
+
+    texts.push(
+
+        textItem({
+
+            id: 3,
+
+            role: "description",
+
+            text:
+                data.description,
+
+            x:
+                titleX,
+
+            y:
+                titleY +
+                0.205,
+
+            width:
+                titleWidth,
+
+            fontScale:
+                0.029,
+
+            fill:
+                "rgba(255,255,255,.92)",
+
+            fontFamily:
+                "DM Sans",
+
+            fontStyle:
+                "normal",
+
+            align
+
+        })
+
+    );
+
+};
+
+
+/* ============================================================
+   TEMPLATE BUILDER
+   ============================================================ */
+
+const buildTemplate = (
     business,
-    style,
-    number
+    variant,
+    id
 ) => {
 
     const data =
         BUSINESS_DATA[business];
 
-    const variant =
-        STYLES.indexOf(style);
-
-    /*
-    | Generate a visually different palette for each layout while
-    | retaining the business category's original identity.
-    */
-
     const palette =
-        getTemplatePalette(
-            business,
-            variant
-        );
+        PALETTES[business];
 
     const photos =
-        PHOTOS[business];
-
-    const backgroundSrc =
-        photos[variant];
-
-    /*
-    | Use a different but relevant photograph for the secondary image.
-    */
-
-    const extraSrc =
-        photos[
-        (variant + 3) %
-        photos.length
-        ];
-
-    const copy =
-        STYLE_COPY[business][variant];
+        PHOTOS[business] || [];
 
     const fontFamily =
-        FONT_FAMILIES[business][
-        variant
+        FONT_FAMILIES[
+        variant %
+        FONT_FAMILIES.length
         ];
 
-    const id =
-        `${business
-            .toLowerCase()
-            .replace(/\s+/g, "-")}-${style}-${number}`;
 
-    const texts = [];
+    const accent =
+        palette[
+        variant %
+        palette.length
+        ];
+
+    const secondary =
+        palette[
+        (variant + 1) %
+        palette.length
+        ];
+
+
+    const background =
+        business === "Other"
+
+            ? {
+
+                type: "gradient",
+
+                src: "",
+
+                value:
+                    [
+                        `linear-gradient(135deg, ${palette[0]} 0%, ${palette[1]} 52%, ${palette[2]} 100%)`,
+
+                        `linear-gradient(120deg, ${palette[3]} 0%, ${palette[0]} 42%, ${palette[2]} 100%)`,
+
+                        `linear-gradient(45deg, ${palette[1]} 0%, ${palette[3]} 48%, ${palette[0]} 100%)`
+
+                    ][
+                    variant %
+                    3
+                    ]
+
+            }
+
+            : {
+
+                type: "image",
+
+                src:
+                    photos[
+                    variant %
+                    photos.length
+                    ],
+
+                value:
+                    accent,
+
+                x: 0,
+                y: 0,
+
+                width: 1,
+                height: 1,
+
+                rotation: 0
+
+            };
+
+
     const images = [];
+    const texts = [];
     const blocks = [];
 
-    /*
-    |--------------------------------------------------------------------------
-    | BACKGROUND
-    |--------------------------------------------------------------------------
-    */
 
-    const background = {
-        type: "image",
-        src: backgroundSrc,
-        value: "#111827",
-        x: 0,
-        y: 0,
-        width: 1,
-        height: 1,
-        rotation: 0
-    };
+    /* ========================================================
+       DESIGN 01 — SPLIT EDITORIAL
+       ======================================================== */
 
-    /*
-    |--------------------------------------------------------------------------
-    | BOTTOM CONTACT AREA
-    |--------------------------------------------------------------------------
-    |
-    | Strictly black or white.
-    |--------------------------------------------------------------------------
-    */
+    if (variant === 0) {
 
-    const darkBottom =
-        variant % 2 === 0;
-
-    const bottomFill =
-        darkBottom
-            ? "#111111"
-            : "#ffffff";
-
-    const bottomText =
-        darkBottom
-            ? "#ffffff"
-            : "#111111";
-
-    const bottomSecondary =
-        darkBottom
-            ? "#e5e7eb"
-            : "#374151";
-
-    blocks.push(
-        rect(
-            0,
-            0.775,
-            1,
-            0.225,
-            bottomFill
-        )
-    );
-
-    /*
-    |--------------------------------------------------------------------------
-    | CONTACT ACCENT
-    |--------------------------------------------------------------------------
-    |
-    | The contact icons use the template's accent color while the
-    | surrounding contact rectangle itself remains strictly black/white.
-    |--------------------------------------------------------------------------
-    */
-
-    const contactAccent =
-        palette[0];
-
-    /*
-    |--------------------------------------------------------------------------
-    | BORDER
-    |--------------------------------------------------------------------------
-    */
-
-    addBorder(
-        blocks,
-        palette[1],
-        0.010
-    );
-
-    /*
-    |--------------------------------------------------------------------------
-    | LAYOUT 1 - SPLIT
-    |--------------------------------------------------------------------------
-    */
-
-    if (style === "split") {
-
-        blocks.push(
-            rect(
-                0.045,
-                0.075,
-                0.48,
-                0.625,
-                "rgba(0,0,0,0.58)"
-            )
-        );
-
-        images.push(
-            imageItem({
-                type: "photo",
-                src: extraSrc,
-                x: 0.58,
-                y: 0.10,
-                width: 0.34,
-                height: 0.53
-            })
-        );
-
-        images.push(
-            imageItem({
-                type: "logo",
-                src: logoSVG(
-                    data.name,
-                    palette[0],
-                    variant
-                ),
-                x: 0.065,
-                y: 0.085,
-                width: 0.125,
-                height: 0.125
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 1,
-                role: "businessName",
-                text: data.name,
-                x: 0.075,
-                y: 0.235,
-                width: 0.44,
-                fontScale: 0.071,
-                fill: "#ffffff",
-                fontStyle: "bold",
-                fontFamily
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 2,
-                role: "tagline",
-                text: copy[0],
-                x: 0.08,
-                y: 0.365,
-                width: 0.42,
-                fontScale: 0.034,
-                fill: palette[1],
-                fontStyle: "bold",
-                fontFamily:
-                    FONT_FAMILIES[
-                    business
-                    ][
-                    (variant + 1) %
-                    8
-                    ]
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 3,
-                role: "description",
-                text: data.description,
-                x: 0.08,
-                y: 0.445,
-                width: 0.40,
-                fontScale: 0.025,
-                fill: "#ffffff",
-                fontFamily:
-                    "Poppins"
-            })
-        );
-
-        addOfferBadge({
-            blocks,
-            texts,
-            text: copy[1],
-            variant: 0,
+        addLogo({
+            images,
+            business,
+            data,
             palette,
-            x: 0.08,
-            y: 0.555,
-            width: 0.31,
-            height: 0.070,
-            fontFamily
+            x: 0.055,
+            y: 0.055,
+            size: 0.105
         });
-    }
 
-    /*
-    |--------------------------------------------------------------------------
-    | LAYOUT 2 - EDITORIAL
-    |--------------------------------------------------------------------------
-    */
 
-    if (style === "editorial") {
-
-        images.push(
-            imageItem({
-                type: "photo",
-                src: extraSrc,
-                x: 0.055,
-                y: 0.09,
-                width: 0.39,
-                height: 0.57
-            })
-        );
-
-        blocks.push(
-            rect(
-                0.48,
-                0.09,
-                0.44,
-                0.57,
-                "rgba(0,0,0,0.56)"
-            )
-        );
-
-        images.push(
-            imageItem({
-                type: "logo",
-                src: logoSVG(
-                    data.name,
-                    palette[1],
-                    variant
-                ),
-                x: 0.525,
-                y: 0.105,
-                width: 0.125,
-                height: 0.125
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 1,
-                role: "businessName",
-                text: data.name,
-                x: 0.535,
-                y: 0.265,
-                width: 0.35,
-                fontScale: 0.068,
-                fill: "#ffffff",
-                fontStyle: "bold",
-                fontFamily
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 2,
-                role: "tagline",
-                text: copy[0],
-                x: 0.54,
-                y: 0.385,
-                width: 0.33,
-                fontScale: 0.032,
-                fill: palette[1],
-                fontStyle: "bold",
-                fontFamily:
-                    FONT_FAMILIES[
-                    business
-                    ][
-                    (variant + 2) %
-                    8
-                    ]
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 3,
-                role: "description",
-                text: data.description,
-                x: 0.54,
-                y: 0.455,
-                width: 0.32,
-                fontScale: 0.024,
-                fill: "#ffffff",
-                fontFamily: "Poppins"
-            })
-        );
-
-        addOfferBadge({
-            blocks,
+        addMainText({
             texts,
-            text: copy[1],
-            variant: 1,
+            data,
+            variant,
             palette,
-            x: 0.54,
-            y: 0.555,
-            width: 0.27,
-            height: 0.065,
-            fontFamily
-        });
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | LAYOUT 3 - CENTERED
-    |--------------------------------------------------------------------------
-    */
-
-    if (style === "centered") {
-
-        images.push(
-            imageItem({
-                type: "logo",
-                src: logoSVG(
-                    data.name,
-                    palette[0],
-                    variant
-                ),
-                x: 0.425,
-                y: 0.045,
-                width: 0.15,
-                height: 0.15
-            })
-        );
-
-        blocks.push(
-            rect(
-                0.06,
-                0.21,
-                0.88,
-                0.43,
-                "rgba(0,0,0,0.52)"
-            )
-        );
-
-        images.push(
-            imageItem({
-                type: "photo",
-                src: extraSrc,
-                x: 0.70,
-                y: 0.25,
-                width: 0.21,
-                height: 0.29
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 1,
-                role: "businessName",
-                text: data.name,
-                x: 0.10,
-                y: 0.255,
-                width: 0.52,
-                fontScale: 0.070,
-                fill: "#ffffff",
-                fontStyle: "bold",
-                fontFamily,
-                align: "center"
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 2,
-                role: "tagline",
-                text: copy[0],
-                x: 0.10,
-                y: 0.365,
-                width: 0.52,
-                fontScale: 0.033,
-                fill: palette[1],
-                fontStyle: "bold",
-                fontFamily:
-                    FONT_FAMILIES[
-                    business
-                    ][
-                    (variant + 3) %
-                    8
-                    ],
-                align: "center"
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 3,
-                role: "description",
-                text: data.description,
-                x: 0.10,
-                y: 0.445,
-                width: 0.52,
-                fontScale: 0.024,
-                fill: "#ffffff",
-                fontFamily: "Poppins",
-                align: "center"
-            })
-        );
-
-        addOfferBadge({
-            blocks,
-            texts,
-            text: copy[1],
-            variant: 2,
-            palette,
-            x: 0.13,
-            y: 0.535,
-            width: 0.22,
-            height: 0.065,
-            fontFamily
-        });
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | LAYOUT 4 - PHOTO CARD
-    |--------------------------------------------------------------------------
-    */
-
-    if (style === "photoCard") {
-
-        images.push(
-            imageItem({
-                type: "photo",
-                src: extraSrc,
-                x: 0.055,
-                y: 0.09,
-                width: 0.42,
-                height: 0.58
-            })
-        );
-
-        blocks.push(
-            rect(
-                0.505,
-                0.075,
-                0.43,
-                0.61,
-                "#ffffff"
-            )
-        );
-
-        images.push(
-            imageItem({
-                type: "logo",
-                src: logoSVG(
-                    data.name,
-                    palette[0],
-                    variant
-                ),
-                x: 0.535,
-                y: 0.095,
-                width: 0.125,
-                height: 0.125
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 1,
-                role: "businessName",
-                text: data.name,
-                x: 0.55,
-                y: 0.245,
-                width: 0.32,
-                fontScale: 0.062,
-                fill: "#111827",
-                fontStyle: "bold",
-                fontFamily
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 2,
-                role: "tagline",
-                text: copy[0],
-                x: 0.55,
-                y: 0.345,
-                width: 0.32,
-                fontScale: 0.031,
-                fill: palette[0],
-                fontStyle: "bold",
-                fontFamily:
-                    FONT_FAMILIES[
-                    business
-                    ][
-                    (variant + 4) %
-                    8
-                    ]
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 3,
-                role: "description",
-                text: data.description,
-                x: 0.55,
-                y: 0.425,
-                width: 0.31,
-                fontScale: 0.023,
-                fill: "#334155",
-                fontFamily: "Poppins"
-            })
-        );
-
-        addOfferBadge({
-            blocks,
-            texts,
-            text: copy[1],
-            variant: 3,
-            palette,
-            x: 0.55,
-            y: 0.535,
-            width: 0.27,
-            height: 0.075,
-            fontFamily
-        });
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | LAYOUT 5 - PROMO
-    |--------------------------------------------------------------------------
-    */
-
-    if (style === "promo") {
-
-        blocks.push(
-            rect(
-                0.045,
-                0.075,
-                0.91,
-                0.60,
-                "rgba(0,0,0,0.56)"
-            )
-        );
-
-        images.push(
-            imageItem({
-                type: "photo",
-                src: extraSrc,
-                x: 0.57,
-                y: 0.115,
-                width: 0.33,
-                height: 0.38
-            })
-        );
-
-        images.push(
-            imageItem({
-                type: "logo",
-                src: logoSVG(
-                    data.name,
-                    palette[0],
-                    variant
-                ),
-                x: 0.06,
-                y: 0.095,
-                width: 0.125,
-                height: 0.125
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 1,
-                role: "businessName",
-                text: data.name,
-                x: 0.075,
-                y: 0.245,
-                width: 0.43,
-                fontScale: 0.069,
-                fill: "#ffffff",
-                fontStyle: "bold",
-                fontFamily
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 2,
-                role: "tagline",
-                text: copy[0],
-                x: 0.08,
-                y: 0.355,
-                width: 0.43,
-                fontScale: 0.032,
-                fill: palette[1],
-                fontStyle: "bold",
-                fontFamily:
-                    FONT_FAMILIES[
-                    business
-                    ][
-                    (variant + 5) %
-                    8
-                    ]
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 3,
-                role: "description",
-                text: data.description,
-                x: 0.08,
-                y: 0.435,
-                width: 0.42,
-                fontScale: 0.023,
-                fill: "#ffffff",
-                fontFamily: "Poppins"
-            })
-        );
-
-        addOfferBadge({
-            blocks,
-            texts,
-            text: copy[1],
-            variant: 4,
-            palette,
-            x: 0.64,
-            y: 0.525,
-            width: 0.23,
-            height: 0.105,
-            fontFamily
-        });
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | LAYOUT 6 - CLEAN FRAME
-    |--------------------------------------------------------------------------
-    */
-
-    if (style === "cleanFrame") {
-
-        blocks.push(
-            rect(
-                0.045,
-                0.075,
-                0.91,
-                0.60,
-                "rgba(255,255,255,0.18)"
-            )
-        );
-
-        images.push(
-            imageItem({
-                type: "photo",
-                src: extraSrc,
-                x: 0.30,
-                y: 0.105,
-                width: 0.40,
-                height: 0.29
-            })
-        );
-
-        images.push(
-            imageItem({
-                type: "logo",
-                src: logoSVG(
-                    data.name,
-                    palette[1],
-                    variant
-                ),
-                x: 0.06,
-                y: 0.09,
-                width: 0.12,
-                height: 0.12
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 1,
-                role: "businessName",
-                text: data.name,
-                x: 0.10,
-                y: 0.435,
-                width: 0.80,
-                fontScale: 0.068,
-                fill: "#ffffff",
-                fontStyle: "bold",
-                fontFamily,
-                align: "center"
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 2,
-                role: "tagline",
-                text: copy[0],
-                x: 0.12,
-                y: 0.535,
-                width: 0.76,
-                fontScale: 0.032,
-                fill: palette[1],
-                fontStyle: "bold",
-                fontFamily:
-                    FONT_FAMILIES[
-                    business
-                    ][
-                    (variant + 6) %
-                    8
-                    ],
-                align: "center"
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 3,
-                role: "description",
-                text: data.description,
-                x: 0.15,
-                y: 0.605,
-                width: 0.70,
-                fontScale: 0.023,
-                fill: "#ffffff",
-                fontFamily: "Poppins",
-                align: "center"
-            })
-        );
-
-        addOfferBadge({
-            blocks,
-            texts,
-            text: copy[1],
-            variant: 5,
-            palette,
-            x: 0.37,
-            y: 0.665,
-            width: 0.26,
-            height: 0.055,
-            fontFamily
-        });
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | LAYOUT 7 - CORNER
-    |--------------------------------------------------------------------------
-    */
-
-    if (style === "corner") {
-
-        blocks.push(
-            rect(
-                0.05,
-                0.075,
-                0.52,
-                0.60,
-                "rgba(0,0,0,0.58)"
-            )
-        );
-
-        images.push(
-            imageItem({
-                type: "photo",
-                src: extraSrc,
-                x: 0.62,
-                y: 0.10,
-                width: 0.28,
-                height: 0.30
-            })
-        );
-
-        images.push(
-            imageItem({
-                type: "logo",
-                src: logoSVG(
-                    data.name,
-                    palette[0],
-                    variant
-                ),
-                x: 0.06,
-                y: 0.095,
-                width: 0.12,
-                height: 0.12
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 1,
-                role: "businessName",
-                text: data.name,
-                x: 0.075,
-                y: 0.245,
-                width: 0.44,
-                fontScale: 0.069,
-                fill: "#ffffff",
-                fontStyle: "bold",
-                fontFamily
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 2,
-                role: "tagline",
-                text: copy[0],
-                x: 0.08,
-                y: 0.355,
-                width: 0.43,
-                fontScale: 0.032,
-                fill: palette[1],
-                fontStyle: "bold",
-                fontFamily:
-                    FONT_FAMILIES[
-                    business
-                    ][
-                    (variant + 7) %
-                    8
-                    ]
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 3,
-                role: "description",
-                text: data.description,
-                x: 0.08,
-                y: 0.435,
-                width: 0.43,
-                fontScale: 0.023,
-                fill: "#ffffff",
-                fontFamily: "Poppins"
-            })
-        );
-
-        addOfferBadge({
-            blocks,
-            texts,
-            text: copy[1],
-            variant: 6,
-            palette,
-            x: 0.08,
-            y: 0.555,
-            width: 0.30,
-            height: 0.065,
+            titleX: 0.055,
+            titleY: 0.205,
+            titleWidth: 0.43,
             fontFamily
         });
 
-        blocks.push(
-            circle(
-                0.74,
-                0.48,
-                0.15,
-                0.15,
-                palette[0]
-            )
-        );
 
-        texts.push(
-            textItem({
-                role: "badge",
-                text: "SPECIAL",
-                x: 0.755,
-                y: 0.535,
-                width: 0.12,
-                fontScale: 0.020,
-                fill: "#ffffff",
-                fontStyle: "bold",
-                fontFamily:
-                    "Montserrat",
-                align: "center"
-            })
-        );
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.535,
+            y: 0.105,
+            width: 0.40,
+            height: 0.43,
+            rotation: 2
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.57,
+            y: 0.545,
+            width: 0.19,
+            height: 0.18,
+            rotation: -3
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[3 % photos.length],
+            x: 0.785,
+            y: 0.575,
+            width: 0.14,
+            height: 0.14,
+            rotation: 4
+        });
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.06,
+            y: 0.575,
+            size: 0.18,
+            fontFamily
+        });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.035,
+            ny: 0.745,
+            nw: 0.93,
+            nh: 0.215,
+            fill: "rgba(5,15,30,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent,
+            textColor: "#FFFFFF",
+            fontFamily: "Poppins",
+            x: 0.055,
+            y: 0.775,
+            width: 0.61
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.705,
+            y: 0.875,
+            size: 0.035
+        });
+
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | LAYOUT 8 - GRID
-    |--------------------------------------------------------------------------
-    */
 
-    if (style === "grid") {
+    /* ========================================================
+       DESIGN 02 — HERO RIGHT
+       ======================================================== */
 
-        images.push(
-            imageItem({
-                type: "photo",
-                src: extraSrc,
-                x: 0.60,
-                y: 0.09,
-                width: 0.32,
-                height: 0.27
-            })
-        );
+    if (variant === 1) {
 
-        images.push(
-            imageItem({
-                type: "logo",
-                src: logoSVG(
-                    data.name,
-                    palette[0],
-                    variant
-                ),
-                x: 0.045,
-                y: 0.055,
-                width: 0.125,
-                height: 0.125
-            })
-        );
-
-        blocks.push(
-            rect(
-                0.055,
-                0.205,
-                0.46,
-                0.43,
-                "rgba(0,0,0,0.56)"
-            )
-        );
-
-        blocks.push(
-            rect(
-                0.55,
-                0.40,
-                0.37,
-                0.24,
-                "rgba(255,255,255,0.16)"
-            )
-        );
-
-        texts.push(
-            textItem({
-                id: 1,
-                role: "businessName",
-                text: data.name,
-                x: 0.08,
-                y: 0.255,
-                width: 0.40,
-                fontScale: 0.064,
-                fill: "#ffffff",
-                fontStyle: "bold",
-                fontFamily
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 2,
-                role: "tagline",
-                text: copy[0],
-                x: 0.08,
-                y: 0.36,
-                width: 0.40,
-                fontScale: 0.032,
-                fill: palette[1],
-                fontStyle: "bold",
-                fontFamily:
-                    FONT_FAMILIES[
-                    business
-                    ][
-                    (variant + 1) %
-                    8
-                    ]
-            })
-        );
-
-        texts.push(
-            textItem({
-                id: 3,
-                role: "description",
-                text: data.description,
-                x: 0.08,
-                y: 0.435,
-                width: 0.40,
-                fontScale: 0.023,
-                fill: "#ffffff",
-                fontFamily: "Poppins"
-            })
-        );
-
-        addOfferBadge({
-            blocks,
-            texts,
-            text: copy[1],
-            variant: 7,
+        addLogo({
+            images,
+            business,
+            data,
             palette,
-            x: 0.59,
+            x: 0.78,
+            y: 0.055,
+            size: 0.12
+        });
+
+
+        addMainText({
+            texts,
+            data,
+            variant,
+            palette,
+            titleX: 0.07,
+            titleY: 0.12,
+            titleWidth: 0.53,
+            fontFamily
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.51,
+            y: 0.29,
+            width: 0.40,
+            height: 0.40,
+            rotation: 0
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.39,
+            y: 0.48,
+            width: 0.16,
+            height: 0.16,
+            rotation: -6
+        });
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.07,
             y: 0.47,
-            width: 0.29,
-            height: 0.070,
+            size: 0.19,
             fontFamily
         });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.035,
+            ny: 0.735,
+            nw: 0.93,
+            nh: 0.225,
+            fill: "rgba(10,18,35,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent,
+            textColor: "#FFFFFF",
+            fontFamily: "Montserrat",
+            x: 0.055,
+            y: 0.765,
+            width: 0.60
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.70,
+            y: 0.87,
+            size: 0.035
+        });
+
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | CONTACT DETAILS
-    |--------------------------------------------------------------------------
-    |
-    | Four separate lines.
-    | The icons are independent image objects.
-    | Text is vertically aligned with the icon centers.
-    |--------------------------------------------------------------------------
-    */
 
-    const contactRows = [
-        {
-            id: 4,
-            role: "phone",
-            icon: "phone",
-            text: data.phone,
-            y: 0.795
-        },
-        {
-            id: 5,
-            role: "email",
-            icon: "email",
-            text: data.email,
-            y: 0.830
-        },
-        {
-            id: 6,
-            role: "address",
-            icon: "location",
-            text: data.address,
-            y: 0.865
-        },
-        {
-            id: 7,
-            role: "website",
-            icon: "website",
-            text: data.website,
-            y: 0.900
-        }
+    /* ========================================================
+       DESIGN 03 — HERO LEFT
+       ======================================================== */
+
+    if (variant === 2) {
+
+        addLogo({
+            images,
+            business,
+            data,
+            palette,
+            x: 0.055,
+            y: 0.055,
+            size: 0.11
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.055,
+            y: 0.235,
+            width: 0.43,
+            height: 0.45,
+            rotation: -2
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.44,
+            y: 0.18,
+            width: 0.14,
+            height: 0.14,
+            rotation: 6
+        });
+
+
+        addMainText({
+            texts,
+            data,
+            variant,
+            palette,
+            titleX: 0.53,
+            titleY: 0.20,
+            titleWidth: 0.40,
+            align: "right",
+            fontFamily
+        });
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.68,
+            y: 0.505,
+            size: 0.17,
+            fontFamily
+        });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.035,
+            ny: 0.735,
+            nw: 0.93,
+            nh: 0.225,
+            fill: "rgba(9,17,31,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent,
+            textColor: "#FFFFFF",
+            fontFamily: "DM Sans",
+            x: 0.055,
+            y: 0.765,
+            width: 0.60
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.70,
+            y: 0.87,
+            size: 0.035
+        });
+
+    }
+
+
+    /* ========================================================
+       DESIGN 04 — CENTER PRODUCT
+       ======================================================== */
+
+    if (variant === 3) {
+
+        addLogo({
+            images,
+            business,
+            data,
+            palette,
+            x: 0.055,
+            y: 0.055,
+            size: 0.10
+        });
+
+
+        texts.push(
+            textItem({
+                id: 1,
+                role: "businessName",
+                text: data.name,
+                x: 0.14,
+                y: 0.065,
+                width: 0.72,
+                fontScale: 0.105,
+                fill: "#FFFFFF",
+                fontFamily,
+                fontStyle: "bold",
+                align: "center"
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 2,
+                role: "tagline",
+                text: data.tagline,
+                x: 0.12,
+                y: 0.20,
+                width: 0.76,
+                fontScale: 0.043,
+                fill: palette[2],
+                fontFamily,
+                fontStyle: "bold",
+                align: "center"
+            })
+        );
+
+
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.22,
+            y: 0.28,
+            width: 0.56,
+            height: 0.40,
+            rotation: 0
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.08,
+            y: 0.40,
+            width: 0.14,
+            height: 0.14,
+            rotation: -8
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[3 % photos.length],
+            x: 0.79,
+            y: 0.42,
+            width: 0.12,
+            height: 0.12,
+            rotation: 7
+        });
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.69,
+            y: 0.69,
+            size: 0.18,
+            fontFamily
+        });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.035,
+            ny: 0.745,
+            nw: 0.93,
+            nh: 0.215,
+            fill: "rgba(10,18,34,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent,
+            textColor: "#FFFFFF",
+            fontFamily: "Poppins",
+            x: 0.055,
+            y: 0.775,
+            width: 0.60
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.70,
+            y: 0.875,
+            size: 0.035
+        });
+
+    }
+
+
+    /* ========================================================
+       DESIGN 05 — DIAGONAL MAGAZINE
+       ======================================================== */
+
+    if (variant === 4) {
+
+        addLogo({
+            images,
+            business,
+            data,
+            palette,
+            x: 0.06,
+            y: 0.055,
+            size: 0.09
+        });
+
+
+        texts.push(
+            textItem({
+                id: 1,
+                role: "businessName",
+                text: data.name,
+                x: 0.055,
+                y: 0.17,
+                width: 0.60,
+                fontScale: 0.125,
+                fill: "#FFFFFF",
+                fontFamily: "Oswald",
+                fontStyle: "bold",
+                letterSpacing: 1
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 2,
+                role: "tagline",
+                text: data.tagline,
+                x: 0.06,
+                y: 0.335,
+                width: 0.52,
+                fontScale: 0.045,
+                fill: palette[2],
+                fontFamily: "Montserrat",
+                fontStyle: "bold"
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 3,
+                role: "description",
+                text: data.description,
+                x: 0.06,
+                y: 0.41,
+                width: 0.48,
+                fontScale: 0.027,
+                fill: "#FFFFFF",
+                fontFamily: "DM Sans"
+            })
+        );
+
+
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.51,
+            y: 0.06,
+            width: 0.42,
+            height: 0.52,
+            rotation: 7
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.69,
+            y: 0.50,
+            width: 0.18,
+            height: 0.18,
+            rotation: -8
+        });
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.46,
+            y: 0.59,
+            size: 0.18,
+            fontFamily: "Montserrat"
+        });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.035,
+            ny: 0.75,
+            nw: 0.93,
+            nh: 0.21,
+            fill: "rgba(10,18,35,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent,
+            textColor: "#FFFFFF",
+            fontFamily: "DM Sans",
+            x: 0.055,
+            y: 0.775,
+            width: 0.60
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.70,
+            y: 0.875,
+            size: 0.035
+        });
+
+    }
+
+
+    /* ========================================================
+       DESIGN 06 — BOTTOM HERO
+       ======================================================== */
+
+    if (variant === 5) {
+
+        addLogo({
+            images,
+            business,
+            data,
+            palette,
+            x: 0.055,
+            y: 0.055,
+            size: 0.095
+        });
+
+
+        texts.push(
+            textItem({
+                id: 1,
+                role: "businessName",
+                text: data.name,
+                x: 0.055,
+                y: 0.16,
+                width: 0.85,
+                fontScale: 0.13,
+                fill: "#FFFFFF",
+                fontFamily: "Bebas Neue",
+                fontStyle: "bold"
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 2,
+                role: "tagline",
+                text: data.tagline,
+                x: 0.06,
+                y: 0.31,
+                width: 0.76,
+                fontScale: 0.048,
+                fill: "#FFFFFF",
+                fontFamily: "Montserrat",
+                fontStyle: "bold"
+            })
+        );
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.75,
+            y: 0.14,
+            size: 0.16,
+            fontFamily: "Montserrat"
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.08,
+            y: 0.42,
+            width: 0.84,
+            height: 0.34,
+            rotation: 0
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.07,
+            y: 0.59,
+            width: 0.14,
+            height: 0.13,
+            rotation: -6
+        });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.035,
+            ny: 0.765,
+            nw: 0.93,
+            nh: 0.195,
+            fill: "rgba(5,16,32,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent,
+            textColor: "#FFFFFF",
+            fontFamily: "Poppins",
+            x: 0.055,
+            y: 0.795,
+            width: 0.60
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.70,
+            y: 0.885,
+            size: 0.032
+        });
+
+    }
+
+
+    /* ========================================================
+       DESIGN 07 — VERTICAL STORY
+       ======================================================== */
+
+    if (variant === 6) {
+
+        addLogo({
+            images,
+            business,
+            data,
+            palette,
+            x: 0.07,
+            y: 0.055,
+            size: 0.10
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.56,
+            y: 0.06,
+            width: 0.35,
+            height: 0.57,
+            rotation: 0
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.48,
+            y: 0.51,
+            width: 0.15,
+            height: 0.15,
+            rotation: -7
+        });
+
+
+        texts.push(
+            textItem({
+                id: 1,
+                role: "businessName",
+                text: data.name,
+                x: 0.07,
+                y: 0.21,
+                width: 0.43,
+                fontScale: 0.125,
+                fill: "#FFFFFF",
+                fontFamily: "Raleway",
+                fontStyle: "bold"
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 2,
+                role: "tagline",
+                text: data.tagline,
+                x: 0.07,
+                y: 0.39,
+                width: 0.41,
+                fontScale: 0.044,
+                fill: palette[2],
+                fontFamily,
+                fontStyle: "bold"
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 3,
+                role: "description",
+                text: data.description,
+                x: 0.07,
+                y: 0.48,
+                width: 0.38,
+                fontScale: 0.027,
+                fill: "#FFFFFF",
+                fontFamily: "DM Sans"
+            })
+        );
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.30,
+            y: 0.62,
+            size: 0.16,
+            fontFamily
+        });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.035,
+            ny: 0.745,
+            nw: 0.93,
+            nh: 0.215,
+            fill: "rgba(7,18,35,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent,
+            textColor: "#FFFFFF",
+            fontFamily: "Poppins",
+            x: 0.055,
+            y: 0.775,
+            width: 0.60
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.70,
+            y: 0.875,
+            size: 0.035
+        });
+
+    }
+
+
+    /* ========================================================
+       DESIGN 08 — CREATIVE COLLAGE
+       ======================================================== */
+
+    if (variant === 7) {
+
+        addLogo({
+            images,
+            business,
+            data,
+            palette,
+            x: 0.055,
+            y: 0.055,
+            size: 0.09
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.07,
+            y: 0.18,
+            width: 0.46,
+            height: 0.33,
+            rotation: -4
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.51,
+            y: 0.13,
+            width: 0.36,
+            height: 0.25,
+            rotation: 5
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[3 % photos.length],
+            x: 0.46,
+            y: 0.43,
+            width: 0.27,
+            height: 0.20,
+            rotation: -5
+        });
+
+
+        texts.push(
+            textItem({
+                id: 1,
+                role: "businessName",
+                text: data.name,
+                x: 0.07,
+                y: 0.535,
+                width: 0.75,
+                fontScale: 0.11,
+                fill: "#FFFFFF",
+                fontFamily: "Playfair Display",
+                fontStyle: "bold"
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 2,
+                role: "tagline",
+                text: data.tagline,
+                x: 0.075,
+                y: 0.68,
+                width: 0.60,
+                fontScale: 0.043,
+                fill: palette[2],
+                fontFamily: "Montserrat",
+                fontStyle: "bold"
+            })
+        );
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.74,
+            y: 0.53,
+            size: 0.17,
+            fontFamily: "Montserrat"
+        });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.035,
+            ny: 0.75,
+            nw: 0.93,
+            nh: 0.21,
+            fill: "rgba(5,15,30,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent,
+            textColor: "#FFFFFF",
+            fontFamily: "DM Sans",
+            x: 0.055,
+            y: 0.78,
+            width: 0.60
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.70,
+            y: 0.875,
+            size: 0.035
+        });
+
+    }
+    /* ========================================================
+   DESIGN 09 — LUXURY FRAME
+   ======================================================== */
+
+    if (variant === 8) {
+
+        addLogo({
+            images,
+            business,
+            data,
+            palette,
+            x: 0.075,
+            y: 0.075,
+            size: 0.09
+        });
+
+
+        texts.push(
+            textItem({
+                id: 1,
+                role: "businessName",
+                text: data.name,
+                x: 0.15,
+                y: 0.10,
+                width: 0.70,
+                fontScale: 0.105,
+                fill: "#FFFFFF",
+                fontFamily: "Libre Baskerville",
+                fontStyle: "bold",
+                align: "center"
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 2,
+                role: "tagline",
+                text: data.tagline,
+                x: 0.18,
+                y: 0.235,
+                width: 0.64,
+                fontScale: 0.038,
+                fill: palette[2],
+                fontFamily: "Raleway",
+                fontStyle: "bold",
+                align: "center",
+                letterSpacing: 1
+            })
+        );
+
+
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.18,
+            y: 0.32,
+            width: 0.64,
+            height: 0.35,
+            rotation: 0
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.70,
+            y: 0.53,
+            width: 0.15,
+            height: 0.13,
+            rotation: 4
+        });
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.075,
+            y: 0.53,
+            size: 0.15,
+            fontFamily: "Libre Baskerville"
+        });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.04,
+            ny: 0.75,
+            nw: 0.92,
+            nh: 0.21,
+            fill: "rgba(4,12,24,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent: "#FFD166",
+            textColor: "#FFFFFF",
+            fontFamily: "Poppins",
+            x: 0.06,
+            y: 0.78,
+            width: 0.60
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.70,
+            y: 0.875,
+            size: 0.034
+        });
+
+    }
+
+
+    /* ========================================================
+       DESIGN 10 — TYPOGRAPHIC POSTER
+       ======================================================== */
+
+    if (variant === 9) {
+
+        addLogo({
+            images,
+            business,
+            data,
+            palette,
+            x: 0.055,
+            y: 0.055,
+            size: 0.09
+        });
+
+
+        texts.push(
+            textItem({
+                id: 1,
+                role: "businessName",
+                text: data.name.toUpperCase(),
+                x: 0.055,
+                y: 0.17,
+                width: 0.88,
+                fontScale: 0.14,
+                fill: "#FFFFFF",
+                fontFamily: "Bebas Neue",
+                fontStyle: "bold",
+                letterSpacing: 2
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 2,
+                role: "tagline",
+                text: data.tagline.toUpperCase(),
+                x: 0.06,
+                y: 0.33,
+                width: 0.62,
+                fontScale: 0.047,
+                fill: palette[2],
+                fontFamily: "Oswald",
+                fontStyle: "bold",
+                letterSpacing: 1
+            })
+        );
+
+
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.55,
+            y: 0.36,
+            width: 0.36,
+            height: 0.31,
+            rotation: 0
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.42,
+            y: 0.57,
+            width: 0.13,
+            height: 0.12,
+            rotation: -5
+        });
+
+
+        texts.push(
+            textItem({
+                id: 3,
+                role: "description",
+                text: data.description,
+                x: 0.06,
+                y: 0.45,
+                width: 0.40,
+                fontScale: 0.029,
+                fill: "#FFFFFF",
+                fontFamily: "DM Sans"
+            })
+        );
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.10,
+            y: 0.60,
+            size: 0.17,
+            fontFamily: "Oswald"
+        });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.035,
+            ny: 0.75,
+            nw: 0.93,
+            nh: 0.21,
+            fill: "rgba(8,17,31,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent,
+            textColor: "#FFFFFF",
+            fontFamily: "DM Sans",
+            x: 0.055,
+            y: 0.78,
+            width: 0.60
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.70,
+            y: 0.875,
+            size: 0.035
+        });
+
+    }
+
+
+    /* ========================================================
+       DESIGN 11 — DYNAMIC PROMO
+       ======================================================== */
+
+    if (variant === 10) {
+
+        addLogo({
+            images,
+            business,
+            data,
+            palette,
+            x: 0.055,
+            y: 0.055,
+            size: 0.085
+        });
+
+
+        texts.push(
+            textItem({
+                id: 1,
+                role: "businessName",
+                text: data.name,
+                x: 0.055,
+                y: 0.16,
+                width: 0.50,
+                fontScale: 0.115,
+                fill: "#FFFFFF",
+                fontFamily: "Montserrat",
+                fontStyle: "bold"
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 2,
+                role: "tagline",
+                text: data.tagline,
+                x: 0.06,
+                y: 0.31,
+                width: 0.48,
+                fontScale: 0.045,
+                fill: palette[2],
+                fontFamily: "Poppins",
+                fontStyle: "bold"
+            })
+        );
+
+
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.52,
+            y: 0.08,
+            width: 0.39,
+            height: 0.42,
+            rotation: 3
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.50,
+            y: 0.51,
+            width: 0.18,
+            height: 0.16,
+            rotation: -4
+        });
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.70,
+            y: 0.54,
+            size: 0.20,
+            fontFamily: "Montserrat"
+        });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.035,
+            ny: 0.745,
+            nw: 0.93,
+            nh: 0.215,
+            fill: "rgba(6,16,31,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent,
+            textColor: "#FFFFFF",
+            fontFamily: "Poppins",
+            x: 0.055,
+            y: 0.775,
+            width: 0.60
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.70,
+            y: 0.875,
+            size: 0.035
+        });
+
+    }
+
+
+    /* ========================================================
+       DESIGN 12 — ASYMMETRIC CARD
+       ======================================================== */
+
+    if (variant === 11) {
+
+        addLogo({
+            images,
+            business,
+            data,
+            palette,
+            x: 0.72,
+            y: 0.065,
+            size: 0.10
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[1 % photos.length],
+            x: 0.055,
+            y: 0.08,
+            width: 0.39,
+            height: 0.40,
+            rotation: -3
+        });
+
+
+        addPhoto({
+            images,
+            src:
+                photos[2 % photos.length],
+            x: 0.47,
+            y: 0.11,
+            width: 0.18,
+            height: 0.16,
+            rotation: 5
+        });
+
+
+        texts.push(
+            textItem({
+                id: 1,
+                role: "businessName",
+                text: data.name,
+                x: 0.055,
+                y: 0.525,
+                width: 0.85,
+                fontScale: 0.12,
+                fill: "#FFFFFF",
+                fontFamily: "Lora",
+                fontStyle: "bold"
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 2,
+                role: "tagline",
+                text: data.tagline,
+                x: 0.06,
+                y: 0.675,
+                width: 0.63,
+                fontScale: 0.044,
+                fill: palette[2],
+                fontFamily: "Raleway",
+                fontStyle: "bold"
+            })
+        );
+
+
+        addPromotion({
+            images,
+            texts,
+            data,
+            palette,
+            variant,
+            x: 0.75,
+            y: 0.52,
+            size: 0.16,
+            fontFamily: "Lora"
+        });
+
+
+        blocks.push({
+            shape: "rectangle",
+            nx: 0.035,
+            ny: 0.75,
+            nw: 0.93,
+            nh: 0.21,
+            fill: "rgba(6,15,30,0.50)",
+            rotation: 0
+        });
+
+
+        addContacts({
+            images,
+            texts,
+            data,
+            accent,
+            textColor: "#FFFFFF",
+            fontFamily: "Poppins",
+            x: 0.055,
+            y: 0.78,
+            width: 0.60
+        });
+
+
+        addSocialRow({
+            images,
+            x: 0.70,
+            y: 0.875,
+            size: 0.035
+        });
+
+    }
+
+
+    /* ========================================================
+       REAL BORDER
+       ======================================================== */
+
+    const borders = [
+
+        createRealBorder(
+            accent,
+            secondary,
+            variant
+        )
+
     ];
 
-    contactRows.forEach(
-        row => {
 
-            /*
-            | Icon is slightly larger and positioned so its center
-            | aligns with the contact text.
-            */
+    /* ========================================================
+       OTHER CATEGORY — GRADIENT DECORATION
+       ======================================================== */
 
-            images.push(
-                imageItem({
-                    type: "contactIcon",
-                    src: makeContactIcon(
-                        row.icon,
-                        contactAccent
-                    ),
-                    x: 0.035,
-                    y:
-                        row.y -
-                        0.009,
-                    width: 0.028,
-                    height: 0.028
-                })
-            );
+    if (business === "Other") {
 
-            texts.push(
-                textItem({
-                    id: row.id,
-                    role: row.role,
-                    type: "contact",
-                    text: row.text,
-                    x: 0.072,
-                    y:
-                        row.y -
-                        0.005,
-                    width: 0.56,
-                    fontScale: 0.0205,
-                    fill:
-                        row.role ===
-                            "website"
-                            ? bottomSecondary
-                            : bottomText,
-                    fontFamily:
-                        "Poppins",
-                    fontStyle:
-                        row.role ===
-                            "website"
-                            ? "normal"
-                            : "bold"
-                })
-            );
-        }
-    );
+        blocks.push({
 
-    /*
-    |--------------------------------------------------------------------------
-    | SOCIAL ICONS
-    |--------------------------------------------------------------------------
-    |
-    | Moved left so the row has comfortable spacing from the right edge.
-    |--------------------------------------------------------------------------
-    */
+            shape: "circle",
 
-    addSocialRow(
-        images,
-        0.705,
-        0.838,
-        0.040
-    );
+            nx:
+                variant % 2 === 0
+                    ? 0.72
+                    : 0.05,
 
-    /*
-    |--------------------------------------------------------------------------
-    | RETURN TEMPLATE
-    |--------------------------------------------------------------------------
-    */
+            ny:
+                variant % 2 === 0
+                    ? 0.08
+                    : 0.58,
 
-    return {
+            nw: 0.22,
+            nh: 0.22,
+
+            fill:
+                "rgba(255,255,255,0.16)",
+
+            rotation: 0
+
+        });
+
+
+        blocks.push({
+
+            shape: "circle",
+
+            nx:
+                variant % 3 === 0
+                    ? 0.08
+                    : 0.68,
+
+            ny:
+                variant % 3 === 0
+                    ? 0.50
+                    : 0.62,
+
+            nw: 0.12,
+            nh: 0.12,
+
+            fill:
+                "rgba(255,255,255,0.10)",
+
+            rotation: 0
+
+        });
+
+    }
+
+
+    /* ========================================================
+       NORMALIZE EDITABLE ELEMENTS
+       ======================================================== */
+
+    // Older design variants intentionally use simple block objects.
+    // Normalize them here so every generated template exposes the same
+    // editor controls without changing the individual layouts.
+    const parseBlockTransparency = (fill) => {
+        if (typeof fill !== "string") return 1;
+        const match = fill.match(/rgba\([^,]+,[^,]+,[^,]+,\s*([0-9.]+)\)/i);
+        return match ? Number(match[1]) : 1;
+    };
+
+    const normalizedBlocks = blocks.map((block, index) => ({
+        ...block,
+        id: block.id || `block-${id}-${index + 1}`,
+        type: block.type || "block",
+        role: block.role || "editableBlock",
+        editable: block.editable ?? true,
+        draggable: block.draggable ?? true,
+        resizable: block.resizable ?? true,
+        locked: block.locked ?? false,
+        color: block.color || block.fill,
+        transparency: block.transparency ?? parseBlockTransparency(block.fill)
+    }));
+
+    const normalizedBorders = borders.map((border, index) => ({
+        ...border,
+        id: border.id || `border-${id}-${index + 1}`,
+        type: "border",
+        role: border.role || "border",
+        editable: border.editable ?? true,
+        draggable: border.draggable ?? true,
+        resizable: border.resizable ?? true,
+        locked: border.locked ?? false
+    }));
+
+    /* ========================================================
+       SIZE SUPPORT
+       ======================================================== */
+
+    const template = {
+
         id,
 
         name:
-            `${data.name} — ${STYLE_NAMES[style]}`,
+            `${data.name} — ${DESIGN_NAMES[variant]}`,
 
         businessType:
             business,
 
-        style,
+        style:
+            DESIGN_NAMES[variant],
 
         variant,
 
@@ -3606,84 +3919,90 @@ const createTemplate = (
 
         images,
 
-        blocks
+        blocks: normalizedBlocks,
+
+        borders: normalizedBorders,
+
+        editing: {
+
+            bordersEditable:
+                true,
+
+            contactIconsLinked:
+                true,
+
+            discountTagsEditable:
+                true,
+
+            blocksEditable:
+                true,
+
+            socialIconsReplaceable:
+                true
+
+        }
+
     };
+
+
+    return template;
+
 };
 
-/*
-|--------------------------------------------------------------------------
-| STYLES
-|--------------------------------------------------------------------------
-*/
 
-const STYLES = [
-    "split",
-    "editorial",
-    "centered",
-    "photoCard",
-    "promo",
-    "cleanFrame",
-    "corner",
-    "grid"
-];
-
-const STYLE_NAMES = {
-    split: "Split Studio",
-    editorial: "Editorial",
-    centered: "Centered Focus",
-    photoCard: "Photo Card",
-    promo: "Promo",
-    cleanFrame: "Clean Frame",
-    corner: "Corner Highlight",
-    grid: "Modern Grid"
-};
-
-/*
-|--------------------------------------------------------------------------
-| GENERATE 96 TEMPLATES
-|--------------------------------------------------------------------------
-*/
+/* ============================================================
+   GENERATE 156 TEMPLATES
+   ============================================================ */
 
 export const templates = [];
 
 let templateNumber = 1;
+
 
 Object.keys(
     BUSINESS_DATA
 ).forEach(
     business => {
 
-        STYLES.forEach(
-            style => {
+        for (
+            let variant = 0;
+            variant < 12;
+            variant++
+        ) {
 
-                templates.push(
-                    createTemplate(
-                        business,
-                        style,
-                        templateNumber++
-                    )
-                );
+            templates.push(
 
-            }
-        );
+                buildTemplate(
+                    business,
+                    variant,
+                    `template-${templateNumber++}`
+                )
+
+            );
+
+        }
 
     }
 );
 
-/*
-|--------------------------------------------------------------------------
-| SAFETY CHECK
-|--------------------------------------------------------------------------
-*/
+
+/* ============================================================
+   SAFETY CHECK
+   ============================================================ */
 
 if (
-    templates.length !== 96
+    templates.length !== 156
 ) {
 
     console.error(
-        `AdStudio template library expected 96 templates but found ${templates.length}`
+        `AdStudio expected 156 templates but generated ${templates.length}.`
     );
 
 }
+
+
+/* ============================================================
+   DEFAULT EXPORT
+   ============================================================ */
 
 export default templates;
