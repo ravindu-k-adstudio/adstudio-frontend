@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import { PLANS } from "../services/plans";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -8,19 +9,112 @@ export default function PricingPage() {
     const navigate = useNavigate();
     const { user } = useAuth();
 
-    const handlePayment = async (plan) => {
+    const [selectedPlan, setSelectedPlan] = useState(null);
+    const [showPaymentDetails, setShowPaymentDetails] = useState(false);
+    const [processingPayment, setProcessingPayment] = useState(false);
+
+    const [customerDetails, setCustomerDetails] = useState({
+        phone: "",
+        address: "",
+        city: "",
+        country: "Sri Lanka"
+    });
+
+    useEffect(() => {
+        if (!user) return;
+
+        setCustomerDetails((current) => ({
+            ...current,
+            phone: user.phone || "",
+            address: user.address || "",
+            city: user.city || "",
+            country: "Sri Lanka"
+        }));
+    }, [user]);
+
+    const handlePayment = (plan) => {
         if (!user) {
             navigate("/login");
             return;
         }
 
+        setSelectedPlan(plan);
+
+        setCustomerDetails({
+            phone: user.phone || "",
+            address: user.address || "",
+            city: user.city || "",
+            country: "Sri Lanka"
+        });
+
+        setShowPaymentDetails(true);
+    };
+
+    const closePaymentDetails = () => {
+        if (processingPayment) return;
+
+        setShowPaymentDetails(false);
+        setSelectedPlan(null);
+    };
+
+    const handleCustomerChange = (e) => {
+        const { name, value } = e.target;
+
+        setCustomerDetails((current) => ({
+            ...current,
+            [name]: value
+        }));
+    };
+
+    const submitPayment = async (e) => {
+        e.preventDefault();
+
+        if (!selectedPlan || processingPayment) {
+            return;
+        }
+
+        const phone = customerDetails.phone.trim();
+        const address = customerDetails.address.trim();
+        const city = customerDetails.city.trim();
+
+        if (!phone) {
+            alert("Please enter your phone number.");
+            return;
+        }
+
+        if (!address) {
+            alert("Please enter your address.");
+            return;
+        }
+
+        if (!city) {
+            alert("Please enter your city.");
+            return;
+        }
+
+        if (phone.length < 7) {
+            alert("Please enter a valid phone number.");
+            return;
+        }
+
+        if (address.length < 3) {
+            alert("Please enter your full address.");
+            return;
+        }
+
+        if (city.length < 2) {
+            alert("Please enter a valid city.");
+            return;
+        }
+
         try {
+            setProcessingPayment(true);
+
             const API_URL =
                 import.meta.env.VITE_API_URL ||
                 "http://192.168.1.28:5000/api";
 
-            const token =
-                localStorage.getItem("token");
+            const token = localStorage.getItem("token");
 
             if (!token) {
                 navigate("/login");
@@ -33,81 +127,69 @@ export default function PricingPage() {
                     method: "POST",
 
                     headers: {
-                        "Content-Type":
-                            "application/json",
-
-                        Authorization:
-                            `Bearer ${token}`
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
                     },
 
                     body: JSON.stringify({
-                        plan: plan.key
+                        plan: selectedPlan.key,
+
+                        customer: {
+                            phone,
+                            address,
+                            city,
+                            country: "Sri Lanka"
+                        }
                     })
                 }
             );
 
-            const data =
-                await res.json();
+            let data = {};
+
+            try {
+                data = await res.json();
+            } catch {
+                data = {};
+            }
 
             if (!res.ok) {
-
-                if (
-                    data.code ===
-                    "CUSTOMER_DETAILS_REQUIRED"
-                ) {
-                    alert(
-                        "Please complete your phone, address and city before making a payment."
-                    );
-
-                    /*
-                     * Later this can navigate to your
-                     * profile/customer-details page.
-                     */
-
-                    return;
-                }
-
                 throw new Error(
                     data.message ||
                     "Unable to start payment."
                 );
             }
 
+            if (
+                !data.checkoutUrl ||
+                !data.payment
+            ) {
+                throw new Error(
+                    "Invalid payment response from server."
+                );
+            }
+
             /*
              * PayHere uses a normal HTML POST form.
              *
-             * Do not send the Merchant Secret from React.
-             * The backend has already generated the hash.
+             * The backend generates the hash.
+             * Merchant Secret never reaches React.
              */
-
             const form =
                 document.createElement("form");
 
             form.method = "POST";
+            form.action = data.checkoutUrl;
 
-            form.action =
-                data.checkoutUrl;
-
-            Object.entries(
-                data.payment
-            ).forEach(
+            Object.entries(data.payment).forEach(
                 ([key, value]) => {
-
                     const input =
-                        document.createElement(
-                            "input"
-                        );
+                        document.createElement("input");
 
                     input.type = "hidden";
-
                     input.name = key;
+                    input.value = value ?? "";
 
-                    input.value =
-                        value ?? "";
-
-                    form.appendChild(
-                        input
-                    );
+                    form.appendChild(input);
                 }
             );
 
@@ -116,7 +198,6 @@ export default function PricingPage() {
             form.submit();
 
         } catch (error) {
-
             console.error(
                 "PAYHERE PAYMENT ERROR:",
                 error
@@ -126,10 +207,13 @@ export default function PricingPage() {
                 error.message ||
                 "Unable to start payment."
             );
+
+            setProcessingPayment(false);
         }
     };
+
     return (
-        <div className="relative  min-h-screen overflow-hidden bg-[#08182d] text-white flex flex-col">
+        <div className="relative min-h-screen overflow-hidden bg-[#08182d] text-white flex flex-col">
 
             {/* ANIMATED BACKGROUND */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -192,7 +276,7 @@ export default function PricingPage() {
                 </div>
             </div>
 
-            {/* HEADER  //margin to wens kara 20260916 update karanna*/}
+            {/* HEADER */}
             <div className="relative z-10 text-center mt-3 mb-6 px-4">
 
                 <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
@@ -235,11 +319,18 @@ export default function PricingPage() {
                             {plan.name}
                         </h3>
 
-
                         <div className="text-center mb-4">
 
                             <p className="text-4xl font-extrabold text-cyan-400">
-                                LKR {(Number(plan.price.replace(/[^\d.]/g, "")) * 327).toLocaleString("en-LK")}
+                                LKR{" "}
+                                {(
+                                    Number(
+                                        plan.price.replace(
+                                            /[^\d.]/g,
+                                            ""
+                                        )
+                                    ) * 327
+                                ).toLocaleString("en-LK")}
                             </p>
 
                             <p className="text-lg font-semibold text-blue-100 mt-1">
@@ -319,6 +410,371 @@ export default function PricingPage() {
                 © {new Date().getFullYear()} AdStudio. All rights reserved.
 
             </div>
+
+            {/* PAYMENT DETAILS MODAL */}
+            {showPaymentDetails && selectedPlan && (
+
+                <div
+                    className="
+                        fixed
+                        inset-0
+                        z-[100]
+                        flex
+                        items-center
+                        justify-center
+                        p-4
+                        bg-black/70
+                        backdrop-blur-sm
+                    "
+                    onMouseDown={(e) => {
+                        if (
+                            e.target === e.currentTarget &&
+                            !processingPayment
+                        ) {
+                            closePaymentDetails();
+                        }
+                    }}
+                >
+
+                    <div
+                        className="
+                            w-full
+                            max-w-lg
+                            max-h-[92vh]
+                            overflow-y-auto
+                            rounded-3xl
+                            border
+                            border-white/10
+                            bg-[#0b1d35]
+                            shadow-[0_30px_100px_rgba(0,0,0,0.65)]
+                            p-6
+                            md:p-8
+                        "
+                    >
+
+                        <div className="flex items-start justify-between mb-6">
+
+                            <div>
+
+                                <p className="text-cyan-400 text-sm font-semibold uppercase tracking-wider">
+                                    Secure Checkout
+                                </p>
+
+                                <h3 className="text-2xl font-bold mt-1">
+                                    Complete Your Payment
+                                </h3>
+
+                                <p className="text-blue-200/80 text-sm mt-2">
+                                    {selectedPlan.name} Plan
+                                </p>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={closePaymentDetails}
+                                disabled={processingPayment}
+                                className="
+                                    text-white/60
+                                    hover:text-white
+                                    text-2xl
+                                    disabled:opacity-30
+                                "
+                            >
+                                ×
+                            </button>
+
+                        </div>
+
+                        <form onSubmit={submitPayment}>
+
+                            {/* NAME */}
+                            <div className="mb-4">
+
+                                <label className="block text-sm font-medium text-blue-100 mb-2">
+                                    Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    value={user?.name || ""}
+                                    readOnly
+                                    className="
+                                        w-full
+                                        rounded-xl
+                                        border
+                                        border-white/10
+                                        bg-white/5
+                                        px-4
+                                        py-3
+                                        text-white
+                                        outline-none
+                                        cursor-not-allowed
+                                        opacity-80
+                                    "
+                                />
+
+                            </div>
+
+                            {/* EMAIL */}
+                            <div className="mb-4">
+
+                                <label className="block text-sm font-medium text-blue-100 mb-2">
+                                    Email
+                                </label>
+
+                                <input
+                                    type="email"
+                                    value={user?.email || ""}
+                                    readOnly
+                                    className="
+                                        w-full
+                                        rounded-xl
+                                        border
+                                        border-white/10
+                                        bg-white/5
+                                        px-4
+                                        py-3
+                                        text-white
+                                        outline-none
+                                        cursor-not-allowed
+                                        opacity-80
+                                    "
+                                />
+
+                            </div>
+
+                            {/* PHONE */}
+                            <div className="mb-4">
+
+                                <label className="block text-sm font-medium text-blue-100 mb-2">
+                                    Phone Number
+                                    <span className="text-cyan-400 ml-1">
+                                        *
+                                    </span>
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    value={customerDetails.phone}
+                                    onChange={handleCustomerChange}
+                                    placeholder="0771234567"
+                                    autoComplete="tel"
+                                    required
+                                    className="
+                                        w-full
+                                        rounded-xl
+                                        border
+                                        border-white/10
+                                        bg-white/5
+                                        px-4
+                                        py-3
+                                        text-white
+                                        placeholder:text-white/30
+                                        outline-none
+                                        focus:border-cyan-400/70
+                                        focus:ring-2
+                                        focus:ring-cyan-400/20
+                                    "
+                                />
+
+                            </div>
+
+                            {/* ADDRESS */}
+                            <div className="mb-4">
+
+                                <label className="block text-sm font-medium text-blue-100 mb-2">
+                                    Address
+                                    <span className="text-cyan-400 ml-1">
+                                        *
+                                    </span>
+                                </label>
+
+                                <textarea
+                                    name="address"
+                                    value={customerDetails.address}
+                                    onChange={handleCustomerChange}
+                                    placeholder="No. 123, Main Street"
+                                    autoComplete="street-address"
+                                    required
+                                    rows={3}
+                                    className="
+                                        w-full
+                                        rounded-xl
+                                        border
+                                        border-white/10
+                                        bg-white/5
+                                        px-4
+                                        py-3
+                                        text-white
+                                        placeholder:text-white/30
+                                        outline-none
+                                        resize-none
+                                        focus:border-cyan-400/70
+                                        focus:ring-2
+                                        focus:ring-cyan-400/20
+                                    "
+                                />
+
+                            </div>
+
+                            {/* CITY */}
+                            <div className="mb-4">
+
+                                <label className="block text-sm font-medium text-blue-100 mb-2">
+                                    City
+                                    <span className="text-cyan-400 ml-1">
+                                        *
+                                    </span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="city"
+                                    value={customerDetails.city}
+                                    onChange={handleCustomerChange}
+                                    placeholder="Colombo"
+                                    autoComplete="address-level2"
+                                    required
+                                    className="
+                                        w-full
+                                        rounded-xl
+                                        border
+                                        border-white/10
+                                        bg-white/5
+                                        px-4
+                                        py-3
+                                        text-white
+                                        placeholder:text-white/30
+                                        outline-none
+                                        focus:border-cyan-400/70
+                                        focus:ring-2
+                                        focus:ring-cyan-400/20
+                                    "
+                                />
+
+                            </div>
+
+                            {/* COUNTRY */}
+                            <div className="mb-6">
+
+                                <label className="block text-sm font-medium text-blue-100 mb-2">
+                                    Country
+                                </label>
+
+                                <select
+                                    name="country"
+                                    value="Sri Lanka"
+                                    disabled
+                                    className="
+                                        w-full
+                                        rounded-xl
+                                        border
+                                        border-white/10
+                                        bg-white/5
+                                        px-4
+                                        py-3
+                                        text-white
+                                        outline-none
+                                        opacity-80
+                                    "
+                                >
+                                    <option
+                                        value="Sri Lanka"
+                                        className="text-black"
+                                    >
+                                        Sri Lanka
+                                    </option>
+                                </select>
+
+                            </div>
+
+                            {/* SUMMARY */}
+                            <div
+                                className="
+                                    rounded-2xl
+                                    border
+                                    border-cyan-400/20
+                                    bg-cyan-400/5
+                                    p-4
+                                    mb-5
+                                "
+                            >
+
+                                <div className="flex items-center justify-between">
+
+                                    <span className="text-blue-100">
+                                        {selectedPlan.name}
+                                    </span>
+
+                                    <span className="font-bold text-cyan-400">
+                                        {selectedPlan.price} USD
+                                    </span>
+
+                                </div>
+
+                                <p className="text-xs text-blue-200/60 mt-2">
+                                    You will be securely redirected to PayHere
+                                    to complete your payment.
+                                </p>
+
+                            </div>
+
+                            {/* BUTTONS */}
+                            <div className="flex gap-3">
+
+                                <button
+                                    type="button"
+                                    onClick={closePaymentDetails}
+                                    disabled={processingPayment}
+                                    className="
+                                        flex-1
+                                        py-3
+                                        rounded-xl
+                                        border
+                                        border-white/10
+                                        bg-white/5
+                                        hover:bg-white/10
+                                        transition
+                                        disabled:opacity-40
+                                    "
+                                >
+                                    Cancel
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    disabled={processingPayment}
+                                    className="
+                                        flex-[2]
+                                        py-3
+                                        rounded-xl
+                                        font-semibold
+                                        bg-gradient-to-r
+                                        from-cyan-400
+                                        to-blue-500
+                                        hover:scale-[1.02]
+                                        transition-all
+                                        shadow-[0_10px_30px_rgba(59,130,246,0.35)]
+                                        disabled:opacity-60
+                                        disabled:hover:scale-100
+                                    "
+                                >
+                                    {processingPayment
+                                        ? "Preparing Payment..."
+                                        : "Continue to PayHere"}
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            )}
 
         </div>
     );
