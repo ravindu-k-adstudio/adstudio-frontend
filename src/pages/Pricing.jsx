@@ -1,9 +1,33 @@
-
 import React, { useEffect, useState } from "react";
 import { PLANS } from "../services/plans";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import adCollection from "../assets/ad-collection.png";
+
+const COUNTRIES = [
+    "Sri Lanka",
+    "India",
+    "United States",
+    "United Kingdom",
+    "Australia",
+    "Canada",
+    "United Arab Emirates",
+    "Singapore",
+    "Malaysia",
+    "Maldives",
+    "New Zealand",
+    "Germany",
+    "France",
+    "Italy",
+    "Spain",
+    "Japan",
+    "South Korea",
+    "China",
+    "Pakistan",
+    "Bangladesh",
+    "Nepal",
+    "Other"
+];
 
 export default function PricingPage() {
     const navigate = useNavigate();
@@ -28,7 +52,7 @@ export default function PricingPage() {
             phone: user.phone || "",
             address: user.address || "",
             city: user.city || "",
-            country: "Sri Lanka"
+            country: current.country || "Sri Lanka"
         }));
     }, [user]);
 
@@ -40,12 +64,12 @@ export default function PricingPage() {
 
         setSelectedPlan(plan);
 
-        setCustomerDetails({
-            phone: user.phone || "",
-            address: user.address || "",
-            city: user.city || "",
-            country: "Sri Lanka"
-        });
+        setCustomerDetails((current) => ({
+            phone: user.phone || current.phone || "",
+            address: user.address || current.address || "",
+            city: user.city || current.city || "",
+            country: current.country || "Sri Lanka"
+        }));
 
         setShowPaymentDetails(true);
     };
@@ -76,6 +100,7 @@ export default function PricingPage() {
         const phone = customerDetails.phone.trim();
         const address = customerDetails.address.trim();
         const city = customerDetails.city.trim();
+        const country = customerDetails.country.trim();
 
         if (!phone) {
             alert("Please enter your phone number.");
@@ -89,6 +114,11 @@ export default function PricingPage() {
 
         if (!city) {
             alert("Please enter your city.");
+            return;
+        }
+
+        if (!country) {
+            alert("Please select your country.");
             return;
         }
 
@@ -138,7 +168,7 @@ export default function PricingPage() {
                             phone,
                             address,
                             city,
-                            country: "Sri Lanka"
+                            country
                         }
                     })
                 }
@@ -174,6 +204,7 @@ export default function PricingPage() {
              * The backend generates the hash.
              * Merchant Secret never reaches React.
              */
+
             const form =
                 document.createElement("form");
 
@@ -657,35 +688,46 @@ export default function PricingPage() {
                             </div>
 
                             {/* COUNTRY */}
-                            <div className="mb-6">
+                            <div className="mb-4">
 
                                 <label className="block text-sm font-medium text-blue-100 mb-2">
                                     Country
+                                    <span className="text-cyan-400 ml-1">
+                                        *
+                                    </span>
                                 </label>
 
                                 <select
                                     name="country"
-                                    value="Sri Lanka"
-                                    disabled
+                                    value={customerDetails.country}
+                                    onChange={handleCustomerChange}
+                                    required
                                     className="
                                         w-full
                                         rounded-xl
                                         border
                                         border-white/10
-                                        bg-white/5
+                                        bg-[#0b1d35]
                                         px-4
                                         py-3
                                         text-white
                                         outline-none
-                                        opacity-80
+                                        transition
+                                        focus:border-cyan-400
+                                        focus:ring-2
+                                        focus:ring-cyan-400/20
+                                        cursor-pointer
                                     "
                                 >
-                                    <option
-                                        value="Sri Lanka"
-                                        className="text-black"
-                                    >
-                                        Sri Lanka
-                                    </option>
+                                    {COUNTRIES.map((country) => (
+                                        <option
+                                            key={country}
+                                            value={country}
+                                            className="bg-[#0b1d35] text-white"
+                                        >
+                                            {country}
+                                        </option>
+                                    ))}
                                 </select>
 
                             </div>
@@ -779,4 +821,3 @@ export default function PricingPage() {
         </div>
     );
 }
-

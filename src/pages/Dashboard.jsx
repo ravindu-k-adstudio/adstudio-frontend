@@ -1,11 +1,9 @@
+
 import { useEffect, useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { PLANS } from "../data/plans";
-
-import logo from "../assets/adstudio-logo.png";
 import {
     PieChart,
     Pie,
@@ -20,334 +18,593 @@ import {
 } from "recharts";
 import Footer from "../components/Footer";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL =
+    import.meta.env.VITE_API_URL ||
+    "http://192.168.1.28:5000/api";
 
 export default function Dashboard() {
     const { user, token, logout } = useAuth();
     const navigate = useNavigate();
+
     const [ads, setAds] = useState([]);
     const [loadingAds, setLoadingAds] = useState(true);
 
+    // Load saved advertisements
     useEffect(() => {
-        if (!token) return;
+        if (!token) {
+            setAds([]);
+            setLoadingAds(false);
+            return;
+        }
+
+        let cancelled = false;
 
         const loadAds = async () => {
             setLoadingAds(true);
+
             try {
-                const res = await fetch(`${API_URL}/ads/my`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const res = await fetch(
+                    `${API_URL}/ads/my`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+
+                if (!res.ok) {
+                    throw new Error("Failed to load saved ads.");
+                }
 
                 const data = await res.json();
-                setAds(Array.isArray(data) ? data : []);
+
+                if (!cancelled) {
+                    setAds(Array.isArray(data) ? data : []);
+                }
             } catch (err) {
-                console.error("Failed to load ads", err);
-                setAds([]);
+                console.error("Failed to load ads:", err);
+
+                if (!cancelled) {
+                    setAds([]);
+                }
             } finally {
-                setLoadingAds(false);
+                if (!cancelled) {
+                    setLoadingAds(false);
+                }
             }
         };
 
         loadAds();
+
+        return () => {
+            cancelled = true;
+        };
     }, [token]);
 
+    // Delete a saved advertisement
     const deleteAd = async (adId) => {
-        if (!window.confirm("Are you sure you want to delete this ad?")) return;
+        if (
+            !window.confirm(
+                "Are you sure you want to delete this ad?"
+            )
+        ) {
+            return;
+        }
 
         try {
-            const res = await fetch(`${API_URL}/ads/${adId}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await fetch(
+                `${API_URL}/ads/${adId}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
 
-            if (res.ok) {
-                setAds(prev => prev.filter(ad => ad._id !== adId));
+            if (!res.ok) {
+                throw new Error("Unable to delete this ad.");
             }
+
+            setAds(previous =>
+                previous.filter(ad => ad._id !== adId)
+            );
         } catch (err) {
             console.error("Error deleting ad:", err);
+            alert("Unable to delete this ad. Please try again.");
         }
     };
 
+    // =========================================================
+    // ACCOUNT AND PLAN DETAILS
+    // =========================================================
+
+    const planKey = String(
+        user?.plan || "starter"
+    ).toLowerCase();
+
     const currentPlanObj = PLANS.find(
-        p => p.key === (user?.plan || "starter").toLowerCase()
+        plan =>
+            String(plan.key).toLowerCase() === planKey
     );
 
-    const adsLimit = currentPlanObj?.adsLimit ?? 3;
-    const downloadsUsed = user?.downloadsUsed ?? 0;
+    const planName =
+        currentPlanObj?.name ||
+        planKey.charAt(0).toUpperCase() + planKey.slice(1);
 
-    const remaining =
-        adsLimit === Infinity
-            ? "Unlimited"
-            : Math.max(adsLimit - downloadsUsed, 0);
+    const hasPaid = Boolean(user?.hasPaid);
 
-    const progressPercentage =
-        adsLimit === Infinity
-            ? 0
-            : Math.min((downloadsUsed / adsLimit) * 100, 100);
+    const isLifetime = planKey === "lifetime";
 
-    const randomNumber = (min, max) =>
-        Math.floor(Math.random() * (max - min + 1)) + min;
+    // This is the real credit balance from the backend.
+    // Do not calculate credits from adsCreated or downloadsUsed.
+    const creditBalance = Math.max(
+        0,
+        Number(user?.downloadCredits ?? 0)
+    );
+
+    const downloadCredits = isLifetime
+        ? "Unlimited"
+        : creditBalance;
+
+    const savedAdsCount = ads.length;
+
+    const downloadDescription = isLifetime
+        ? "Unlimited Download / Share actions"
+        : `${creditBalance} Download / Share credit${creditBalance === 1 ? "" : "s"
+        } remaining`;
+
+    const planPrice =
+        currentPlanObj?.price != null
+            ? currentPlanObj.price
+            : null;
+
+    // =========================================================
+    // CHARTS
+    // Preserve the existing chart UI.
+    //
+    // Real engagement/view analytics are not available in the
+    // user/ad data shown here, so do not present random numbers
+    // as real statistics. The ads-per-day chart uses actual
+    // saved-ad creation dates when available.
+    // =========================================================
 
     const pieData = useMemo(() => [
-        { name: "Views", value: randomNumber(200, 1000) },
-        { name: "Likes", value: randomNumber(100, 600) },
-        { name: "Shares", value: randomNumber(50, 400) }
+        { name: "Views", value: 0 },
+        { name: "Likes", value: 0 },
+        { name: "Shares", value: 0 }
     ], []);
 
-    const barData = useMemo(() => [
-        { name: "Mon", ads: randomNumber(0, 5) },
-        { name: "Tue", ads: randomNumber(0, 5) },
-        { name: "Wed", ads: randomNumber(0, 5) },
-        { name: "Thu", ads: randomNumber(0, 5) },
-        { name: "Fri", ads: randomNumber(0, 5) }
-    ], []);
+    const barData = useMemo(() => {
+        const days = [
+            { name: "Mon", day: 1, ads: 0 },
+            { name: "Tue", day: 2, ads: 0 },
+            { name: "Wed", day: 3, ads: 0 },
+            { name: "Thu", day: 4, ads: 0 },
+            { name: "Fri", day: 5, ads: 0 }
+        ];
 
-    const lineData = useMemo(() => [
-        { day: "Week 1", views: randomNumber(100, 400) },
-        { day: "Week 2", views: randomNumber(400, 800) },
-        { day: "Week 3", views: randomNumber(800, 1500) }
-    ], []);
+        const now = new Date();
 
-    const randomColor = () =>
-        `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+        const monday = new Date(now);
+        const weekday = now.getDay();
+        const daysSinceMonday = (weekday + 6) % 7;
 
-    const COLORS = useMemo(() => [
-        randomColor(),
-        randomColor(),
-        randomColor()
-    ], []);
+        monday.setDate(now.getDate() - daysSinceMonday);
+        monday.setHours(0, 0, 0, 0);
 
-    const barColor = useMemo(() => randomColor(), []);
-    const lineColor = useMemo(() => randomColor(), []);
+        ads.forEach(ad => {
+            const createdAt = ad.createdAt
+                ? new Date(ad.createdAt)
+                : null;
+
+            if (
+                !createdAt ||
+                Number.isNaN(createdAt.getTime()) ||
+                createdAt < monday
+            ) {
+                return;
+            }
+
+            const dayIndex = (createdAt.getDay() + 6) % 7;
+
+            if (dayIndex < 5) {
+                days[dayIndex].ads += 1;
+            }
+        });
+
+        return days.map(({ name, ads: count }) => ({
+            name,
+            ads: count
+        }));
+    }, [ads]);
+
+    const lineData = useMemo(() => {
+        const now = new Date();
+
+        const weeks = [
+            { day: "Week 1", views: 0 },
+            { day: "Week 2", views: 0 },
+            { day: "Week 3", views: 0 }
+        ];
+
+        // Real view tracking is not currently available.
+        // Keep the chart but do not invent view statistics.
+        return weeks;
+    }, []);
+
+    const COLORS = ["#64748b", "#94a3b8", "#cbd5e1"];
+    const barColor = "#2563eb";
+    const lineColor = "#0891b2";
 
     return (
         <>
             <Navbar />
 
-            {/* 🔥 RESPONSIVE WRAPPER */}
-            <div className="min-h-screen bg-[#f4f6fb] p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="min-h-screen bg-[#f4f6fb] p-4 md:p-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-                {/* LEFT */}
-                <div className="lg:col-span-8 flex flex-col gap-6">
+                    {/* LEFT SIDE */}
+                    <div className="lg:col-span-8 flex flex-col gap-6">
 
-                    {/* HEADER */}
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-[#0b1f33]">
-                            Dashboard
-                        </h1>
-                        <button
-                            onClick={logout}
-                            className="px-4 py-2 bg-[#0b1f33] text-white rounded-xl shadow w-full sm:w-auto"
-                        >
-                            Logout
-                        </button>
-                    </div>
+                        {/* HEADER */}
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <h1 className="text-2xl sm:text-3xl font-bold text-[#0b1f33]">
+                                    Dashboard
+                                </h1>
 
-                    {/* USER INFO */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div className="bg-white rounded-2xl p-6 shadow border">
-                            <p><b>Email:</b> {user.email}</p>
-                            <p><b>Plan:</b> {user.plan}</p>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-6 shadow border">
-                            <p><b>Downloads Used:</b> {downloadsUsed}</p>
-                            <p><b>Remaining:</b> {remaining}</p>
-
-                            <div className="mt-3 w-full bg-gray-200 rounded-full h-3">
-                                <div
-                                    className="h-3 rounded-full transition-all"
-                                    style={{
-                                        width: `${progressPercentage}%`,
-                                        backgroundColor: barColor
-                                    }}
-                                />
+                                <p className="text-gray-500 mt-1">
+                                    Welcome back, {user?.name || "User"}
+                                </p>
                             </div>
+
+                            <button
+                                onClick={logout}
+                                className="px-4 py-2 bg-[#0b1f33] text-white rounded-xl shadow w-full sm:w-auto"
+                            >
+                                Logout
+                            </button>
                         </div>
-                    </div>
 
-                    {/* ACTIONS */}
-                    <div className="flex flex-col sm:flex-row gap-4">
-                        <button
-                            onClick={() => navigate("/adstudio")}
-                            className="w-full sm:w-auto px-6 py-3 bg-[#0b1f33] text-white rounded-xl"
-                        >
-                            Create New Ad
-                        </button>
+                        {/* PROFILE */}
+                        <div className="bg-white rounded-2xl p-6 shadow border">
+                            <h2 className="text-lg font-semibold text-[#0b1f33] mb-4">
+                                Your Profile
+                            </h2>
 
-                        <button
-                            onClick={() => navigate("/pricing")}
-                            className="w-full sm:w-auto px-6 py-3 bg-[#0b1f33] text-white rounded-xl"
-                        >
-                            Upgrade Plan
-                        </button>
-                    </div>
-
-                    {/* SAVED ADS */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 shadow border">
-                        <h2 className="text-lg sm:text-xl font-semibold mb-4">
-                            Saved Ads
-                        </h2>
-
-                        {loadingAds && <p className="text-gray-500">Loading ads…</p>}
-                        {!loadingAds && ads.length === 0 && (
-                            <p className="text-gray-500">No ads created yet</p>
-                        )}
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                            {ads.map(ad => (
-                                <div
-                                    key={ad._id}
-                                    className="relative bg-white p-2 rounded-xl border shadow flex flex-col items-center"
-                                >
-                                    {ad.image ? (
-                                        <img
-                                            src={ad.image}
-                                            className="w-full aspect-square object-contain rounded mb-3"
-                                            alt="Ad"
-                                        />
-                                    ) : (
-                                        <div className="w-full aspect-square flex items-center justify-center bg-gray-100 rounded mb-3 text-gray-400">
-                                            No preview
-                                        </div>
-                                    )}
-
-                                    <p className="font-semibold text-center">
-                                        {ad.title || "Untitled Ad"}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-sm text-gray-500">
+                                        Name
                                     </p>
-
-                                    <div className="flex gap-2 mt-2">
-                                        <button
-                                            onClick={() =>
-                                                navigate("/adstudio", { state: { ad } })
-                                            }
-                                            className="px-3 py-1 bg-[#0b1f33] text-white rounded"
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            onClick={() => deleteAd(ad._id)}
-                                            className="px-3 py-1 bg-red-600 text-white rounded"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
+                                    <p className="font-medium break-words">
+                                        {user?.name || "Not provided"}
+                                    </p>
                                 </div>
-                            ))}
+
+                                <div>
+                                    <p className="text-sm text-gray-500">
+                                        Email
+                                    </p>
+                                    <p className="font-medium break-all">
+                                        {user?.email || "Not provided"}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <p className="text-sm text-gray-500">
+                                        Phone
+                                    </p>
+                                    <p className="font-medium break-words">
+                                        {user?.phone || "Not provided"}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <p className="text-sm text-gray-500">
+                                        City
+                                    </p>
+                                    <p className="font-medium break-words">
+                                        {user?.city || "Not provided"}
+                                    </p>
+                                </div>
+
+                                <div className="sm:col-span-2">
+                                    <p className="text-sm text-gray-500">
+                                        Address
+                                    </p>
+                                    <p className="font-medium break-words">
+                                        {user?.address || "Not provided"}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                {/* RIGHT */}
-                <aside className="lg:col-span-4 flex flex-col gap-6">
+                        {/* PLAN AND CREDITS */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-                    <div className="bg-white rounded-2xl p-4 shadow border">
-                        <h3 className="font-semibold mb-2">Engagement</h3>
-                        <ResponsiveContainer width="100%" height={180}>
-                            <PieChart>
-                                <Pie data={pieData} dataKey="value" outerRadius={70}>
-                                    {pieData.map((_, i) => (
-                                        <Cell key={i} fill={COLORS[i]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
+                            <div className="bg-white rounded-2xl p-6 shadow border">
+                                <p className="text-sm text-gray-500">
+                                    Current Plan
+                                </p>
 
-                    <div className="bg-white rounded-2xl p-4 shadow border">
-                        <h3 className="font-semibold mb-2">Ads per day</h3>
-                        <ResponsiveContainer width="100%" height={180}>
-                            <BarChart data={barData}>
-                                <XAxis dataKey="name" />
-                                <Bar dataKey="ads" fill={barColor} />
-                                <Tooltip />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
+                                <p className="text-2xl font-bold text-[#0b1f33] mt-2">
+                                    {planName}
+                                </p>
 
-                    <div className="bg-white rounded-2xl p-4 shadow border">
-                        <h3 className="font-semibold mb-2">Views Growth</h3>
-                        <ResponsiveContainer width="100%" height={180}>
-                            <LineChart data={lineData}>
-                                <XAxis dataKey="day" />
-                                <Line
-                                    type="monotone"
-                                    dataKey="views"
-                                    stroke={lineColor}
-                                    strokeWidth={3}
-                                />
-                                <Tooltip />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </div>
-                </aside>
+                                <p className={`text-sm mt-2 font-medium ${hasPaid
+                                    ? "text-green-600"
+                                    : "text-amber-600"
+                                    }`}>
+                                    {hasPaid
+                                        ? "Payment Active"
+                                        : "No paid plan"}
+                                </p>
 
-                {/* FOOTER */}
-                <footer className="bg-[#07111d] text-gray-300 py-16">
+                                {planPrice !== null && (
+                                    <p className="text-sm text-gray-500 mt-2">
+                                        Plan price: {planPrice}
+                                    </p>
+                                )}
 
-                    <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
-
-                        <div>
-                            <div className="flex items-center gap-3 mb-4">
-                                <img
-                                    src={logo}
-                                    alt="AdStudio"
-                                    className="w-12 h-12"
-                                />
-
-                                <h3 className="text-white text-2xl font-bold">
-                                    AdStudio
-                                </h3>
+                                <button
+                                    onClick={() => navigate("/pricing")}
+                                    className="mt-4 px-4 py-2 bg-[#0b1f33] text-white rounded-xl"
+                                >
+                                    {hasPaid
+                                        ? "Upgrade Plan"
+                                        : "Choose a Plan"}
+                                </button>
                             </div>
 
-                            <p className="text-sm leading-relaxed">
-                                Create professional advertisements for any business with ease.
-                            </p>
+                            <div className="bg-white rounded-2xl p-6 shadow border">
+                                <p className="text-sm text-gray-500">
+                                    Download / Share Credits
+                                </p>
+
+                                <p className="text-3xl font-bold text-[#0b1f33] mt-2">
+                                    {downloadCredits}
+                                </p>
+
+                                <p className="text-sm text-gray-500 mt-2">
+                                    {downloadDescription}
+                                </p>
+
+                                {!isLifetime && (
+                                    <div className="mt-4 w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                        <div
+                                            className="h-3 rounded-full bg-blue-600 transition-all"
+                                            style={{
+                                                width: hasPaid
+                                                    ? `${Math.min(
+                                                        (creditBalance /
+                                                            Math.max(
+                                                                Number(currentPlanObj?.downloadCredits) ||
+                                                                Number(currentPlanObj?.credits) ||
+                                                                creditBalance ||
+                                                                1,
+                                                                1
+                                                            )) *
+                                                        100,
+                                                        100
+                                                    )}%`
+                                                    : "0%"
+                                            }}
+                                        />
+                                    </div>
+                                )}
+
+                                <p className="text-xs text-gray-400 mt-2">
+                                    Each successful Download or Share uses one credit.
+                                </p>
+                            </div>
                         </div>
 
-                        <div>
-                            <h4 className="font-semibold mb-4 text-white">
-                                Product
-                            </h4>
+                        {/* SUMMARY CARDS */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-                            <ul className="space-y-2 text-sm">
-                                <li><Link to="/pricing">Pricing</Link></li>
-                                <li><Link to="/adstudio">Ad Studio</Link></li>
-                                <li><Link to="/dashboard">Dashboard</Link></li>
-                            </ul>
+                            <div className="bg-white rounded-2xl p-6 shadow border">
+                                <p className="text-sm text-gray-500">
+                                    Saved Ads
+                                </p>
+
+                                <p className="text-3xl font-bold text-[#0b1f33] mt-2">
+                                    {loadingAds ? "…" : savedAdsCount}
+                                </p>
+
+                                <p className="text-sm text-gray-500 mt-2">
+                                    Advertisements saved to your account
+                                </p>
+                            </div>
+
+                            <div className="bg-white rounded-2xl p-6 shadow border">
+                                <p className="text-sm text-gray-500">
+                                    Available Downloads
+                                </p>
+
+                                <p className="text-3xl font-bold text-[#0b1f33] mt-2">
+                                    {hasPaid
+                                        ? downloadCredits
+                                        : 0}
+                                </p>
+
+                                <p className="text-sm text-gray-500 mt-2">
+                                    {hasPaid
+                                        ? downloadDescription
+                                        : "Purchase a plan to download or share ads."}
+                                </p>
+                            </div>
                         </div>
 
-                        <div>
-                            <h4 className="font-semibold mb-4 text-white">
-                                Account
-                            </h4>
+                        {/* ACTIONS */}
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <button
+                                onClick={() => navigate("/adstudio")}
+                                className="w-full sm:w-auto px-6 py-3 bg-[#0b1f33] text-white rounded-xl"
+                            >
+                                Create New Ad
+                            </button>
 
-                            <ul className="space-y-2 text-sm">
-                                <li><Link to="/login">Login</Link></li>
-                                <li><Link to="/signup">Sign Up</Link></li>
-                            </ul>
+                            <button
+                                onClick={() => navigate("/pricing")}
+                                className="w-full sm:w-auto px-6 py-3 bg-[#0b1f33] text-white rounded-xl"
+                            >
+                                {hasPaid
+                                    ? "Upgrade Plan"
+                                    : "View Plans"}
+                            </button>
                         </div>
 
-                        <div>
-                            <h4 className="font-semibold mb-4 text-white">
-                                Contact
-                            </h4>
+                        {/* SAVED ADS */}
+                        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow border">
+                            <h2 className="text-lg sm:text-xl font-semibold mb-4">
+                                Saved Ads ({loadingAds ? "…" : savedAdsCount})
+                            </h2>
 
-                            <p className="text-sm">
-                                support@adstudio.app
-                            </p>
+                            {loadingAds && (
+                                <p className="text-gray-500">
+                                    Loading ads…
+                                </p>
+                            )}
+
+                            {!loadingAds && ads.length === 0 && (
+                                <p className="text-gray-500">
+                                    No ads created yet.
+                                </p>
+                            )}
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+                                {ads.map(ad => (
+                                    <div
+                                        key={ad._id}
+                                        className="relative min-w-0 bg-white p-2 rounded-xl border shadow flex flex-col items-center"
+                                    >
+                                        {ad.image ? (
+                                            <img
+                                                src={ad.image}
+                                                className="w-full aspect-square object-contain rounded mb-3"
+                                                alt={ad.title || "Saved advertisement"}
+                                            />
+                                        ) : (
+                                            <div className="w-full aspect-square flex items-center justify-center bg-gray-100 rounded mb-3 text-gray-400">
+                                                No preview
+                                            </div>
+                                        )}
+
+                                        <p className="font-semibold text-center break-words w-full">
+                                            {ad.title || "Untitled Ad"}
+                                        </p>
+
+                                        <div className="flex flex-wrap justify-center gap-2 mt-2">
+                                            <button
+                                                onClick={() =>
+                                                    navigate(
+                                                        "/adstudio",
+                                                        { state: { ad } }
+                                                    )
+                                                }
+                                                className="px-3 py-1 bg-[#0b1f33] text-white rounded"
+                                            >
+                                                Edit
+                                            </button>
+
+                                            <button
+                                                onClick={() => deleteAd(ad._id)}
+                                                className="px-3 py-1 bg-red-600 text-white rounded"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
 
-                    <p className="text-center text-sm text-gray-500 mt-12">
-                        © {new Date().getFullYear()} AdStudio. All rights reserved.
-                    </p>
-                </footer>
+                    {/* RIGHT SIDE: KEEP ALL THREE CHARTS */}
+                    <aside className="lg:col-span-4 flex flex-col gap-6">
 
+                        <div className="bg-white rounded-2xl p-4 shadow border">
+                            <h3 className="font-semibold mb-2">
+                                Engagement
+                            </h3>
+
+                            <ResponsiveContainer width="100%" height={180}>
+                                <PieChart>
+                                    <Pie
+                                        data={pieData}
+                                        dataKey="value"
+                                        nameKey="name"
+                                        outerRadius={70}
+                                    >
+                                        {pieData.map((entry, index) => (
+                                            <Cell
+                                                key={entry.name}
+                                                fill={COLORS[index]}
+                                            />
+                                        ))}
+                                    </Pie>
+
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+
+                            <p className="text-xs text-gray-400">
+                                Engagement tracking is not connected yet.
+                            </p>
+                        </div>
+
+                        <div className="bg-white rounded-2xl p-4 shadow border">
+                            <h3 className="font-semibold mb-2">
+                                Ads per day
+                            </h3>
+
+                            <ResponsiveContainer width="100%" height={180}>
+                                <BarChart data={barData}>
+                                    <XAxis dataKey="name" />
+                                    <Bar
+                                        dataKey="ads"
+                                        fill={barColor}
+                                    />
+                                    <Tooltip />
+                                </BarChart>
+                            </ResponsiveContainer>
+
+                            <p className="text-xs text-gray-400">
+                                Based on saved ads created this week.
+                            </p>
+                        </div>
+
+                        <div className="bg-white rounded-2xl p-4 shadow border">
+                            <h3 className="font-semibold mb-2">
+                                Views Growth
+                            </h3>
+
+                            <ResponsiveContainer width="100%" height={180}>
+                                <LineChart data={lineData}>
+                                    <XAxis dataKey="day" />
+
+                                    <Line
+                                        type="monotone"
+                                        dataKey="views"
+                                        stroke={lineColor}
+                                        strokeWidth={3}
+                                    />
+
+                                    <Tooltip />
+                                </LineChart>
+                            </ResponsiveContainer>
+
+                            <p className="text-xs text-gray-400">
+                                View tracking is not connected yet.
+                            </p>
+                        </div>
+                    </aside>
+                </div>
             </div>
 
+            <Footer />
         </>
-
     );
 }

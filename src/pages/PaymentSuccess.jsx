@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const API_URL =
@@ -9,27 +10,37 @@ const API_URL =
 export default function PaymentSuccess() {
     const navigate = useNavigate();
 
-    const [searchParams] =
-        useSearchParams();
-
-    const { token } = useAuth();
+    const {
+        token,
+        loading,
+        refreshUser
+    } = useAuth();
 
     const [status, setStatus] =
         useState("checking");
 
-    const [user, setUser] =
-        useState(null);
+    const [message, setMessage] =
+        useState(
+            "Confirming your payment..."
+        );
 
     useEffect(() => {
+        if (loading) return;
+
+        if (!token) {
+            navigate("/login", {
+                replace: true
+            });
+
+            return;
+        }
+
         let attempts = 0;
+        let timer = null;
+        let cancelled = false;
 
         const checkPayment = async () => {
             try {
-                if (!token) {
-                    navigate("/login");
-                    return;
-                }
-
                 const res = await fetch(
                     `${API_URL}/auth/me`,
                     {
@@ -40,8 +51,7 @@ export default function PaymentSuccess() {
                     }
                 );
 
-                const data =
-                    await res.json();
+                const data = await res.json();
 
                 if (!res.ok) {
                     throw new Error(
@@ -50,141 +60,192 @@ export default function PaymentSuccess() {
                     );
                 }
 
-                setUser(data.user);
+                if (cancelled) return;
 
-                /*
-                 * PayHere notify and browser return can
-                 * happen very close together.
-                 *
-                 * Give the backend a few attempts to receive
-                 * and process the notification.
-                 */
-                if (data.user.hasPaid) {
+                if (data.user?.hasPaid) {
                     setStatus("success");
+                    setMessage(
+                        "Payment successful. Your plan is now active."
+                    );
+
+                    try {
+                        await refreshUser(token);
+                    } catch (refreshError) {
+                        console.error(
+                            "USER REFRESH ERROR:",
+                            refreshError
+                        );
+                    }
+
+                    if (!cancelled) {
+                        setTimeout(() => {
+                            navigate(
+                                "/dashboard",
+                                {
+                                    replace: true
+                                }
+                            );
+                        }, 1200);
+                    }
+
                     return;
                 }
 
                 attempts++;
 
                 if (attempts < 10) {
-                    setTimeout(
+                    setMessage(
+                        "Payment received. Waiting for payment confirmation..."
+                    );
+
+                    timer = setTimeout(
                         checkPayment,
                         1500
                     );
-                } else {
-                    setStatus("pending");
+
+                    return;
                 }
 
-            } catch (error) {
+                setStatus("pending");
 
+                setMessage(
+                    "Your payment is still being confirmed. Please check your dashboard shortly."
+                );
+            } catch (error) {
                 console.error(
                     "PAYMENT STATUS ERROR:",
                     error
                 );
 
-                setStatus("error");
+                if (!cancelled) {
+                    setStatus("error");
+
+                    setMessage(
+                        "We could not confirm the payment yet."
+                    );
+                }
             }
         };
 
         checkPayment();
 
-    }, [token, navigate]);
+        return () => {
+            cancelled = true;
+
+            if (timer) {
+                clearTimeout(timer);
+            }
+        };
+    }, [
+        loading,
+        token,
+        navigate,
+        refreshUser
+    ]);
 
     return (
-        <div className="min-h-screen bg-[#08182d] text-white flex items-center justify-center px-4">
+        <div className="min-h-screen flex items-center justify-center bg-[#071525] px-5">
 
-            <div className="w-full max-w-lg text-center">
+            <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 text-center">
 
                 {status === "checking" && (
                     <>
-                        <h1 className="text-3xl font-bold mb-4">
+                        <div className="w-14 h-14 mx-auto mb-5 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+
+                        <h1 className="text-2xl font-bold text-gray-900 mb-3">
                             Confirming Payment
                         </h1>
 
-                        <p className="text-white/70">
-                            Please wait while we confirm
-                            your payment.
+                        <p className="text-gray-600">
+                            {message}
                         </p>
                     </>
                 )}
 
                 {status === "success" && (
                     <>
-                        <h1 className="text-3xl font-bold mb-4">
+                        <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-3xl font-bold">
+                            ✓
+                        </div>
+
+                        <h1 className="text-2xl font-bold text-gray-900 mb-3">
                             Payment Successful
                         </h1>
 
-                        <p className="text-white/70 mb-3">
-                            Your {user?.plan} plan is now active.
+                        <p className="text-gray-600 mb-5">
+                            {message}
                         </p>
 
-                        {user?.plan === "lifetime" ? (
-                            <p className="text-cyan-300 mb-8">
-                                You now have unlimited
-                                Download and Share access.
-                            </p>
-                        ) : (
-                            <p className="text-cyan-300 mb-8">
-                                {user?.downloadCredits}{" "}
-                                Download/Share credits
-                                are available.
-                            </p>
-                        )}
-
-                        <button
-                            onClick={() =>
-                                navigate("/adstudio")
-                            }
-                            className="px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold"
-                        >
-                            Go to AdStudio
-                        </button>
+                        <p className="text-sm text-gray-500">
+                            Redirecting you to your Dashboard...
+                        </p>
                     </>
                 )}
 
                 {status === "pending" && (
                     <>
-                        <h1 className="text-3xl font-bold mb-4">
+                        <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 text-3xl">
+                            !
+                        </div>
+
+                        <h1 className="text-2xl font-bold text-gray-900 mb-3">
                             Payment Processing
                         </h1>
 
-                        <p className="text-white/70 mb-8">
-                            Your payment was returned by
-                            PayHere, but our server is still
-                            waiting for the payment confirmation.
-                            Please refresh in a moment.
+                        <p className="text-gray-600 mb-6">
+                            {message}
                         </p>
 
                         <button
                             onClick={() =>
-                                navigate("/adstudio")
+                                navigate(
+                                    "/dashboard"
+                                )
                             }
-                            className="px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold"
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl"
                         >
-                            Continue to AdStudio
+                            Go to Dashboard
                         </button>
                     </>
                 )}
 
                 {status === "error" && (
                     <>
-                        <h1 className="text-3xl font-bold mb-4">
-                            Unable to Verify Payment
+                        <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-red-100 flex items-center justify-center text-red-600 text-3xl">
+                            !
+                        </div>
+
+                        <h1 className="text-2xl font-bold text-gray-900 mb-3">
+                            Payment Confirmation Delayed
                         </h1>
 
-                        <p className="text-white/70 mb-8">
-                            Please try again or contact
-                            AdStudio support.
+                        <p className="text-gray-600 mb-6">
+                            {message}
                         </p>
 
-                        <button
-                            onClick={() =>
-                                navigate("/pricing")
-                            }
-                            className="px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold"
-                        >
-                            Return to Pricing
-                        </button>
+                        <div className="flex flex-col gap-3">
+                            <button
+                                onClick={() =>
+                                    navigate(
+                                        "/dashboard"
+                                    )
+                                }
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl"
+                            >
+                                Go to Dashboard
+                            </button>
+
+                            <button
+                                onClick={() =>
+                                    navigate(
+                                        "/pricing"
+                                    )
+                                }
+                                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 rounded-xl"
+                            >
+                                Return to Pricing
+                            </button>
+                        </div>
                     </>
                 )}
 
