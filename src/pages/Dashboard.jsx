@@ -893,6 +893,156 @@ function Dashboard() {
                     </div>
                 </section>
 
+                {/* Saved ads */}
+                <section className="dashboard-card dashboard-enter p-5 sm:p-6">
+                    <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                        <div>
+                            <h2 className="text-xl font-extrabold text-[#0B1F33]">
+                                Your saved designs
+                            </h2>
+                            <p className="mt-1 text-sm text-slate-500">
+                                Continue editing or manage your existing creations.
+                            </p>
+                        </div>
+
+                        <Link to="/adstudio" className="dashboard-primary w-fit">
+                            <FaPlus />
+                            Create a design
+                        </Link>
+                    </div>
+
+                    {error && (
+                        <div className="mb-5 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            {error}
+                            <button
+                                type="button"
+                                onClick={() => loadAds()}
+                                className="ml-2 font-bold underline"
+                            >
+                                Try again
+                            </button>
+                        </div>
+                    )}
+
+                    {loadingAds ? (
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            {[1, 2, 3].map((item) => (
+                                <div
+                                    key={item}
+                                    className="animate-pulse overflow-hidden rounded-2xl border border-slate-100"
+                                >
+                                    <div className="h-40 bg-slate-100" />
+                                    <div className="space-y-3 p-4">
+                                        <div className="h-4 w-2/3 rounded bg-slate-100" />
+                                        <div className="h-3 w-1/3 rounded bg-slate-100" />
+                                        <div className="h-9 rounded-lg bg-slate-100" />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : ads.length === 0 ? (
+                        <div className="rounded-2xl border border-dashed border-blue-200 bg-gradient-to-br from-blue-50/70 to-cyan-50/50 px-5 py-12 text-center">
+                            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-2xl text-blue-600 shadow-sm">
+                                <FaFileAlt />
+                            </div>
+
+                            <h3 className="text-lg font-extrabold text-[#0B1F33]">
+                                Your creative journey starts here
+                            </h3>
+
+                            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+                                Create your first design and save it here. You can return
+                                whenever you want to continue editing.
+                            </p>
+
+                            <Link to="/adstudio" className="dashboard-primary mt-6">
+                                <FaPlus />
+                                Create your first ad
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                            {ads.map((ad, index) => {
+                                const adId = ad._id || ad.id;
+                                const preview =
+                                    ad.previewImage ||
+                                    ad.thumbnail ||
+                                    ad.image ||
+                                    ad.exportedImage ||
+                                    ad.imageUrl;
+
+                                return (
+                                    <article
+                                        key={adId || index}
+                                        className="group overflow-hidden rounded-2xl border border-slate-100 bg-white transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-950/5"
+                                    >
+                                        <div className="dashboard-ad-image relative flex h-44 items-center justify-center overflow-hidden">
+                                            {preview ? (
+                                                <img
+                                                    src={preview}
+                                                    alt={getAdTitle(ad, index)}
+                                                    className="h-full w-full object-contain p-3 transition duration-500 group-hover:scale-[1.03]"
+                                                    loading="lazy"
+                                                />
+                                            ) : (
+                                                <div className="flex flex-col items-center gap-3 text-blue-700/60">
+                                                    <FaFileAlt className="text-4xl" />
+                                                    <span className="text-xs font-semibold">
+                                                        AdStudio design
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            <span className="absolute left-3 top-3 rounded-full border border-white/70 bg-white/90 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#0B1F33] shadow-sm">
+                                                Saved design
+                                            </span>
+                                        </div>
+
+                                        <div className="p-4">
+                                            <h3
+                                                className="truncate text-base font-extrabold text-[#0B1F33]"
+                                                title={getAdTitle(ad, index)}
+                                            >
+                                                {getAdTitle(ad, index)}
+                                            </h3>
+
+                                            <p className="mt-2 flex items-center gap-2 text-xs text-slate-400">
+                                                <FaClock />
+                                                {formatDate(ad.createdAt || ad.created_at)}
+                                            </p>
+
+                                            <div className="mt-4 grid grid-cols-2 gap-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        navigate("/adstudio", {
+                                                            state: { ad },
+                                                        })
+                                                    }
+                                                    className="dashboard-primary !gap-2 !rounded-lg !px-3 !py-2.5 !text-xs"
+                                                >
+                                                    <FaEdit />
+                                                    Edit design
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleDeleteAd(adId)}
+                                                    disabled={deletingId === adId}
+                                                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-100 bg-red-50 px-3 py-2.5 text-xs font-bold text-red-600 transition hover:border-red-200 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+                                                >
+                                                    <FaTrash />
+                                                    {deletingId === adId ? "Deleting..." : "Delete"}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </article>
+                                );
+                            })}
+                        </div>
+                    )}
+                </section>
+
                 {/* Charts */}
                 <section className="mb-6">
                     <div className="dashboard-enter mb-4 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
@@ -1138,155 +1288,7 @@ function Dashboard() {
                     </div>
                 </section>
 
-                {/* Saved ads */}
-                <section className="dashboard-card dashboard-enter p-5 sm:p-6">
-                    <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                        <div>
-                            <h2 className="text-xl font-extrabold text-[#0B1F33]">
-                                Your saved designs
-                            </h2>
-                            <p className="mt-1 text-sm text-slate-500">
-                                Continue editing or manage your existing creations.
-                            </p>
-                        </div>
 
-                        <Link to="/adstudio" className="dashboard-primary w-fit">
-                            <FaPlus />
-                            Create a design
-                        </Link>
-                    </div>
-
-                    {error && (
-                        <div className="mb-5 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
-                            {error}
-                            <button
-                                type="button"
-                                onClick={() => loadAds()}
-                                className="ml-2 font-bold underline"
-                            >
-                                Try again
-                            </button>
-                        </div>
-                    )}
-
-                    {loadingAds ? (
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                            {[1, 2, 3].map((item) => (
-                                <div
-                                    key={item}
-                                    className="animate-pulse overflow-hidden rounded-2xl border border-slate-100"
-                                >
-                                    <div className="h-40 bg-slate-100" />
-                                    <div className="space-y-3 p-4">
-                                        <div className="h-4 w-2/3 rounded bg-slate-100" />
-                                        <div className="h-3 w-1/3 rounded bg-slate-100" />
-                                        <div className="h-9 rounded-lg bg-slate-100" />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : ads.length === 0 ? (
-                        <div className="rounded-2xl border border-dashed border-blue-200 bg-gradient-to-br from-blue-50/70 to-cyan-50/50 px-5 py-12 text-center">
-                            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-2xl text-blue-600 shadow-sm">
-                                <FaFileAlt />
-                            </div>
-
-                            <h3 className="text-lg font-extrabold text-[#0B1F33]">
-                                Your creative journey starts here
-                            </h3>
-
-                            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
-                                Create your first design and save it here. You can return
-                                whenever you want to continue editing.
-                            </p>
-
-                            <Link to="/adstudio" className="dashboard-primary mt-6">
-                                <FaPlus />
-                                Create your first ad
-                            </Link>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                            {ads.map((ad, index) => {
-                                const adId = ad._id || ad.id;
-                                const preview =
-                                    ad.previewImage ||
-                                    ad.thumbnail ||
-                                    ad.image ||
-                                    ad.exportedImage ||
-                                    ad.imageUrl;
-
-                                return (
-                                    <article
-                                        key={adId || index}
-                                        className="group overflow-hidden rounded-2xl border border-slate-100 bg-white transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-950/5"
-                                    >
-                                        <div className="dashboard-ad-image relative flex h-44 items-center justify-center overflow-hidden">
-                                            {preview ? (
-                                                <img
-                                                    src={preview}
-                                                    alt={getAdTitle(ad, index)}
-                                                    className="h-full w-full object-contain p-3 transition duration-500 group-hover:scale-[1.03]"
-                                                    loading="lazy"
-                                                />
-                                            ) : (
-                                                <div className="flex flex-col items-center gap-3 text-blue-700/60">
-                                                    <FaFileAlt className="text-4xl" />
-                                                    <span className="text-xs font-semibold">
-                                                        AdStudio design
-                                                    </span>
-                                                </div>
-                                            )}
-
-                                            <span className="absolute left-3 top-3 rounded-full border border-white/70 bg-white/90 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#0B1F33] shadow-sm">
-                                                Saved design
-                                            </span>
-                                        </div>
-
-                                        <div className="p-4">
-                                            <h3
-                                                className="truncate text-base font-extrabold text-[#0B1F33]"
-                                                title={getAdTitle(ad, index)}
-                                            >
-                                                {getAdTitle(ad, index)}
-                                            </h3>
-
-                                            <p className="mt-2 flex items-center gap-2 text-xs text-slate-400">
-                                                <FaClock />
-                                                {formatDate(ad.createdAt || ad.created_at)}
-                                            </p>
-
-                                            <div className="mt-4 grid grid-cols-2 gap-2">
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        navigate("/adstudio", {
-                                                            state: { ad },
-                                                        })
-                                                    }
-                                                    className="dashboard-primary !gap-2 !rounded-lg !px-3 !py-2.5 !text-xs"
-                                                >
-                                                    <FaEdit />
-                                                    Edit design
-                                                </button>
-
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleDeleteAd(adId)}
-                                                    disabled={deletingId === adId}
-                                                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-red-100 bg-red-50 px-3 py-2.5 text-xs font-bold text-red-600 transition hover:border-red-200 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
-                                                >
-                                                    <FaTrash />
-                                                    {deletingId === adId ? "Deleting..." : "Delete"}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </article>
-                                );
-                            })}
-                        </div>
-                    )}
-                </section>
 
                 {/* Bottom call to action */}
                 <section
