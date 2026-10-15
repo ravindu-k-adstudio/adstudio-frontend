@@ -19,6 +19,8 @@ import {
     restoreIconElement,
     loadIconImage
 } from "../data/iconLibrary";
+import AIAssistanceModal from "../components/AIAssistanceModal";
+import { recommendTemplate } from "../utils/aiDesignAssistant";
 
 // const API_URL = "http://192.168.1.28:5000/api"; // your IP
 const API_URL = import.meta.env.VITE_API_URL;
@@ -2224,6 +2226,14 @@ export default function AdStudio() {
                     onOpenTemplates={() => setShowTemplates(true)}
                 />
             </div>
+
+            {showAIAssistance && (
+                <AIAssistanceModal
+                    onClose={() => setShowAIAssistance(false)}
+                    onGenerate={generateAIDesign}
+                />
+            )}
+
             {showTemplates && (
                 <TemplateBrowser
                     adSize={adSize}

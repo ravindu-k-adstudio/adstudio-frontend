@@ -226,8 +226,6 @@ const Canvas = forwardRef(function Canvas(
 
     const [W, H] = sizes[adSize] || [420, 420];
     const stageRef = useRef(null);
-    // const trRef = useRef(null);
-    // const selectedNodeRef = useRef(null);
     const trRef = useRef(null);
     const selectedNodeRef = useRef(null);
     const nodeRegistryRef = useRef(new Map());
@@ -257,7 +255,7 @@ const Canvas = forwardRef(function Canvas(
     const [draftShape, setDraftShape] = useState(null);
 
     const [toolbarPos, setToolbarPos] = useState({ x: 0, y: 0 });
-
+    const [isMobileToolbarOpen, setIsMobileToolbarOpen] = useState(false);
     /* ================= AUTO SCALE FOR MOBILE ================= */
 
     const [autoScale, setAutoScale] = useState(1);
