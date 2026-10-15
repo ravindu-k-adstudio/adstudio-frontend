@@ -52,6 +52,7 @@ export default function AdStudio() {
     const [showClipArtPicker, setShowClipArtPicker] = useState(false);
     const [showDiscountTagPicker, setShowDiscountTagPicker] = useState(false);
     const [discountTags, setDiscountTags] = useState([]);
+    const [showAIAssistance, setShowAIAssistance] = useState(false);
 
     const [tool, setTool] = useState("select");
     const [lineType, setLineType] = useState("default");
@@ -2190,6 +2191,7 @@ export default function AdStudio() {
                     activeSection={activeSection}
                     editingBackground={editingBackground}
                     setEditingBackground={setEditingBackground}
+                    onOpenAIAssistance={() => setShowAIAssistance(true)}
 
                 />
                 <RightPanel

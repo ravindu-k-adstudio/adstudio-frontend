@@ -178,6 +178,7 @@ const Canvas = forwardRef(function Canvas(
         onOpenClipArt,
         onReplaceImage,
         onOpenDiscountTags,
+        onOpenAIAssistance,
         discountTags = [],
         setDiscountTags,
         shapes,
@@ -880,269 +881,169 @@ const Canvas = forwardRef(function Canvas(
                 onChange={handleReplacementFile}
             />
 
-            {/* ================= BACKGROUND CLIP ART BUTTON ================= */}
 
-            <button
-                type="button"
-                onClick={() => {
-
-                    if (onOpenClipArt) {
-                        onOpenClipArt();
-                    }
-
-                }}
-                title="Background Clip Art"
-                style={{
-                    position: "absolute",
-
-                    top: 20,
-
-                    right: 225,
-
-                    zIndex: 30,
-
-                    display: "flex",
-
-                    alignItems: "center",
-
-                    justifyContent: "center",
-
-                    gap: 8,
-
-                    padding: "9px 16px",
-
-                    borderRadius: 10,
-
-                    border:
-                        "1px solid rgba(37,99,235,0.30)",
-
-                    background: "#ffffff",
-
-                    color: "#2563eb",
-
-                    fontSize: 13,
-
-                    fontWeight: 600,
-
-                    cursor: "pointer",
-
-                    boxShadow:
-                        "0 8px 25px rgba(0,0,0,0.18)",
-
-                    transition:
-                        "all 0.2s ease"
-                }}
-
-                onMouseEnter={e => {
-
-                    e.currentTarget.style.background =
-                        "#2563eb";
-
-                    e.currentTarget.style.color =
-                        "#ffffff";
-
-                    e.currentTarget.style.transform =
-                        "translateY(-1px)";
-
-                }}
-
-                onMouseLeave={e => {
-
-                    e.currentTarget.style.background =
-                        "#ffffff";
-
-                    e.currentTarget.style.color =
-                        "#2563eb";
-
-                    e.currentTarget.style.transform =
-                        "translateY(0)";
-
-                }}
-            >
-                ✦ Backgrounds
-            </button>
-
-
-            {/* ================= SALE TAGS BUTTON ================= */}
-
-            <button
-                type="button"
-                onClick={() => {
-                    setSelectedId(null);
-                    selectedNodeRef.current = null;
-                    setEditingBackground(false);
-
-                    if (trRef.current) {
-                        trRef.current.nodes([]);
-                        trRef.current.getLayer()?.batchDraw();
-                    }
-
-                    onOpenDiscountTags?.();
-                }}
-                title="Sale Tags — Discount & Special Offers"
-                data-tippy-content="Sale Tags"
-                aria-label="Open Sale Tags Library"
-                style={{
-                    position: "absolute",
-                    top: 20,
-                    right: 365,
-                    zIndex: 30,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 8,
-                    padding: "9px 16px",
-                    borderRadius: 10,
-                    border: "1px solid rgba(220,38,38,0.3)",
-                    background: "#ffffff",
-                    color: "#dc2626",
-                    fontSize: 13,
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    boxShadow: "0 8px 25px rgba(0,0,0,0.18)",
-                    transition: "all 0.2s ease",
-                }}
-                onMouseEnter={e => {
-                    e.currentTarget.style.background = "#dc2626";
-                    e.currentTarget.style.color = "#ffffff";
-                }}
-                onMouseLeave={e => {
-                    e.currentTarget.style.background = "#ffffff";
-                    e.currentTarget.style.color = "#dc2626";
-                }}
-            >
-                🏷️ Sale Tags
-            </button>
-
-
-            {/* ================= ICON BUTTON ================= */}
-
-            <button
-                type="button"
-                onClick={() => {
-                    setSelectedId(null);
-                    selectedNodeRef.current = null;
-                    setEditingBackground(false);
-
-                    if (trRef.current) {
-                        trRef.current.nodes([]);
-                        trRef.current.getLayer()?.batchDraw();
-                    }
-
-                    window.dispatchEvent(
-                        new CustomEvent(
-                            "adstudio-open-icon-picker"
-                        )
-                    );
-                }}
-                title="Add Icon"
-                style={{
-                    position: "absolute",
-                    top: 20,
-                    right: 125,
-                    zIndex: 30,
-
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 8,
-
-                    padding: "9px 16px",
-
-                    borderRadius: 10,
-
-                    border:
-                        "1px solid rgba(14,165,233,0.35)",
-
-                    background: "#ffffff",
-
-                    color: "#0284c7",
-
-                    fontSize: 13,
-                    fontWeight: 600,
-
-                    cursor: "pointer",
-
-                    boxShadow:
-                        "0 8px 25px rgba(0,0,0,0.18)",
-
-                    transition: "all 0.2s ease"
-                }}
-                onMouseEnter={e => {
-                    e.currentTarget.style.background =
-                        "#0284c7";
-
-                    e.currentTarget.style.color =
-                        "#ffffff";
-
-                    e.currentTarget.style.transform =
-                        "translateY(-1px)";
-                }}
-                onMouseLeave={e => {
-                    e.currentTarget.style.background =
-                        "#ffffff";
-
-                    e.currentTarget.style.color =
-                        "#0284c7";
-
-                    e.currentTarget.style.transform =
-                        "translateY(0)";
-                }}
-            >
-                ✦ Icons
-            </button>
-
-
-
-            {/* ================= RESET BUTTON ================= */}
-
-            <button
-                type="button"
-                onClick={onReset}
-                title="Reset Canvas"
-                style={{
-                    position: "absolute",
-                    top: 20,
-                    right: 25,
-                    zIndex: 30,
-
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 8,
-
-                    padding: "9px 16px",
-
-                    borderRadius: 10,
-
-                    border: "1px solid rgba(239,68,68,0.35)",
-
-                    background: "#ffffff",
-
-                    color: "#dc2626",
-
-                    fontSize: 13,
-                    fontWeight: 600,
-
-                    cursor: "pointer",
-
-                    boxShadow: "0 8px 25px rgba(0,0,0,0.18)",
-
-                    transition: "all 0.2s ease"
-                }}
-                onMouseEnter={e => {
-                    e.currentTarget.style.background = "#dc2626";
-                    e.currentTarget.style.color = "#ffffff";
-                    e.currentTarget.style.transform = "translateY(-1px)";
-                }}
-                onMouseLeave={e => {
-                    e.currentTarget.style.background = "#ffffff";
-                    e.currentTarget.style.color = "#dc2626";
-                    e.currentTarget.style.transform = "translateY(0)";
-                }}
-            >
-                ↻ Reset
-            </button>
+            {/* RESPONSIVE TOOLBAR SHELL */}
+            <div className="adstudio-toolbar-shell">
+
+                {/* MOBILE TOGGLE BUTTON */}
+                <button
+                    type="button"
+                    className="adstudio-toolbar-toggle"
+                    onClick={() => setIsMobileToolbarOpen((previous) => !previous)}
+                    aria-label={isMobileToolbarOpen ? "Hide toolbar" : "Show toolbar"}
+                    aria-expanded={isMobileToolbarOpen}
+                    title={isMobileToolbarOpen ? "Hide tools" : "Show tools"}
+                >
+                    <span className={isMobileToolbarOpen ? "toolbar-toggle-icon is-open" : "toolbar-toggle-icon"}>
+                        {isMobileToolbarOpen ? "✕" : "☰"}
+                    </span>
+                    <span className="toolbar-toggle-label">
+                        {isMobileToolbarOpen ? "Hide tools" : "Tools"}
+                    </span>
+                </button>
+
+                {/* EXISTING TOOLBAR */}
+                <div
+                    className={`adstudio-canvas-toolbar ${isMobileToolbarOpen
+                        ? "adstudio-toolbar-menu-open"
+                        : "adstudio-toolbar-menu-closed"
+                        }`}
+                >
+                    {/* KEEP YOUR EXISTING FIVE BUTTONS HERE:
+        AI Assistance, Backgrounds, Icons, Reset, Sale Tags.
+        Do not change their onClick handlers. */}
+
+                    {/* AI ASSISTANCE */}
+                    <button
+                        type="button"
+                        className="adstudio-tool-button adstudio-ai-button"
+                        onClick={() => {
+                            if (onOpenAIAssistance) {
+                                onOpenAIAssistance();
+                            } else {
+                                window.dispatchEvent(
+                                    new CustomEvent("adstudio-open-ai-assistance")
+                                );
+                            }
+                        }}
+                        title="AI Assistance"
+                        data-tippy-content="AI Assistance"
+                        aria-label="Open AI Assistance"
+                    >
+                        <span className="adstudio-tool-icon" aria-hidden="true">
+                            ✦
+                        </span>
+                        <span className="adstudio-tool-label">
+                            AI Assistance
+                        </span>
+                        <span className="adstudio-beta-label">
+                            Beta
+                        </span>
+                    </button>
+
+                    {/* BACKGROUNDS */}
+                    <button
+                        type="button"
+                        className="adstudio-tool-button adstudio-background-button"
+                        onClick={() => onOpenClipArt?.()}
+                        title="Backgrounds"
+                        data-tippy-content="Backgrounds"
+                        aria-label="Open Backgrounds Library"
+                    >
+                        <span className="adstudio-tool-icon" aria-hidden="true">
+                            ▧
+                        </span>
+                        <span className="adstudio-tool-label">
+                            Backgrounds
+                        </span>
+                    </button>
+
+                    {/* ICONS */}
+                    <button
+                        type="button"
+                        className="adstudio-tool-button adstudio-icons-button"
+                        onClick={() => {
+                            setSelectedId(null);
+                            selectedNodeRef.current = null;
+                            setEditingBackground(false);
+
+                            if (trRef.current) {
+                                trRef.current.nodes([]);
+                                trRef.current.getLayer()?.batchDraw();
+                            }
+
+                            window.dispatchEvent(
+                                new CustomEvent("adstudio-open-icon-picker")
+                            );
+                        }}
+                        title="Icons"
+                        data-tippy-content="Icons"
+                        aria-label="Open Icon Library"
+                    >
+                        <span className="adstudio-tool-icon" aria-hidden="true">
+                            ✥
+                        </span>
+                        <span className="adstudio-tool-label">
+                            Icons
+                        </span>
+                    </button>
+
+                    {/* DISCOUNT / SALE TAGS */}
+                    <button
+                        type="button"
+                        className="adstudio-tool-button adstudio-sale-button"
+                        onClick={() => {
+                            setSelectedId(null);
+                            selectedNodeRef.current = null;
+                            setEditingBackground(false);
+
+                            if (trRef.current) {
+                                trRef.current.nodes([]);
+                                trRef.current.getLayer()?.batchDraw();
+                            }
+
+                            onOpenDiscountTags?.();
+                        }}
+                        title="Sale Tags — Discounts and Special Offers"
+                        data-tippy-content="Sale Tags"
+                        aria-label="Open Sale Tags Library"
+                    >
+                        <span className="adstudio-tool-icon" aria-hidden="true">
+                            🏷
+                        </span>
+                        <span className="adstudio-tool-label">
+                            Sale Tags
+                        </span>
+                    </button>
+
+
+                    {/* RESET */}
+                    <button
+                        type="button"
+                        className="adstudio-tool-button adstudio-reset-button"
+                        onClick={onReset}
+                        title="Reset Canvas"
+                        data-tippy-content="Reset Canvas"
+                        aria-label="Reset Canvas"
+                    >
+                        <span className="adstudio-tool-icon" aria-hidden="true">
+                            ↻
+                        </span>
+                        <span className="adstudio-tool-label">
+                            Reset
+                        </span>
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+            {/* ================= END RESPONSIVE CANVAS TOOLBAR ================= */}
 
 
             {/* ZOOM CONTROLLER */}
