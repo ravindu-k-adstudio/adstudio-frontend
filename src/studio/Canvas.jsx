@@ -13,6 +13,7 @@ import {
 } from "react-konva";
 import { useRef, useState, useEffect, forwardRef, Fragment } from "react";
 import FloatingToolbar from "./FloatinngToolbar";
+import WordArtPicker from "../components/WordArtPicker";
 const CURSORS = {
     brush: "crosshair",
     line: "crosshair",
@@ -179,6 +180,7 @@ const Canvas = forwardRef(function Canvas(
         onReplaceImage,
         onOpenDiscountTags,
         onOpenAIAssistance,
+        hideCanvasToolbar = false,
         discountTags = [],
         setDiscountTags,
         shapes,
@@ -256,6 +258,12 @@ const Canvas = forwardRef(function Canvas(
 
     const [toolbarPos, setToolbarPos] = useState({ x: 0, y: 0 });
     const [isMobileToolbarOpen, setIsMobileToolbarOpen] = useState(false);
+    useEffect(() => {
+        if (hideCanvasToolbar) {
+            setIsMobileToolbarOpen(false);
+        }
+    }, [hideCanvasToolbar]);
+    const [showWordArtLibrary, setShowWordArtLibrary] = useState(false);
     /* ================= AUTO SCALE FOR MOBILE ================= */
 
     const [autoScale, setAutoScale] = useState(1);
@@ -574,6 +582,43 @@ const Canvas = forwardRef(function Canvas(
         };
     }, [editingBackground]);
 
+    /*/////////////////////////////*/
+    const handleApplyWordArt = (wordArt) => {
+        const selectedText = texts?.find(
+            (item) => String(item.id) === String(selectedId) &&
+                (item.type === "text" || item.text !== undefined)
+        );
+
+        if (!selectedText) {
+            alert("Please select a text object on the canvas first.");
+            return;
+        }
+
+        setTexts((previousTexts) =>
+            previousTexts.map((item) => {
+                if (String(item.id) !== String(selectedId)) {
+                    return item;
+                }
+
+                return {
+                    ...item,
+                    ...wordArt.style,
+
+                    // Preserve the user's existing wording and placement.
+                    text: item.text,
+                    x: item.x,
+                    y: item.y,
+                    width: item.width,
+                    rotation: item.rotation ?? 0,
+                    id: item.id,
+                    type: item.type,
+                };
+            })
+        );
+
+        setShowWordArtLibrary(false);
+    };
+
     /* ================= DRAWING ================= */
     const onMouseDown = e => {
         if (!DRAW_TOOLS.includes(tool)) return;
@@ -881,7 +926,22 @@ const Canvas = forwardRef(function Canvas(
 
 
             {/* RESPONSIVE TOOLBAR SHELL */}
-            <div className="adstudio-toolbar-shell">
+            <div
+                className="adstudio-toolbar-shell"
+                style={{
+                    display: hideCanvasToolbar ? "none" : "flex",
+                    position: "absolute",
+                    top: 12,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: "max-content",
+                    maxWidth: "calc(100% - 24px)",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 30,
+                    boxSizing: "border-box",
+                }}
+            >
 
                 {/* MOBILE TOGGLE BUTTON */}
                 <button
@@ -955,6 +1015,25 @@ const Canvas = forwardRef(function Canvas(
                             Backgrounds
                         </span>
                     </button>
+
+
+                    {/* WORD ART */}
+                    <button
+                        type="button"
+                        className="adstudio-tool-button adstudio-sale-button"
+                        onClick={() => setShowWordArtLibrary(true)}
+                        title="Word Art"
+                        data-tippy-content="Word Art"
+                        aria-label="Open Word Art Library"
+                    >
+                        <span className="adstudio-tool-icon" aria-hidden="true">
+                            Aa
+                        </span>
+                        <span className="adstudio-tool-label">
+                            Word Art
+                        </span>
+                    </button>
+
 
                     {/* ICONS */}
                     <button
@@ -2763,6 +2842,12 @@ const Canvas = forwardRef(function Canvas(
 
                     </div>
                 </div>
+                {showWordArtLibrary && (
+                    <WordArtPicker
+                        onClose={() => setShowWordArtLibrary(false)}
+                        onApply={handleApplyWordArt}
+                    />
+                )}
             </div>
         </div>
 

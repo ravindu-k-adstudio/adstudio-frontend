@@ -2194,6 +2194,13 @@ export default function AdStudio() {
                     editingBackground={editingBackground}
                     setEditingBackground={setEditingBackground}
                     onOpenAIAssistance={() => setShowAIAssistance(true)}
+                    hideCanvasToolbar={
+                        showTemplates ||
+                        showAIAssistance ||
+                        showIconPicker ||
+                        showClipArtPicker ||
+                        showDiscountTagPicker
+                    }
 
                 />
                 <RightPanel
