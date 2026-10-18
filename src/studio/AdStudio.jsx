@@ -1275,6 +1275,71 @@ export default function AdStudio() {
     };
 
 
+
+    /* ============================================================
+   AI ASSISTANCE — GENERATE FROM EXISTING TEMPLATES
+   ============================================================ */
+
+    const generateAIDesign = async (formData) => {
+        const selectedTemplate = recommendTemplate({
+            templates,
+            prompt: formData.prompt,
+            businessType: formData.businessType,
+            size: formData.size
+        });
+
+        if (!selectedTemplate) {
+            throw new Error("No suitable template was found.");
+        }
+
+        /*
+         * Customize the template's editable text before loading it.
+         * This lets the existing loadTemplate function prepare the
+         * normal Canvas objects, images, blocks and background.
+         */
+        const textOverrides = {
+            businessName: formData.businessName,
+            tagline: formData.tagline,
+            description: formData.description,
+            offer: formData.offer,
+            phone: formData.phone,
+            email: formData.email,
+            address: formData.address
+        };
+
+        const customizedTemplate = {
+            ...selectedTemplate,
+
+            selectedSize: formData.size,
+
+            texts: (selectedTemplate.texts || []).map((item) => {
+                const replacement = textOverrides[item.role];
+
+                if (
+                    typeof replacement === "string" &&
+                    replacement.trim()
+                ) {
+                    return {
+                        ...item,
+                        text: replacement.trim()
+                    };
+                }
+
+                return item;
+            })
+        };
+
+        /*
+         * Use the real template loader. Do not create a separate
+         * canvas or replace the existing editor.
+         */
+        await loadTemplate(customizedTemplate);
+
+        setShowAIAssistance(false);
+        setShowTemplates(false);
+        setIsDirty(true);
+    };
+
     /* ================= TEMPLATE IMAGE REPLACEMENT ================= */
 
     const replaceTemplateImage = (imageId, file) => {
@@ -2109,6 +2174,9 @@ export default function AdStudio() {
             /> */}
 
             <TopBar
+                t={t}
+                texts={texts}
+                setTexts={setTexts}
                 adSize={adSize}
                 setAdSize={setAdSize}
                 language={language}

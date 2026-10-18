@@ -209,35 +209,35 @@ export default function LeftPanel({
                     <button className="icon-btn" onClick={() => toggleSection("business")}>
                         <FaBuilding />
                     </button>
-                    {isMobile && <span className="icon-label">Business</span>}
+                    {isMobile && <span className="icon-label">{t.business || "Business"}</span>}
                 </div>
 
                 <div className="icon-item">
                     <button className="icon-btn" onClick={() => toggleSection("contact")}>
                         <FaPhone />
                     </button>
-                    {isMobile && <span className="icon-label">Contact</span>}
+                    {isMobile && <span className="icon-label">{t.contact || "Contact"}</span>}
                 </div>
 
                 <div className="icon-item">
                     <button className="icon-btn" onClick={() => toggleSection("images")}>
                         <FaImage />
                     </button>
-                    {isMobile && <span className="icon-label">Images</span>}
+                    {isMobile && <span className="icon-label">{t.backgroundImage || "Background - Images"}</span>}
                 </div>
 
                 <div className="icon-item">
                     <button className="icon-btn" onClick={() => toggleSection("blocks")}>
                         <FaShapes />
                     </button>
-                    {isMobile && <span className="icon-label">Shapes</span>}
+                    {isMobile && <span className="icon-label">{t.blockShapes || "Blocks shapes"}</span>}
                 </div>
 
                 <div className="icon-item">
                     <button className="icon-btn" onClick={() => toggleSection("social")}>
                         <FaShareAlt />
                     </button>
-                    {isMobile && <span className="icon-label">Social</span>}
+                    {isMobile && <span className="icon-label">{t.socialMedia || "Social Icons"}</span>}
                 </div>
 
                 <div className="icon-item">
@@ -293,22 +293,14 @@ export default function LeftPanel({
                             onChange={e => updateContact(4, "📞", e.target.value)}
                         />
 
-                        {/* <input
-                            className={inputClass}
-                            value={texts.find(t => t.id === 5)?.text.replace("✉ ", "") || ""}
-                            onChange={e => updateContact("✉", e.target.value)}
-                        /> */}
+
                         <input
                             className={inputClass}
                             value={texts.find(item => item.id === 5)?.text.replace("✉ ", "") || ""}
                             onChange={e => updateContact(5, "✉", e.target.value)}
                         />
 
-                        {/* <input
-                            className={inputClass}
-                            value={texts.find(t => t.id === 6)?.text.replace("📍 ", "") || ""}
-                            onChange={e => updateContact("📍", e.target.value)}
-                        /> */}
+
                         <input
                             className={inputClass}
                             value={texts.find(item => item.id === 6)?.text.replace("📍 ", "") || ""}
@@ -327,55 +319,6 @@ export default function LeftPanel({
                                 type="file"
                                 accept="image/*"
                                 hidden
-                                // onChange={e => {
-                                //     const file = e.target.files[0];
-                                //     if (!file) return;
-
-                                //     const reader = new FileReader();
-
-                                //     reader.onload = () => {
-                                //         const img = new window.Image();
-                                //         img.src = reader.result;
-
-                                //         img.onload = () => {
-                                //             const imageRatio = img.width / img.height;
-                                //             const canvasRatio = canvasWidth / canvasHeight;
-
-                                //             let drawWidth;
-                                //             let drawHeight;
-                                //             let x = 0;
-                                //             let y = 0;
-
-                                //             // Cover mode (same logic as Canva)
-                                //             if (imageRatio > canvasRatio) {
-                                //                 drawHeight = canvasHeight;
-                                //                 drawWidth = canvasHeight * imageRatio;
-                                //                 x = -(drawWidth - canvasWidth) / 2;
-                                //             } else {
-                                //                 drawWidth = canvasWidth;
-                                //                 drawHeight = canvasWidth / imageRatio;
-                                //                 y = -(drawHeight - canvasHeight) / 2;
-                                //             }
-
-                                //             setBackground({
-                                //                 type: "image",
-                                //                 image: img,
-                                //                 src: reader.result,
-
-                                //                 x,
-                                //                 y,
-
-                                //                 width: drawWidth,
-                                //                 height: drawHeight,
-
-                                //                 rotation: 0
-                                //             });
-                                //         };
-                                //     };
-
-                                //     reader.readAsDataURL(file);
-                                // }}
-
                                 onChange={e => {
                                     const file = e.target.files?.[0];
                                     if (!file) return;

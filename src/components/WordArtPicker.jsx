@@ -1,13 +1,13 @@
 
 import React, { useMemo, useState } from "react";
 import {
-    FaSearch,
-    FaTimes,
-    FaCheck,
-    FaMagic,
-    FaLayerGroup,
-    FaStar,
-    FaPalette,
+  FaSearch,
+  FaTimes,
+  FaCheck,
+  FaMagic,
+  FaLayerGroup,
+  FaStar,
+  FaPalette,
 } from "react-icons/fa";
 
 /*
@@ -20,378 +20,378 @@ import {
  */
 
 const RAW_STYLES = [
-    // MODERN — 8
-    ["bold-impact", "Bold Impact", "Modern", "BIG SALE", "#ff3d57", "#ffffff", 2, "#8d1530", 4, 5, 0, 1, "Arial Black, Arial, sans-serif", 1],
-    ["midnight", "Midnight Luxe", "Modern", "MIDNIGHT", "#e9e8ff", "#5148a8", 1, "#15152d", 3, 4, 2, .7, "Arial Black, Arial, sans-serif", 1],
-    ["clean-outline", "Clean Outline", "Modern", "OUTLINE", "#ffffff", "#20243a", 3, "#000000", 2, 3, 2, .35, "Arial Black, Arial, sans-serif", 1],
-    ["mint-fresh", "Fresh Mint", "Modern", "FRESH", "#7cf7c4", "#087f68", 1.5, "#064e43", 2, 3, 2, .55, "Arial Black, Arial, sans-serif", 2],
-    ["soft-shadow", "Soft Shadow", "Modern", "YOUR BRAND", "#ffffff", "#ffffff", 0, "#111827", 2, 4, 8, .7, "Arial, sans-serif", 1],
-    ["lime-energy", "Lime Energy", "Modern", "ENERGY", "#d9ff38", "#28532b", 2, "#18391e", 4, 4, 0, .9, "Arial Black, Arial, sans-serif", 1],
-    ["coral-pop", "Coral Pop", "Modern", "HELLO!", "#ff7f8b", "#ffffff", 1.5, "#b92751", 2, 3, 2, .6, "Arial Black, Arial, sans-serif", 1],
-    ["minimal-black", "Minimal Black", "Modern", "STUDIO", "#20212c", "#ffffff", 0, "#000000", 0, 0, 0, 0, "Arial, sans-serif", 4],
+  // MODERN — 8
+  ["bold-impact", "Bold Impact", "Modern", "BIG SALE", "#ff3d57", "#ffffff", 2, "#8d1530", 4, 5, 0, 1, "Arial Black, Arial, sans-serif", 1],
+  ["midnight", "Midnight Luxe", "Modern", "MIDNIGHT", "#e9e8ff", "#5148a8", 1, "#15152d", 3, 4, 2, .7, "Arial Black, Arial, sans-serif", 1],
+  ["clean-outline", "Clean Outline", "Modern", "OUTLINE", "#ffffff", "#20243a", 3, "#000000", 2, 3, 2, .35, "Arial Black, Arial, sans-serif", 1],
+  ["mint-fresh", "Fresh Mint", "Modern", "FRESH", "#7cf7c4", "#087f68", 1.5, "#064e43", 2, 3, 2, .55, "Arial Black, Arial, sans-serif", 2],
+  ["soft-shadow", "Soft Shadow", "Modern", "YOUR BRAND", "#ffffff", "#ffffff", 0, "#111827", 2, 4, 8, .7, "Arial, sans-serif", 1],
+  ["lime-energy", "Lime Energy", "Modern", "ENERGY", "#d9ff38", "#28532b", 2, "#18391e", 4, 4, 0, .9, "Arial Black, Arial, sans-serif", 1],
+  ["coral-pop", "Coral Pop", "Modern", "HELLO!", "#ff7f8b", "#ffffff", 1.5, "#b92751", 2, 3, 2, .6, "Arial Black, Arial, sans-serif", 1],
+  ["minimal-black", "Minimal Black", "Modern", "STUDIO", "#20212c", "#ffffff", 0, "#000000", 0, 0, 0, 0, "Arial, sans-serif", 4],
 
-    // 3D — 8
-    ["3d-red", "3D Fire Red", "3D", "3D POWER", "#ff4b2b", "#7d1010", 2, "#620d0d", 7, 8, 0, 1, "Arial Black, Arial, sans-serif", .5],
-    ["3d-ocean", "3D Ocean", "3D", "OCEAN", "#48c6ef", "#123b85", 2.5, "#10285f", 6, 7, 0, 1, "Arial Black, Arial, sans-serif", 1],
-    ["3d-gold", "3D Gold", "3D", "GOLD", "#ffdf70", "#8c4b08", 2, "#5e3005", 6, 7, 0, 1, "Arial Black, Arial, sans-serif", 2],
-    ["3d-purple", "Royal 3D", "3D", "ROYAL", "#c7a1ff", "#5b21b6", 2, "#32105f", 6, 7, 0, 1, "Arial Black, Arial, sans-serif", 1],
-    ["3d-emerald", "Emerald Depth", "3D", "PREMIUM", "#6ef3ac", "#08784c", 2, "#06452e", 5, 7, 0, 1, "Arial Black, Arial, sans-serif", .5],
-    ["3d-ice", "Ice Crystal", "3D", "ICE COLD", "#e3fcff", "#2980b9", 2, "#145078", 5, 6, 0, 1, "Arial Black, Arial, sans-serif", 1],
-    ["3d-orange", "Tangerine 3D", "3D", "WOW!", "#ffb347", "#b9360c", 2, "#75210b", 6, 6, 0, 1, "Arial Black, Arial, sans-serif", 1],
-    ["3d-pink", "Candy 3D", "3D", "SWEET", "#ff9fdb", "#a51c76", 2, "#701052", 5, 7, 0, 1, "Arial Black, Arial, sans-serif", 1],
+  // 3D — 8
+  ["3d-red", "3D Fire Red", "3D", "3D POWER", "#ff4b2b", "#7d1010", 2, "#620d0d", 7, 8, 0, 1, "Arial Black, Arial, sans-serif", .5],
+  ["3d-ocean", "3D Ocean", "3D", "OCEAN", "#48c6ef", "#123b85", 2.5, "#10285f", 6, 7, 0, 1, "Arial Black, Arial, sans-serif", 1],
+  ["3d-gold", "3D Gold", "3D", "GOLD", "#ffdf70", "#8c4b08", 2, "#5e3005", 6, 7, 0, 1, "Arial Black, Arial, sans-serif", 2],
+  ["3d-purple", "Royal 3D", "3D", "ROYAL", "#c7a1ff", "#5b21b6", 2, "#32105f", 6, 7, 0, 1, "Arial Black, Arial, sans-serif", 1],
+  ["3d-emerald", "Emerald Depth", "3D", "PREMIUM", "#6ef3ac", "#08784c", 2, "#06452e", 5, 7, 0, 1, "Arial Black, Arial, sans-serif", .5],
+  ["3d-ice", "Ice Crystal", "3D", "ICE COLD", "#e3fcff", "#2980b9", 2, "#145078", 5, 6, 0, 1, "Arial Black, Arial, sans-serif", 1],
+  ["3d-orange", "Tangerine 3D", "3D", "WOW!", "#ffb347", "#b9360c", 2, "#75210b", 6, 6, 0, 1, "Arial Black, Arial, sans-serif", 1],
+  ["3d-pink", "Candy 3D", "3D", "SWEET", "#ff9fdb", "#a51c76", 2, "#701052", 5, 7, 0, 1, "Arial Black, Arial, sans-serif", 1],
 
-    // NEON — 8
-    ["neon-pink", "Neon Pink", "Neon", "NEON", "#ff43c6", "#ffffff", .7, "#ff00aa", 0, 0, 18, 1, "Arial Black, Arial, sans-serif", 3],
-    ["neon-cyan", "Electric Cyan", "Neon", "ELECTRIC", "#65f7ff", "#ffffff", .8, "#00aaff", 0, 0, 15, 1, "Arial Black, Arial, sans-serif", 1],
-    ["neon-lime", "Neon Lime", "Neon", "OPEN", "#d4ff35", "#ffffff", .7, "#91ff00", 0, 0, 17, 1, "Arial Black, Arial, sans-serif", 3],
-    ["neon-violet", "Violet Glow", "Neon", "VIOLET", "#d7a6ff", "#ffffff", .8, "#9b30ff", 0, 0, 17, 1, "Arial Black, Arial, sans-serif", 2],
-    ["neon-blue", "Laser Blue", "Neon", "LASER", "#8ab8ff", "#ffffff", .7, "#1769ff", 0, 0, 17, 1, "Arial Black, Arial, sans-serif", 3],
-    ["neon-orange", "Neon Flame", "Neon", "FLAME", "#ffb66e", "#fff5df", .8, "#ff5a00", 0, 0, 17, 1, "Arial Black, Arial, sans-serif", 2],
-    ["neon-rose", "Rose Tube", "Neon", "LOVE", "#ff94b8", "#ffffff", .8, "#ff276d", 0, 0, 16, 1, "Georgia, serif", 3],
-    ["neon-mint", "Mint Glow", "Neon", "FRESH", "#9bffdf", "#ffffff", .7, "#00dfad", 0, 0, 17, 1, "Arial Black, Arial, sans-serif", 2],
+  // NEON — 8
+  ["neon-pink", "Neon Pink", "Neon", "NEON", "#ff43c6", "#ffffff", .7, "#ff00aa", 0, 0, 18, 1, "Arial Black, Arial, sans-serif", 3],
+  ["neon-cyan", "Electric Cyan", "Neon", "ELECTRIC", "#65f7ff", "#ffffff", .8, "#00aaff", 0, 0, 15, 1, "Arial Black, Arial, sans-serif", 1],
+  ["neon-lime", "Neon Lime", "Neon", "OPEN", "#d4ff35", "#ffffff", .7, "#91ff00", 0, 0, 17, 1, "Arial Black, Arial, sans-serif", 3],
+  ["neon-violet", "Violet Glow", "Neon", "VIOLET", "#d7a6ff", "#ffffff", .8, "#9b30ff", 0, 0, 17, 1, "Arial Black, Arial, sans-serif", 2],
+  ["neon-blue", "Laser Blue", "Neon", "LASER", "#8ab8ff", "#ffffff", .7, "#1769ff", 0, 0, 17, 1, "Arial Black, Arial, sans-serif", 3],
+  ["neon-orange", "Neon Flame", "Neon", "FLAME", "#ffb66e", "#fff5df", .8, "#ff5a00", 0, 0, 17, 1, "Arial Black, Arial, sans-serif", 2],
+  ["neon-rose", "Rose Tube", "Neon", "LOVE", "#ff94b8", "#ffffff", .8, "#ff276d", 0, 0, 16, 1, "Georgia, serif", 3],
+  ["neon-mint", "Mint Glow", "Neon", "FRESH", "#9bffdf", "#ffffff", .7, "#00dfad", 0, 0, 17, 1, "Arial Black, Arial, sans-serif", 2],
 
-    // ELEGANT — 8
-    ["gold-luxury", "Luxury Gold", "Elegant", "LUXURY", "#f6d365", "#8a5a12", 1.5, "#49300c", 2, 3, 3, .8, "Georgia, serif", 2],
-    ["serif-elegant", "Editorial Serif", "Elegant", "EST. 2026", "#f5e6c8", "#493824", .6, "#000000", 1, 2, 2, .3, "Georgia, serif", 2],
-    ["rose-gold", "Rose Gold", "Elegant", "BEAUTY", "#f4a6a0", "#9f4b59", 1, "#5e2534", 2, 3, 3, .7, "Georgia, serif", 2],
-    ["champagne", "Champagne", "Elegant", "SIGNATURE", "#ead4a5", "#a58146", .7, "#5c482d", 1, 2, 2, .4, "Georgia, serif", 3],
-    ["ivory-serif", "Ivory Classic", "Elegant", "TIMELESS", "#fff6e8", "#9a7c5a", .8, "#54402d", 1, 2, 2, .35, "Georgia, serif", 3],
-    ["burgundy", "Burgundy Editorial", "Elegant", "MAISON", "#7e183c", "#f4d6df", .7, "#451025", 1, 2, 1, .5, "Georgia, serif", 3],
-    ["silver-elegance", "Silver Elegance", "Elegant", "EXCLUSIVE", "#e4e9f2", "#66758e", 1, "#344054", 1, 2, 3, .45, "Georgia, serif", 2],
-    ["copper-classic", "Copper Classic", "Elegant", "ARTISAN", "#e8a477", "#85482d", 1, "#49291e", 1, 2, 2, .5, "Georgia, serif", 2],
+  // ELEGANT — 8
+  ["gold-luxury", "Luxury Gold", "Elegant", "LUXURY", "#f6d365", "#8a5a12", 1.5, "#49300c", 2, 3, 3, .8, "Georgia, serif", 2],
+  ["serif-elegant", "Editorial Serif", "Elegant", "EST. 2026", "#f5e6c8", "#493824", .6, "#000000", 1, 2, 2, .3, "Georgia, serif", 2],
+  ["rose-gold", "Rose Gold", "Elegant", "BEAUTY", "#f4a6a0", "#9f4b59", 1, "#5e2534", 2, 3, 3, .7, "Georgia, serif", 2],
+  ["champagne", "Champagne", "Elegant", "SIGNATURE", "#ead4a5", "#a58146", .7, "#5c482d", 1, 2, 2, .4, "Georgia, serif", 3],
+  ["ivory-serif", "Ivory Classic", "Elegant", "TIMELESS", "#fff6e8", "#9a7c5a", .8, "#54402d", 1, 2, 2, .35, "Georgia, serif", 3],
+  ["burgundy", "Burgundy Editorial", "Elegant", "MAISON", "#7e183c", "#f4d6df", .7, "#451025", 1, 2, 1, .5, "Georgia, serif", 3],
+  ["silver-elegance", "Silver Elegance", "Elegant", "EXCLUSIVE", "#e4e9f2", "#66758e", 1, "#344054", 1, 2, 3, .45, "Georgia, serif", 2],
+  ["copper-classic", "Copper Classic", "Elegant", "ARTISAN", "#e8a477", "#85482d", 1, "#49291e", 1, 2, 2, .5, "Georgia, serif", 2],
 
-    // PROMOTIONAL — 8
-    ["orange-promo", "Promo Orange", "Promotional", "SPECIAL", "#ff8a00", "#7c2d12", 2, "#7c2d12", 4, 4, 0, .9, "Arial Black, Arial, sans-serif", 1],
-    ["sale-yellow", "Sale Yellow", "Promotional", "SALE 50%", "#ffe600", "#e11d48", 3, "#7f1d1d", 3, 4, 0, 1, "Arial Black, Arial, sans-serif", .5],
-    ["flash-deal", "Flash Deal", "Promotional", "FLASH DEAL", "#ffffff", "#ff1744", 2.5, "#a00024", 4, 4, 0, 1, "Arial Black, Arial, sans-serif", .5],
-    ["limited-edition", "Limited Edition", "Promotional", "LIMITED", "#ffefb0", "#b45309", 2, "#713f12", 3, 3, 0, .8, "Arial Black, Arial, sans-serif", 1],
-    ["hot-offer", "Hot Offer", "Promotional", "HOT OFFER", "#fff4e5", "#e63b2e", 3, "#9f211b", 4, 4, 0, 1, "Arial Black, Arial, sans-serif", .5],
-    ["new-arrival", "New Arrival", "Promotional", "NEW ARRIVAL", "#d6ffea", "#07865b", 2, "#075e43", 3, 3, 0, .75, "Arial Black, Arial, sans-serif", 1],
-    ["mega-deal", "Mega Deal", "Promotional", "MEGA DEAL", "#ffffff", "#6d28d9", 3, "#40118b", 4, 5, 0, 1, "Arial Black, Arial, sans-serif", .5],
-    ["limited-time", "Limited Time", "Promotional", "ACT NOW!", "#ffedc2", "#b91c1c", 2.5, "#7f1d1d", 3, 4, 0, .9, "Arial Black, Arial, sans-serif", 1],
+  // PROMOTIONAL — 8
+  ["orange-promo", "Promo Orange", "Promotional", "SPECIAL", "#ff8a00", "#7c2d12", 2, "#7c2d12", 4, 4, 0, .9, "Arial Black, Arial, sans-serif", 1],
+  ["sale-yellow", "Sale Yellow", "Promotional", "SALE 50%", "#ffe600", "#e11d48", 3, "#7f1d1d", 3, 4, 0, 1, "Arial Black, Arial, sans-serif", .5],
+  ["flash-deal", "Flash Deal", "Promotional", "FLASH DEAL", "#ffffff", "#ff1744", 2.5, "#a00024", 4, 4, 0, 1, "Arial Black, Arial, sans-serif", .5],
+  ["limited-edition", "Limited Edition", "Promotional", "LIMITED", "#ffefb0", "#b45309", 2, "#713f12", 3, 3, 0, .8, "Arial Black, Arial, sans-serif", 1],
+  ["hot-offer", "Hot Offer", "Promotional", "HOT OFFER", "#fff4e5", "#e63b2e", 3, "#9f211b", 4, 4, 0, 1, "Arial Black, Arial, sans-serif", .5],
+  ["new-arrival", "New Arrival", "Promotional", "NEW ARRIVAL", "#d6ffea", "#07865b", 2, "#075e43", 3, 3, 0, .75, "Arial Black, Arial, sans-serif", 1],
+  ["mega-deal", "Mega Deal", "Promotional", "MEGA DEAL", "#ffffff", "#6d28d9", 3, "#40118b", 4, 5, 0, 1, "Arial Black, Arial, sans-serif", .5],
+  ["limited-time", "Limited Time", "Promotional", "ACT NOW!", "#ffedc2", "#b91c1c", 2.5, "#7f1d1d", 3, 4, 0, .9, "Arial Black, Arial, sans-serif", 1],
 
-    // GRADIENT-INSPIRED — 7
-    ["purple-gradient", "Violet Dream", "Gradient", "DREAM", "#c084fc", "#6d28d9", 1.5, "#4c1d95", 3, 4, 4, .8, "Arial Black, Arial, sans-serif", 1.5],
-    ["sunset", "Sunset Glow", "Gradient", "SUNSET", "#ff9068", "#a83279", 1.5, "#76245e", 3, 4, 3, .7, "Arial Black, Arial, sans-serif", 2],
-    ["ocean-breeze", "Ocean Breeze", "Gradient", "BREATHE", "#67e8f9", "#0369a1", 1.5, "#164e63", 2, 3, 3, .6, "Arial Black, Arial, sans-serif", 1],
-    ["berry-blast", "Berry Blast", "Gradient", "BERRY", "#f0abfc", "#a21caf", 1.5, "#701a75", 3, 4, 3, .7, "Arial Black, Arial, sans-serif", 1],
-    ["peach-dream", "Peach Dream", "Gradient", "PEACHY", "#ffcfb8", "#e45e7c", 1.5, "#9d315b", 2, 3, 2, .65, "Georgia, serif", 2],
-    ["arctic-glow", "Arctic Glow", "Gradient", "ARCTIC", "#b8f5ff", "#5279d8", 1.5, "#334c91", 2, 3, 3, .65, "Arial Black, Arial, sans-serif", 1],
-    ["tropical", "Tropical Pop", "Gradient", "TROPICAL", "#8df7c7", "#0e9f89", 1.5, "#086c68", 3, 3, 2, .7, "Arial Black, Arial, sans-serif", 1],
+  // GRADIENT-INSPIRED — 7
+  ["purple-gradient", "Violet Dream", "Gradient", "DREAM", "#c084fc", "#6d28d9", 1.5, "#4c1d95", 3, 4, 4, .8, "Arial Black, Arial, sans-serif", 1.5],
+  ["sunset", "Sunset Glow", "Gradient", "SUNSET", "#ff9068", "#a83279", 1.5, "#76245e", 3, 4, 3, .7, "Arial Black, Arial, sans-serif", 2],
+  ["ocean-breeze", "Ocean Breeze", "Gradient", "BREATHE", "#67e8f9", "#0369a1", 1.5, "#164e63", 2, 3, 3, .6, "Arial Black, Arial, sans-serif", 1],
+  ["berry-blast", "Berry Blast", "Gradient", "BERRY", "#f0abfc", "#a21caf", 1.5, "#701a75", 3, 4, 3, .7, "Arial Black, Arial, sans-serif", 1],
+  ["peach-dream", "Peach Dream", "Gradient", "PEACHY", "#ffcfb8", "#e45e7c", 1.5, "#9d315b", 2, 3, 2, .65, "Georgia, serif", 2],
+  ["arctic-glow", "Arctic Glow", "Gradient", "ARCTIC", "#b8f5ff", "#5279d8", 1.5, "#334c91", 2, 3, 3, .65, "Arial Black, Arial, sans-serif", 1],
+  ["tropical", "Tropical Pop", "Gradient", "TROPICAL", "#8df7c7", "#0e9f89", 1.5, "#086c68", 3, 3, 2, .7, "Arial Black, Arial, sans-serif", 1],
 
-    // RETRO — 6
-    ["retro-diner", "Retro Diner", "Retro", "GOOD TIMES", "#fff0a6", "#e34d70", 2, "#8b2450", 3, 4, 0, .8, "Georgia, serif", 1],
-    ["disco", "Disco Fever", "Retro", "DISCO", "#ff83dd", "#7827bf", 2, "#42106d", 5, 5, 0, .9, "Arial Black, Arial, sans-serif", 3],
-    ["vintage-cream", "Vintage Cream", "Retro", "HANDCRAFTED", "#f3dfb8", "#725034", 1.3, "#4b3324", 2, 2, 1, .45, "Georgia, serif", 2],
-    ["arcade", "Arcade Pop", "Retro", "PLAYER 1", "#8afff4", "#5425c6", 2.5, "#28116d", 4, 4, 0, 1, "Arial Black, Arial, sans-serif", 1],
-    ["retro-cherry", "Cherry Pop", "Retro", "CHERRY", "#ff6b7a", "#8e1738", 2, "#571126", 3, 4, 0, .9, "Georgia, serif", 2],
-    ["sunshine", "Sunshine Retro", "Retro", "SUNSHINE", "#ffdf6b", "#d75a16", 2, "#8c310c", 3, 4, 0, .85, "Arial Black, Arial, sans-serif", 1],
+  // RETRO — 6
+  ["retro-diner", "Retro Diner", "Retro", "GOOD TIMES", "#fff0a6", "#e34d70", 2, "#8b2450", 3, 4, 0, .8, "Georgia, serif", 1],
+  ["disco", "Disco Fever", "Retro", "DISCO", "#ff83dd", "#7827bf", 2, "#42106d", 5, 5, 0, .9, "Arial Black, Arial, sans-serif", 3],
+  ["vintage-cream", "Vintage Cream", "Retro", "HANDCRAFTED", "#f3dfb8", "#725034", 1.3, "#4b3324", 2, 2, 1, .45, "Georgia, serif", 2],
+  ["arcade", "Arcade Pop", "Retro", "PLAYER 1", "#8afff4", "#5425c6", 2.5, "#28116d", 4, 4, 0, 1, "Arial Black, Arial, sans-serif", 1],
+  ["retro-cherry", "Cherry Pop", "Retro", "CHERRY", "#ff6b7a", "#8e1738", 2, "#571126", 3, 4, 0, .9, "Georgia, serif", 2],
+  ["sunshine", "Sunshine Retro", "Retro", "SUNSHINE", "#ffdf6b", "#d75a16", 2, "#8c310c", 3, 4, 0, .85, "Arial Black, Arial, sans-serif", 1],
 
-    // PLAYFUL — 7
-    ["bubblegum", "Bubblegum", "Playful", "HAPPY!", "#ff9ed8", "#a21caf", 2, "#6b217b", 3, 4, 2, .75, "Arial Black, Arial, sans-serif", 1],
-    ["cotton-candy", "Cotton Candy", "Playful", "SWEET DAY", "#b8c0ff", "#845ec2", 1.5, "#54417e", 2, 3, 2, .65, "Georgia, serif", 1],
-    ["lemon-drop", "Lemon Drop", "Playful", "OH WOW!", "#fff16b", "#ed7b22", 2, "#9b4210", 3, 3, 0, .8, "Arial Black, Arial, sans-serif", .5],
-    ["berry-splash", "Berry Splash", "Playful", "YUMMY", "#ff8e9e", "#9d174d", 2, "#651035", 3, 4, 1, .8, "Arial Black, Arial, sans-serif", 1],
-    ["sky-pop", "Sky Pop", "Playful", "DREAM BIG", "#a5dcff", "#2362a6", 1.5, "#173e73", 2, 3, 2, .6, "Arial Black, Arial, sans-serif", 1],
-    ["confetti", "Confetti", "Playful", "CELEBRATE", "#ffe29a", "#e34b9a", 2, "#9d2466", 3, 3, 2, .75, "Arial Black, Arial, sans-serif", 1],
-    ["choco", "Chocolate Cream", "Playful", "DELICIOUS", "#f5d0a9", "#713f2a", 2, "#45251a", 2, 3, 1, .65, "Georgia, serif", 1],
+  // PLAYFUL — 7
+  ["bubblegum", "Bubblegum", "Playful", "HAPPY!", "#ff9ed8", "#a21caf", 2, "#6b217b", 3, 4, 2, .75, "Arial Black, Arial, sans-serif", 1],
+  ["cotton-candy", "Cotton Candy", "Playful", "SWEET DAY", "#b8c0ff", "#845ec2", 1.5, "#54417e", 2, 3, 2, .65, "Georgia, serif", 1],
+  ["lemon-drop", "Lemon Drop", "Playful", "OH WOW!", "#fff16b", "#ed7b22", 2, "#9b4210", 3, 3, 0, .8, "Arial Black, Arial, sans-serif", .5],
+  ["berry-splash", "Berry Splash", "Playful", "YUMMY", "#ff8e9e", "#9d174d", 2, "#651035", 3, 4, 1, .8, "Arial Black, Arial, sans-serif", 1],
+  ["sky-pop", "Sky Pop", "Playful", "DREAM BIG", "#a5dcff", "#2362a6", 1.5, "#173e73", 2, 3, 2, .6, "Arial Black, Arial, sans-serif", 1],
+  ["confetti", "Confetti", "Playful", "CELEBRATE", "#ffe29a", "#e34b9a", 2, "#9d2466", 3, 3, 2, .75, "Arial Black, Arial, sans-serif", 1],
+  ["choco", "Chocolate Cream", "Playful", "DELICIOUS", "#f5d0a9", "#713f2a", 2, "#45251a", 2, 3, 1, .65, "Georgia, serif", 1],
 ];
 
 const WORD_ART_STYLES = RAW_STYLES.map((item) => {
-    const [
-        id, name, category, preview, fill, stroke, strokeWidth,
-        shadowColor, shadowOffsetX, shadowOffsetY, shadowBlur,
-        shadowOpacity, fontFamily, letterSpacing,
-    ] = item;
+  const [
+    id, name, category, preview, fill, stroke, strokeWidth,
+    shadowColor, shadowOffsetX, shadowOffsetY, shadowBlur,
+    shadowOpacity, fontFamily, letterSpacing,
+  ] = item;
 
-    return {
-        id,
-        name,
-        category,
-        preview,
-        description: {
-            Modern: "Contemporary, polished typography",
-            "3D": "Dimensional lettering with depth",
-            Neon: "Bright glow-inspired lettering",
-            Elegant: "Refined typography for premium brands",
-            Promotional: "High-impact advertising headline",
-            Gradient: "Vibrant color-inspired typography",
-            Retro: "Vintage-inspired expressive lettering",
-            Playful: "Colorful, lively display typography",
-        }[category],
-        style: {
-            fontFamily,
-            fontStyle: "bold",
-            fill,
-            stroke,
-            strokeWidth,
-            shadowColor,
-            shadowBlur,
-            shadowOffsetX,
-            shadowOffsetY,
-            shadowOpacity,
-            letterSpacing,
-        },
-    };
+  return {
+    id,
+    name,
+    category,
+    preview,
+    description: {
+      Modern: "Contemporary, polished typography",
+      "3D": "Dimensional lettering with depth",
+      Neon: "Bright glow-inspired lettering",
+      Elegant: "Refined typography for premium brands",
+      Promotional: "High-impact advertising headline",
+      Gradient: "Vibrant color-inspired typography",
+      Retro: "Vintage-inspired expressive lettering",
+      Playful: "Colorful, lively display typography",
+    }[category],
+    style: {
+      fontFamily,
+      fontStyle: "bold",
+      fill,
+      stroke,
+      strokeWidth,
+      shadowColor,
+      shadowBlur,
+      shadowOffsetX,
+      shadowOffsetY,
+      shadowOpacity,
+      letterSpacing,
+    },
+  };
 });
 
 const CATEGORIES = [
-    "All",
-    "Modern",
-    "3D",
-    "Neon",
-    "Elegant",
-    "Promotional",
-    "Gradient",
-    "Retro",
-    "Playful",
+
+  "Modern",
+  "3D",
+  "Neon",
+  "Elegant",
+  "Promotional",
+  "Gradient",
+  "Retro",
+  "Playful",
 ];
 
 const PREVIEW_BACKGROUNDS = {
-    Modern: "linear-gradient(135deg,#f5f6ff,#e7eaf8)",
-    "3D": "linear-gradient(145deg,#242c4b,#101426)",
-    Neon: "radial-gradient(circle at center,#382253,#151329 78%)",
-    Elegant: "linear-gradient(135deg,#f7f0e6,#e6d7c4)",
-    Promotional: "linear-gradient(135deg,#fff1d8,#ffd2b7)",
-    Gradient: "linear-gradient(135deg,#e8dcff,#c5e8ff)",
-    Retro: "linear-gradient(135deg,#fff1cf,#f7d3bf)",
-    Playful: "linear-gradient(135deg,#fff0fa,#e8edff)",
+  Modern: "linear-gradient(135deg,#f5f6ff,#e7eaf8)",
+  "3D": "linear-gradient(145deg,#242c4b,#101426)",
+  Neon: "radial-gradient(circle at center,#382253,#151329 78%)",
+  Elegant: "linear-gradient(135deg,#f7f0e6,#e6d7c4)",
+  Promotional: "linear-gradient(135deg,#fff1d8,#ffd2b7)",
+  Gradient: "linear-gradient(135deg,#e8dcff,#c5e8ff)",
+  Retro: "linear-gradient(135deg,#fff1cf,#f7d3bf)",
+  Playful: "linear-gradient(135deg,#fff0fa,#e8edff)",
 };
 
 function getPreviewTextStyle(item) {
-    const s = item.style;
+  const s = item.style;
 
-    const shadows = [];
+  const shadows = [];
 
-    if (s.shadowOffsetX || s.shadowOffsetY) {
-        shadows.push(
-            `${s.shadowOffsetX || 0}px ${s.shadowOffsetY || 0}px 0 ${s.shadowColor}`
-        );
-    }
+  if (s.shadowOffsetX || s.shadowOffsetY) {
+    shadows.push(
+      `${s.shadowOffsetX || 0}px ${s.shadowOffsetY || 0}px 0 ${s.shadowColor}`
+    );
+  }
 
-    if (s.shadowBlur) {
-        shadows.push(`0 0 ${Math.min(s.shadowBlur, 18)}px ${s.shadowColor}`);
-    }
+  if (s.shadowBlur) {
+    shadows.push(`0 0 ${Math.min(s.shadowBlur, 18)}px ${s.shadowColor}`);
+  }
 
-    return {
-        color: s.fill,
-        fontFamily: s.fontFamily,
-        fontWeight: 900,
-        fontStyle: s.fontStyle === "italic" ? "italic" : "normal",
-        fontSize: item.preview.length > 9 ? 18 : item.preview.length > 7 ? 21 : 26,
-        lineHeight: 1.15,
-        textAlign: "center",
-        overflowWrap: "anywhere",
-        maxWidth: "100%",
-        letterSpacing: `${Math.min(s.letterSpacing || 0, 3)}px`,
-        WebkitTextStroke: s.strokeWidth
-            ? `${Math.min(s.strokeWidth, 3)}px ${s.stroke}`
-            : "0 transparent",
-        paintOrder: "stroke fill",
-        textShadow: shadows.join(", ") || "none",
-    };
+  return {
+    color: s.fill,
+    fontFamily: s.fontFamily,
+    fontWeight: 900,
+    fontStyle: s.fontStyle === "italic" ? "italic" : "normal",
+    fontSize: item.preview.length > 9 ? 18 : item.preview.length > 7 ? 21 : 26,
+    lineHeight: 1.15,
+    textAlign: "center",
+    overflowWrap: "anywhere",
+    maxWidth: "100%",
+    letterSpacing: `${Math.min(s.letterSpacing || 0, 3)}px`,
+    WebkitTextStroke: s.strokeWidth
+      ? `${Math.min(s.strokeWidth, 3)}px ${s.stroke}`
+      : "0 transparent",
+    paintOrder: "stroke fill",
+    textShadow: shadows.join(", ") || "none",
+  };
 }
 
 export default function WordArtPicker({ onApply, onClose }) {
-    const [search, setSearch] = useState("");
-    const [category, setCategory] = useState("All");
-    const [activeId, setActiveId] = useState("bold-impact");
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [activeId, setActiveId] = useState("bold-impact");
 
-    const styles = useMemo(() => {
-        const query = search.trim().toLowerCase();
+  const styles = useMemo(() => {
+    const query = search.trim().toLowerCase();
 
-        return WORD_ART_STYLES.filter((item) => {
-            const matchesCategory =
-                category === "All" || item.category === category;
+    return WORD_ART_STYLES.filter((item) => {
+      const matchesCategory =
+        category === "All" || item.category === category;
 
-            const matchesSearch =
-                !query ||
-                item.name.toLowerCase().includes(query) ||
-                item.description.toLowerCase().includes(query) ||
-                item.preview.toLowerCase().includes(query) ||
-                item.category.toLowerCase().includes(query);
+      const matchesSearch =
+        !query ||
+        item.name.toLowerCase().includes(query) ||
+        item.description.toLowerCase().includes(query) ||
+        item.preview.toLowerCase().includes(query) ||
+        item.category.toLowerCase().includes(query);
 
-            return matchesCategory && matchesSearch;
-        });
-    }, [search, category]);
+      return matchesCategory && matchesSearch;
+    });
+  }, [search, category]);
 
-    const activeStyle =
-        WORD_ART_STYLES.find((item) => item.id === activeId) ||
-        WORD_ART_STYLES[0];
+  const activeStyle =
+    WORD_ART_STYLES.find((item) => item.id === activeId) ||
+    WORD_ART_STYLES[0];
 
-    const applyStyle = () => {
-        if (activeStyle && onApply) {
-            onApply({
-                ...activeStyle,
-                style: { ...activeStyle.style },
-            });
-        }
-    };
+  const applyStyle = () => {
+    if (activeStyle && onApply) {
+      onApply({
+        ...activeStyle,
+        style: { ...activeStyle.style },
+      });
+    }
+  };
 
-    return (
-        <div className="wa-overlay" onMouseDown={onClose}>
-            <section
-                className="wa-modal"
-                role="dialog"
-                aria-modal="true"
-                aria-label="Word Art library"
-                onMouseDown={(event) => event.stopPropagation()}
+  return (
+    <div className="wa-overlay" onMouseDown={onClose}>
+      <section
+        className="wa-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Word Art library"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <header className="wa-header">
+          <div className="wa-heading">
+            <div className="wa-heading-icon">
+              <FaMagic />
+            </div>
+            <div>
+              <h2>Word Art Studio</h2>
+              <p>Make your words impossible to ignore.</p>
+            </div>
+          </div>
+
+          <button
+            className="wa-close"
+            onClick={onClose}
+            type="button"
+            aria-label="Close Word Art library"
+          >
+            <FaTimes />
+          </button>
+        </header>
+
+        <div className="wa-search">
+          <FaSearch />
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search styles, e.g. gold, neon, sale..."
+            aria-label="Search Word Art styles"
+          />
+          {search && (
+            <button
+              type="button"
+              className="wa-clear-search"
+              onClick={() => setSearch("")}
+              aria-label="Clear search"
             >
-                <header className="wa-header">
-                    <div className="wa-heading">
-                        <div className="wa-heading-icon">
-                            <FaMagic />
-                        </div>
-                        <div>
-                            <h2>Word Art Studio</h2>
-                            <p>Make your words impossible to ignore.</p>
-                        </div>
-                    </div>
+              <FaTimes />
+            </button>
+          )}
+        </div>
 
-                    <button
-                        className="wa-close"
-                        onClick={onClose}
-                        type="button"
-                        aria-label="Close Word Art library"
-                    >
-                        <FaTimes />
-                    </button>
-                </header>
+        <nav className="wa-categories" aria-label="Word Art categories">
+          {CATEGORIES.map((item) => (
+            <button
+              key={item}
+              type="button"
+              className={`wa-category ${category === item ? "is-active" : ""}`}
+              onClick={() => setCategory(item)}
+              aria-pressed={category === item}
+            >
+              {item}
+            </button>
+          ))}
+        </nav>
 
-                <div className="wa-search">
-                    <FaSearch />
-                    <input
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                        placeholder="Search styles, e.g. gold, neon, sale..."
-                        aria-label="Search Word Art styles"
-                    />
-                    {search && (
-                        <button
-                            type="button"
-                            className="wa-clear-search"
-                            onClick={() => setSearch("")}
-                            aria-label="Clear search"
-                        >
-                            <FaTimes />
-                        </button>
-                    )}
+        <div className="wa-library-info">
+          <span className="wa-count">
+            <FaLayerGroup />
+            {styles.length} styles
+          </span>
+          <span className="wa-hint">
+            Choose a design, then apply it to selected canvas text
+          </span>
+        </div>
+
+        <div className="wa-grid">
+          {styles.map((item) => (
+            <button
+              type="button"
+              key={item.id}
+              className={`wa-style-card ${activeId === item.id ? "is-selected" : ""}`}
+              onClick={() => setActiveId(item.id)}
+              aria-pressed={activeId === item.id}
+            >
+              <div
+                className={`wa-preview wa-preview-${item.category.toLowerCase()}`}
+                style={{ background: PREVIEW_BACKGROUNDS[item.category] }}
+              >
+                <span className="wa-preview-sparkle wa-sparkle-one">✦</span>
+                <span className="wa-preview-sparkle wa-sparkle-two">✧</span>
+
+                <span
+                  className="wa-preview-text"
+                  style={getPreviewTextStyle(item)}
+                >
+                  {item.preview}
+                </span>
+              </div>
+
+              <div className="wa-card-details">
+                <div className="wa-card-copy">
+                  <strong>{item.name}</strong>
+                  <small>{item.description}</small>
                 </div>
-
-                <nav className="wa-categories" aria-label="Word Art categories">
-                    {CATEGORIES.map((item) => (
-                        <button
-                            key={item}
-                            type="button"
-                            className={`wa-category ${category === item ? "is-active" : ""}`}
-                            onClick={() => setCategory(item)}
-                            aria-pressed={category === item}
-                        >
-                            {item}
-                        </button>
-                    ))}
-                </nav>
-
-                <div className="wa-library-info">
-                    <span className="wa-count">
-                        <FaLayerGroup />
-                        {styles.length} styles
-                    </span>
-                    <span className="wa-hint">
-                        Choose a design, then apply it to selected canvas text
-                    </span>
-                </div>
-
-                <div className="wa-grid">
-                    {styles.map((item) => (
-                        <button
-                            type="button"
-                            key={item.id}
-                            className={`wa-style-card ${activeId === item.id ? "is-selected" : ""}`}
-                            onClick={() => setActiveId(item.id)}
-                            aria-pressed={activeId === item.id}
-                        >
-                            <div
-                                className={`wa-preview wa-preview-${item.category.toLowerCase()}`}
-                                style={{ background: PREVIEW_BACKGROUNDS[item.category] }}
-                            >
-                                <span className="wa-preview-sparkle wa-sparkle-one">✦</span>
-                                <span className="wa-preview-sparkle wa-sparkle-two">✧</span>
-
-                                <span
-                                    className="wa-preview-text"
-                                    style={getPreviewTextStyle(item)}
-                                >
-                                    {item.preview}
-                                </span>
-                            </div>
-
-                            <div className="wa-card-details">
-                                <div className="wa-card-copy">
-                                    <strong>{item.name}</strong>
-                                    <small>{item.description}</small>
-                                </div>
-                                {activeId === item.id && (
-                                    <span className="wa-check">
-                                        <FaCheck />
-                                    </span>
-                                )}
-                            </div>
-                        </button>
-                    ))}
-                </div>
-
-                {styles.length === 0 && (
-                    <div className="wa-empty">
-                        <FaSearch />
-                        <strong>No matching styles</strong>
-                        <span>Try another search or choose a different category.</span>
-                        <button
-                            type="button"
-                            className="wa-reset-filter"
-                            onClick={() => {
-                                setSearch("");
-                                setCategory("All");
-                            }}
-                        >
-                            Show all Word Art
-                        </button>
-                    </div>
+                {activeId === item.id && (
+                  <span className="wa-check">
+                    <FaCheck />
+                  </span>
                 )}
+              </div>
+            </button>
+          ))}
+        </div>
 
-                <footer className="wa-footer">
-                    <div className="wa-selected-info">
-                        <span className="wa-selected-icon">
-                            <FaPalette />
-                        </span>
-                        <div>
-                            <strong>{activeStyle.name}</strong>
-                            <small>{activeStyle.category} style selected</small>
-                        </div>
-                    </div>
+        {styles.length === 0 && (
+          <div className="wa-empty">
+            <FaSearch />
+            <strong>No matching styles</strong>
+            <span>Try another search or choose a different category.</span>
+            <button
+              type="button"
+              className="wa-reset-filter"
+              onClick={() => {
+                setSearch("");
+                setCategory("All");
+              }}
+            >
+              Show all Word Art
+            </button>
+          </div>
+        )}
 
-                    <div className="wa-actions">
-                        <button
-                            type="button"
-                            className="wa-cancel"
-                            onClick={onClose}
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="button"
-                            className="wa-apply"
-                            onClick={applyStyle}
-                            disabled={!activeStyle}
-                        >
-                            <FaMagic />
-                            Apply Word Art
-                        </button>
-                    </div>
-                </footer>
-            </section>
+        <footer className="wa-footer">
+          <div className="wa-selected-info">
+            <span className="wa-selected-icon">
+              <FaPalette />
+            </span>
+            <div>
+              <strong>{activeStyle.name}</strong>
+              <small>{activeStyle.category} style selected</small>
+            </div>
+          </div>
 
-            <style>{`
+          <div className="wa-actions">
+            <button
+              type="button"
+              className="wa-cancel"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="wa-apply"
+              onClick={applyStyle}
+              disabled={!activeStyle}
+            >
+              <FaMagic />
+              Apply Word Art
+            </button>
+          </div>
+        </footer>
+      </section>
+
+      <style>{`
         .wa-overlay {
           position: fixed;
           inset: 0;
@@ -965,8 +965,8 @@ export default function WordArtPicker({ onApply, onClose }) {
           }
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 }
 
 

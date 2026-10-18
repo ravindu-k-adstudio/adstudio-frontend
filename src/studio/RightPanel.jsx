@@ -656,30 +656,14 @@ hover:shadow-lg active:scale-95 disabled:opacity-40
 
             <div className="rightpanel-icons">
 
-                {/* <div className="icon-item">
-
-                    <button
-                        className={`icon-btn ${activeSection === "templates" ? "active" : ""
-                            }`}
-                        onClick={onOpenTemplates}
-                    >
-                        <FaLayerGroup />
-                    </button>
-
-                    {isMobile && (
-                        <span className="icon-label">
-                            Templates
-                        </span>
-                    )}
-
-                </div> */}
 
                 <div className="icon-item">
                     <button
                         className={`icon-btn ${activeSection === "text" ? "active" : ""}`}
                         onClick={() => toggleSection("text")}
                     >
-                        <FaFont />
+                        <FaFont />{t.text || "Text"}
+
                     </button>
                     {isMobile && <span className="icon-label">Text</span>}
                 </div>
@@ -705,28 +689,28 @@ hover:shadow-lg active:scale-95 disabled:opacity-40
                     >
                         <FaSquare />
                     </button>
-                    {isMobile && <span className="icon-label">Shapes</span>}
+                    {isMobile && <span className="icon-label">Drawings</span>}
                 </div>
 
                 <div className="icon-item">
                     <button className="icon-btn" onClick={undo}>
                         <FaUndo />
                     </button>
-                    {isMobile && <span className="icon-label">Undo</span>}
+                    {isMobile && <span className="icon-label">{t.undo || "Undo"}</span>}
                 </div>
 
                 <div className="icon-item">
                     <button className="icon-btn" onClick={redo}>
                         <FaRedo />
                     </button>
-                    {isMobile && <span className="icon-label">Redo</span>}
+                    {isMobile && <span className="icon-label">{t.redo || "Redo"}</span>}
                 </div>
 
                 <div className="icon-item">
                     <button className="icon-btn" onClick={deleteElement}>
                         <FaTrash />
                     </button>
-                    {isMobile && <span className="icon-label">Delete</span>}
+                    {isMobile && <span className="icon-label">{t.delete || "Delete"}</span>}
                 </div>
 
                 <div className="icon-item">

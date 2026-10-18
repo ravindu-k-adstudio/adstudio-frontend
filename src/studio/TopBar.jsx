@@ -883,6 +883,9 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function TopBar({
+
+    texts = [],
+    setTexts,
     adSize,
     setAdSize,
     language,
@@ -892,7 +895,8 @@ export default function TopBar({
     onSave,
     adId,
     setAdId,
-    onOpenTemplates
+    onOpenTemplates,
+    t = {}
 }) {
     const {
         user,
@@ -1374,7 +1378,8 @@ export default function TopBar({
                             className="flex gap-1 items-center text-sm px-2 py-1 rounded bg-gray-100 hover:bg-gray-200"
                         >
                             <FaHome />
-                            {label("home")}
+                            {/* {label("home")} */}
+                            {t.home || "Home"}
                         </button>
                     </Tippy>
 
@@ -1392,9 +1397,10 @@ export default function TopBar({
                             className="flex gap-1 items-center text-sm px-2 py-1 rounded bg-gray-100 hover:bg-gray-200"
                         >
                             <FaChartBar />
-                            {label(
+                            {/* {label(
                                 "dashboard"
-                            )}
+                            )} */}
+                            {t.dashboard || "Dashboard"}
                         </button>
                     </Tippy>
 
@@ -1412,9 +1418,10 @@ export default function TopBar({
                             className="flex gap-1 items-center text-sm px-2 py-1 rounded bg-gray-100 hover:bg-gray-200"
                         >
                             <FaDollarSign />
-                            {label(
+                            {/* {label(
                                 "pricing"
-                            )}
+                            )} */}
+                            {t.pricing || "Pricing"}
                         </button>
                     </Tippy>
 
@@ -1437,9 +1444,10 @@ export default function TopBar({
                             className="flex gap-1 items-center text-sm px-2 py-1 rounded bg-red-100 hover:bg-red-200 text-red-600"
                         >
                             <FaSignOutAlt />
-                            {label(
+                            {/* {label(
                                 "logout"
-                            )}
+                            )} */}
+                            {t.logout || "Logout"}
                         </button>
                     </Tippy>
 
@@ -1585,7 +1593,7 @@ export default function TopBar({
                     </button>
 
                     <span className="icon-label">
-                        Home
+                        {t.home || "Home"}
                     </span>
                 </div>
 
@@ -1602,7 +1610,7 @@ export default function TopBar({
                     </button>
 
                     <span className="icon-label">
-                        Dashboard
+                        {t.dashboard || "Dashboard"}
                     </span>
                 </div>
 
@@ -1619,7 +1627,7 @@ export default function TopBar({
                     </button>
 
                     <span className="icon-label">
-                        Pricing
+                        {t.pricing || "Pricing"}
                     </span>
                 </div>
             </div>
@@ -1746,7 +1754,7 @@ export default function TopBar({
                         </button>
 
                         <span className="icon-label">
-                            Save
+                            {t.save || "Save"}
                         </span>
                     </div>
 

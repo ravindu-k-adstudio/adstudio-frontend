@@ -2806,6 +2806,297 @@ const MINIMAL_PALETTES = [
 ];
 
 
+
+
+
+/* ============================================================
+   ADSTUDIO — BUSINESS IMAGE BACKGROUNDS
+   12 business-specific designs with open space for user content
+============================================================ */
+
+const BUSINESS_IMAGE_DESIGNS = [
+    {
+        id: "restaurant",
+        name: "Restaurant",
+        color: "#F97316",
+        pale: "#FFF0E5",
+        icon: "🍔",
+        placement: "bottom-left",
+        shape: "circle",
+    },
+    {
+        id: "cafe",
+        name: "Cafe",
+        color: "#8B5E3C",
+        pale: "#F8EEE3",
+        icon: "☕",
+        placement: "top-right",
+        shape: "blob",
+    },
+    {
+        id: "fashion",
+        name: "Fashion",
+        color: "#D94675",
+        pale: "#FCE8EF",
+        icon: "👗",
+        placement: "right",
+        shape: "arch",
+    },
+    {
+        id: "photography",
+        name: "Photography",
+        color: "#7963D9",
+        pale: "#EFECFF",
+        icon: "📷",
+        placement: "bottom-right",
+        shape: "circle",
+    },
+    {
+        id: "resort",
+        name: "Resort",
+        color: "#0D9488",
+        pale: "#DDF7F0",
+        icon: "🌴",
+        placement: "top-left",
+        shape: "blob",
+    },
+    {
+        id: "fitness",
+        name: "Fitness",
+        color: "#E33D4F",
+        pale: "#FFE9EB",
+        icon: "🏋️",
+        placement: "bottom-right",
+        shape: "diagonal",
+    },
+    {
+        id: "beauty",
+        name: "Beauty",
+        color: "#D66BA0",
+        pale: "#FCEAF3",
+        icon: "✨",
+        placement: "right",
+        shape: "arch",
+    },
+    {
+        id: "auto",
+        name: "Auto",
+        color: "#2876D2",
+        pale: "#E7F1FF",
+        icon: "🚘",
+        placement: "bottom-left",
+        shape: "diagonal",
+    },
+    {
+        id: "grocery",
+        name: "Grocery",
+        color: "#31965C",
+        pale: "#E4F7E9",
+        icon: "🥑",
+        placement: "top-right",
+        shape: "circle",
+    },
+    {
+        id: "real-estate",
+        name: "Real Estate",
+        color: "#3276B8",
+        pale: "#E6F1FC",
+        icon: "🏡",
+        placement: "right",
+        shape: "arch",
+    },
+    {
+        id: "travel",
+        name: "Travel",
+        color: "#0891B2",
+        pale: "#DFF7FC",
+        icon: "🧳",
+        placement: "bottom-left",
+        shape: "blob",
+    },
+    {
+        id: "education",
+        name: "Education",
+        color: "#3457B2",
+        pale: "#E9EEFF",
+        icon: "🎓",
+        placement: "top-right",
+        shape: "circle",
+    },
+];
+
+function createBusinessImageBackground(design, index) {
+    const W = 1200;
+    const H = 1200;
+
+    const rightSide = ["right", "top-right", "bottom-right"].includes(
+        design.placement
+    );
+
+    const topSide = design.placement.startsWith("top");
+    const bottomSide = design.placement.startsWith("bottom");
+
+    const cx = design.placement.includes("left")
+        ? 220
+        : rightSide
+            ? 980
+            : 980;
+
+    const cy = topSide
+        ? 220
+        : bottomSide
+            ? 980
+            : 600;
+
+    const imageSize = 330;
+    const imageX = cx - imageSize / 2;
+    const imageY = cy - imageSize / 2;
+
+    let shapeMarkup = "";
+
+    if (design.shape === "circle") {
+        shapeMarkup = `
+            <circle cx="${cx}" cy="${cy}" r="230"
+                fill="${design.pale}"/>
+            <circle cx="${cx}" cy="${cy}" r="190"
+                fill="${design.color}" opacity=".12"/>
+            <circle cx="${cx + 125}" cy="${cy - 150}" r="36"
+                fill="${design.color}" opacity=".22"/>
+        `;
+    } else if (design.shape === "blob") {
+        shapeMarkup = `
+            <path
+                d="M ${cx - 205} ${cy - 125}
+                   C ${cx - 125} ${cy - 270},
+                     ${cx + 100} ${cy - 230},
+                     ${cx + 200} ${cy - 80}
+                   C ${cx + 285} ${cy + 65},
+                     ${cx + 145} ${cy + 225},
+                     ${cx - 25} ${cy + 210}
+                   C ${cx - 215} ${cy + 200},
+                     ${cx - 280} ${cy + 15},
+                     ${cx - 205} ${cy - 125} Z"
+                fill="${design.pale}"/>
+            <circle cx="${cx + 160}" cy="${cy + 155}" r="45"
+                fill="${design.color}" opacity=".20"/>
+        `;
+    } else if (design.shape === "arch") {
+        shapeMarkup = `
+            <path
+                d="M ${cx - 205} ${cy + 210}
+                   V ${cy - 35}
+                   A 205 205 0 0 1 ${cx + 205} ${cy - 35}
+                   V ${cy + 210} Z"
+                fill="${design.pale}"/>
+            <path
+                d="M ${cx - 155} ${cy + 210}
+                   V ${cy - 15}
+                   A 155 155 0 0 1 ${cx + 155} ${cy - 15}
+                   V ${cy + 210} Z"
+                fill="${design.color}" opacity=".13"/>
+        `;
+    } else {
+        shapeMarkup = `
+            <path
+                d="M ${cx - 260} ${cy - 130}
+                   L ${cx + 100} ${cy - 260}
+                   L ${cx + 270} ${cy + 100}
+                   L ${cx - 90} ${cy + 260} Z"
+                fill="${design.pale}"/>
+            <path
+                d="M ${cx + 100} ${cy - 260}
+                   L ${cx + 270} ${cy + 100}
+                   L ${cx + 160} ${cy + 150}
+                   L ${cx - 10} ${cy - 210} Z"
+                fill="${design.color}" opacity=".16"/>
+        `;
+    }
+
+    const dots = `
+        <circle cx="${cx - 210}" cy="${cy - 200}" r="9"
+            fill="${design.color}" opacity=".4"/>
+        <circle cx="${cx - 175}" cy="${cy - 220}" r="6"
+            fill="${design.color}" opacity=".25"/>
+        <circle cx="${cx - 205}" cy="${cy - 165}" r="5"
+            fill="${design.color}" opacity=".3"/>
+    `;
+
+    /*
+      Keep the opposite side clean so users can add their own
+      headings, prices, contact details and other design elements.
+    */
+    const emptySpace = design.placement.includes("left")
+        ? `<path d="M 460 0 H 1200 V 1200 H 460 Z" fill="#FFFFFF"/>`
+        : `<path d="M 0 0 H 740 V 1200 H 0 Z" fill="#FFFFFF"/>`;
+
+    /*
+      Small emoji illustration in a white circle.
+      The pale shape and accent geometry provide the main artwork.
+    */
+    const illustration = `
+        <circle cx="${cx}" cy="${cy}" r="150"
+            fill="#FFFFFF" stroke="${design.color}"
+            stroke-opacity=".20" stroke-width="5"/>
+        <text x="${cx}" y="${cy + 44}"
+            font-size="178" text-anchor="middle"
+            font-family="Arial, sans-serif">${design.icon}</text>
+    `;
+
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+            <defs>
+                <linearGradient id="accent-${index}"
+                    x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="${design.pale}"/>
+                    <stop offset="100%" stop-color="${design.color}"
+                        stop-opacity=".24"/>
+                </linearGradient>
+            </defs>
+
+            <rect width="${W}" height="${H}" fill="#FFFFFF"/>
+
+            <path d="M 0 0 H 1200 V 1200 H 0 Z"
+                fill="url(#accent-${index})" opacity=".10"/>
+
+            ${shapeMarkup}
+            ${dots}
+
+            <path
+                d="${design.placement.includes("left")
+            ? "M 0 0 H 105 Q 65 160 0 200 Z"
+            : "M 1200 1200 H 1090 Q 1140 1040 1200 1000 Z"}"
+                fill="${design.color}" opacity=".18"/>
+
+            ${illustration}
+        </svg>
+    `;
+
+    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+const BUSINESS_IMAGE_BACKGROUNDS = BUSINESS_IMAGE_DESIGNS.map(
+    (design, index) => ({
+        id: `business-image-${design.id}`,
+        name: `${design.name} — Image Accent`,
+        category: design.name,
+        src: createBusinessImageBackground(design, index),
+        tags: [
+            design.name.toLowerCase(),
+            "business image",
+            "business background",
+            "white space",
+            "minimal",
+            "gradient",
+            "advertising",
+        ],
+    })
+);
+
+
+
+
+
 /* ============================================================
    100 BACKGROUNDS
 ============================================================ */
@@ -3387,7 +3678,7 @@ const MODERN_COLOR_POP_BACKGROUNDS =
 ============================================================ */
 
 export const CLIP_ART_BACKGROUNDS = [
-
+    ...BUSINESS_IMAGE_BACKGROUNDS,
     ...MODERN_COLOR_POP_BACKGROUNDS,
     ...BASE_CLIP_ART_BACKGROUNDS
 ];
@@ -3399,6 +3690,19 @@ export const CLIP_ART_BACKGROUNDS = [
 export const CLIP_ART_CATEGORIES = [
 
     "All",
+
+    "Restaurant",
+    "Cafe",
+    "Fashion",
+    "Photography",
+    "Resort",
+    "Fitness",
+    "Beauty",
+    "Auto",
+    "Grocery",
+    "Real Estate",
+    "Travel",
+    "Education",
 
     "Abstract",
 
