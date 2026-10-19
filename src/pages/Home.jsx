@@ -1726,7 +1726,7 @@ export default function Home() {
                         text-gray-500
                         mt-12
                     ">
-                        © {new Date().getFullYear()} Eco software | AdStudio | All rights reserved.
+                        © {new Date().getFullYear()} Eco Software | AdStudio | All rights reserved.
                     </p>
 
                 </footer>

@@ -18,7 +18,7 @@ import {
     restoreIconElement,
     loadIconImage
 } from "../data/iconLibrary";
-// import ClipArtBackgroundPicker from "../components/ClipArtBackgroundPicker";
+
 import DiscountTagPicker from "../components/DiscountTagPicker";
 import { FaTextWidth } from "react-icons/fa";
 import AIAssistanceModal from "../components/AIAssistanceModal";

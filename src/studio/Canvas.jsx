@@ -1024,7 +1024,7 @@ const Canvas = forwardRef(function Canvas(
                         <span className="adstudio-tool-icon" aria-hidden="true">
                             ▧
                         </span>
-                        <span>Business Photos</span>
+                        <span>Business Photos T</span>
                     </button>
 
 

@@ -128,7 +128,7 @@ export default function Contact() {
 
             {/* WHATSAPP BUTTON */}
             <a
-                href="https://wa.me/9477XXXXXXX"
+                href="https://wa.me/94786708128"
                 target="_blank"
                 rel="noreferrer"
                 className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded-full shadow-lg"
