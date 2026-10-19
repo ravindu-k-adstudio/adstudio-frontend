@@ -3394,239 +3394,377 @@ const BASE_CLIP_ART_BACKGROUNDS = [
 ];
 
 
+/* ============================================================
+   PREMIUM BUSINESS PHOTO BACKGROUNDS
+   12 BUSINESS TYPES × 12 BACKGROUNDS = 144
+============================================================ */
+
+const BUSINESS_PHOTO_DESIGNS = [
+    {
+        category: "Restaurant",
+        tags: ["restaurant", "food", "dining"],
+        designs: [
+            "fine dining plated gourmet food",
+            "luxury restaurant interior",
+            "grilled steak food photography",
+            "fresh pasta Italian cuisine",
+            "gourmet burger close up",
+            "seafood fine dining plate",
+            "pizza restaurant food photography",
+            "sushi Japanese cuisine",
+            "chef preparing gourmet food",
+            "elegant restaurant table setting",
+            "fresh salad food photography",
+            "luxury dining candlelight"
+        ]
+    },
+    {
+        category: "Cafe",
+        tags: ["cafe", "coffee", "bakery"],
+        designs: [
+            "latte art coffee cup close up",
+            "specialty coffee beans photography",
+            "modern minimalist coffee shop",
+            "iced coffee product photography",
+            "croissant pastry bakery photography",
+            "coffee pouring espresso",
+            "cappuccino on marble table",
+            "coffee shop interior natural light",
+            "chocolate cake dessert photography",
+            "coffee and fresh pastries",
+            "barista making coffee",
+            "premium coffee cup aesthetic"
+        ]
+    },
+    {
+        category: "Fashion",
+        tags: ["fashion", "clothing", "editorial"],
+        designs: [
+            "luxury fashion editorial photography",
+            "minimalist clothing boutique interior",
+            "elegant womenswear fashion photography",
+            "menswear fashion editorial",
+            "luxury handbag product photography",
+            "fashion model studio photography",
+            "premium sneakers product photography",
+            "folded designer clothing aesthetic",
+            "fashion accessories editorial",
+            "luxury fabric texture fashion",
+            "streetwear fashion editorial",
+            "elegant boutique clothing display"
+        ]
+    },
+    {
+        category: "Photography",
+        tags: ["photography", "camera", "studio"],
+        designs: [
+            "professional camera lens close up",
+            "photography studio lighting setup",
+            "portrait photography studio",
+            "professional camera on tripod",
+            "wedding photography elegant scene",
+            "cinematic photography equipment",
+            "camera and lenses on dark surface",
+            "professional photographer at work",
+            "minimal photography studio interior",
+            "camera lens product photography",
+            "creative photo studio workspace",
+            "cinematic film camera equipment"
+        ]
+    },
+    {
+        category: "Resort",
+        tags: ["resort", "hotel", "tropical"],
+        designs: [
+            "luxury tropical resort swimming pool",
+            "luxury hotel bedroom interior",
+            "tropical beach resort aerial view",
+            "luxury infinity pool ocean view",
+            "modern resort architecture",
+            "tropical villa with private pool",
+            "luxury hotel lobby interior",
+            "beachfront resort sunset",
+            "luxury spa resort interior",
+            "tropical palm trees luxury hotel",
+            "premium hotel breakfast terrace",
+            "luxury resort ocean panorama"
+        ]
+    },
+    {
+        category: "Fitness",
+        tags: ["fitness", "gym", "training"],
+        designs: [
+            "modern premium gym interior",
+            "athlete strength training photography",
+            "dumbbells on dark gym floor",
+            "personal trainer fitness studio",
+            "running athlete outdoor photography",
+            "fitness equipment close up",
+            "athlete lifting weights gym",
+            "modern yoga studio interior",
+            "boxing training gym photography",
+            "fitness woman workout editorial",
+            "muscular athlete dramatic lighting",
+            "premium gym equipment photography"
+        ]
+    },
+    {
+        category: "Beauty",
+        tags: ["beauty", "skincare", "cosmetics"],
+        designs: [
+            "luxury skincare product photography",
+            "premium cosmetics on beige background",
+            "elegant beauty salon interior",
+            "perfume bottle luxury photography",
+            "makeup brushes cosmetics flat lay",
+            "skincare serum glass bottle",
+            "luxury spa treatment photography",
+            "minimal beauty product still life",
+            "hair salon professional interior",
+            "cosmetic cream texture photography",
+            "premium lipstick product photography",
+            "elegant skincare bottles natural light"
+        ]
+    },
+    {
+        category: "Auto",
+        tags: ["automotive", "car", "vehicle"],
+        designs: [
+            "luxury sports car dramatic photography",
+            "premium sedan studio photography",
+            "modern car showroom interior",
+            "sports car on mountain road",
+            "automotive detailing close up",
+            "luxury SUV outdoor photography",
+            "car headlight detail photography",
+            "modern electric car charging",
+            "premium car interior leather",
+            "performance car dark studio",
+            "automotive service workshop",
+            "luxury car sunset photography"
+        ]
+    },
+    {
+        category: "Grocery",
+        tags: ["grocery", "fresh", "produce"],
+        designs: [
+            "fresh colorful vegetables market",
+            "fresh fruit arrangement photography",
+            "organic produce grocery store",
+            "fresh bakery bread display",
+            "premium grocery store interior",
+            "fresh citrus fruit close up",
+            "organic vegetables wooden table",
+            "fresh strawberries and berries",
+            "farmers market produce photography",
+            "fresh herbs and vegetables",
+            "healthy food ingredients flat lay",
+            "fresh apples and green produce"
+        ]
+    },
+    {
+        category: "Real Estate",
+        tags: ["realestate", "architecture", "interior"],
+        designs: [
+            "modern luxury house exterior",
+            "minimalist luxury living room",
+            "contemporary architectural villa",
+            "luxury apartment interior photography",
+            "modern kitchen interior design",
+            "luxury home swimming pool",
+            "contemporary house architecture",
+            "elegant bedroom interior design",
+            "modern commercial property exterior",
+            "luxury property sunset architecture",
+            "bright minimalist home interior",
+            "premium real estate architecture"
+        ]
+    },
+    {
+        category: "Travel",
+        tags: ["travel", "landscape", "destination"],
+        designs: [
+            "tropical island turquoise water",
+            "dramatic mountain travel landscape",
+            "Mediterranean coastal village",
+            "beautiful tropical beach aerial",
+            "European city travel photography",
+            "waterfall lush tropical forest",
+            "desert dunes travel photography",
+            "mountain lake scenic destination",
+            "luxury yacht ocean travel",
+            "tropical palm beach sunset",
+            "Japanese travel landscape",
+            "scenic coastal road destination"
+        ]
+    },
+    {
+        category: "Education",
+        tags: ["education", "study", "learning"],
+        designs: [
+            "books and notebooks study desk",
+            "modern university campus photography",
+            "student studying at desk",
+            "library shelves warm natural light",
+            "graduation cap diploma photography",
+            "modern classroom interior",
+            "open books on wooden desk",
+            "science laboratory education",
+            "laptop books learning workspace",
+            "students studying together",
+            "academic books and stationery",
+            "university library study environment"
+        ]
+    }
+];
 
 /*
- * DIRECT PHOTO BACKGROUNDS
- * 12 business types × 12 designs = 144 backgrounds.
- * Replace the old BUSINESS_PHOTO_BACKGROUNDS generator with this section.
- * Keep BUSINESS_PHOTO_DESIGNS above unchanged.
+ * Use direct, stable Unsplash image URLs instead of loremflickr search URLs.
+ * Search-style image services can return errors or inconsistent results.
+ * These URLs point directly to image files and are suitable for <img src>.
  */
-
 const BUSINESS_PHOTO_URLS = {
     Restaurant: [
-        "photo-1414235077428-338989a2e8c0",
-        "photo-1517248135467-4c7edcad34c4",
-        "photo-1514933651103-005eec06c04b",
-        "photo-1559339352-11d035aa65de",
-        "photo-1555396273-367ea4eb4db5",
-        "photo-1515003197210-e0cd7184f8b5",
-        "photo-1546549032-9571cd6b27df",
-        "photo-1547592180-85f173990554",
-        "photo-1544025162-d76694265947",
-        "photo-1565299624946-b28f40a0ae38",
-        "photo-1579871494447-9811cf80d66c",
-        "photo-1547595628-c61a29f496f0"
+        "photo-1414235077428-338989a2e8c0", "photo-1517248135467-4c7edcad34c4",
+        "photo-1514933651103-005eec06c04b", "photo-1559339352-11d035aa65de",
+        "photo-1555396273-367ea4eb4db5", "photo-1515003197210-e0cd7184f8b5"
     ],
-
     Cafe: [
-        "photo-1509042239860-f550ce710b93",
-        "photo-1445116572660-236099ec97a0",
-        "photo-1495474472287-4d71bcdd2085",
-        "photo-1554118811-1e0d58224f24",
-        "photo-1461023058943-07fcbe16d735",
-        "photo-1501339847302-ac426a4a7cbb",
-        "photo-1511920170033-f8396924c348",
-        "photo-1442512595331-e89e73853f31",
-        "photo-1493857671505-72967e2e2760",
-        "photo-1559925393-8be0ec4767c8",
-        "photo-1466978913421-dad2ebd01d17",
-        "photo-1509042239860-f550ce710b93"
+        "photo-1509042239860-f550ce710b93", "photo-1445116572660-236099ec97a0",
+        "photo-1495474472287-4d71bcdd2085", "photo-1554118811-1e0d58224f24",
+        "photo-1461023058943-07fcbe16d735", "photo-1501339847302-ac426a4a7cbb"
     ],
-
     Fashion: [
-        "photo-1483985988355-763728e1935b",
-        "photo-1485230895905-ec40ba36b9bc",
-        "photo-1490481651871-ab68de25d43d",
-        "photo-1529139574466-a303027c1d8b",
-        "photo-1539109136881-3be0616acf4b",
-        "photo-1483985988355-763728e1935b",
-        "photo-1525507119028-ed4c629a60a3",
-        "photo-1490481651871-ab68de25d43d",
-        "photo-1485968579580-b6d095142e6e",
-        "photo-1551232864-3f0890e580d9",
-        "photo-1445205170230-053b83016050",
-        "photo-1434389677669-e08b4cac3105"
+        "photo-1483985988355-763728e1935b", "photo-1485230895905-ec40ba36b9bc",
+        "photo-1490481651871-ab68de25d43d", "photo-1483985988355-763728e1935b",
+        "photo-1529139574466-a303027c1d8b", "photo-1539109136881-3be0616acf4b"
     ],
-
     Photography: [
-        "photo-1516035069371-29a1b244cc32",
-        "photo-1495707902641-75cac588d2e9",
-        "photo-1519183071298-a2962be90b8e",
-        "photo-1452587925148-ce544e77e70d",
-        "photo-1502982720700-bfff97f2ecac",
-        "photo-1516724562728-afc824a36e84",
-        "photo-1500530855697-b586d89ba3ee",
-        "photo-1471341971476-ae15ff5dd4ea",
-        "photo-1516035069371-29a1b244cc32",
-        "photo-1510127034890-ba27508e9f1c",
-        "photo-1542038784456-1ea8e935640e",
-        "photo-1502920917128-1aa500764cbd"
+        "photo-1516035069371-29a1b244cc32", "photo-1495707902641-75cac588d2e9",
+        "photo-1519183071298-a2962be90b8e", "photo-1452587925148-ce544e77e70d"
     ],
-
     Resort: [
-        "photo-1571896349842-33c89424de2d",
-        "photo-1566073771259-6a8506099945",
-        "photo-1573843981267-be1999ff37cd",
-        "photo-1540541338287-41700207dee6",
-        "photo-1571003123894-1f0594d2b5d9",
-        "photo-1564013799919-ab600027ffc6",
-        "photo-1571896349842-33c89424de2d",
-        "photo-1582719478250-c89cae4dc85b",
-        "photo-1511818966892-d7d671e672a2",
-        "photo-1542314831-068cd1dbfeeb",
-        "photo-1571896349842-33c89424de2d",
-        "photo-1576013551627-0cc20b96c2a7"
+        "photo-1571896349842-33c89424de2d", "photo-1566073771259-6a8506099945",
+        "photo-1571896349842-33c89424de2d", "photo-1573843981267-be1999ff37cd",
+        "photo-1540541338287-41700207dee6", "photo-1571003123894-1f0594d2b5d9"
     ],
-
     Fitness: [
-        "photo-1534438327276-14e5300c3a48",
-        "photo-1517836357463-d25dfeac3438",
-        "photo-1517963879466-e1b555cdb5b4",
-        "photo-1534258936925-c58bed479fcb",
-        "photo-1571019613454-1cb2f99b2d8b",
-        "photo-1583454110551-21f2fa2afe61",
-        "photo-1534438327276-14e5300c3a48",
-        "photo-1518611012118-696072aa579a",
-        "photo-1540497077202-7c8a3999166f",
-        "photo-1576678927484-cc907957088c",
-        "photo-1517963628607-235ccdd5476c",
-        "photo-1579758629938-03607ccdbaba"
+        "photo-1534438327276-14e5300c3a48", "photo-1517836357463-d25dfeac3438",
+        "photo-1517963879466-e1b555cdb5b4", "photo-1534258936925-c58bed479fcb",
+        "photo-1571019613454-1cb2f99b2d8b", "photo-1583454110551-21f2fa2afe61"
     ],
-
     Beauty: [
-        "photo-1608248543803-ba4f8c70ae0b",
-        "photo-1598440947619-2c35fc9aa908",
-        "photo-1601049541289-9b1b7bbbfe19",
-        "photo-1611930022073-b7a4ba5fcccd",
-        "photo-1570172619644-dfd03ed5d881",
-        "photo-1596462502278-27bfdc403348",
-        "photo-1608248543803-ba4f8c70ae0b",
-        "photo-1522335789203-aabd1fc54bc9",
-        "photo-1512496015851-a90fb38ba796",
-        "photo-1596462502278-27bfdc403348",
-        "photo-1616394584738-fc6e612e71b9",
-        "photo-1571781926291-c477ebfd024b"
+        "photo-1608248543803-ba4f8c70ae0b", "photo-1598440947619-2c35fc9aa908",
+        "photo-1601049541289-9b1b7bbbfe19", "photo-1611930022073-b7a4ba5fcccd",
+        "photo-1570172619644-dfd03ed5d881", "photo-1596462502278-27bfdc403348"
     ],
-
     Auto: [
-        "photo-1492144534655-ae79c964c9d7",
-        "photo-1503376780353-7e6692767b70",
-        "photo-1493238792000-8113da705763",
-        "photo-1511919884226-fd3cad34687c",
-        "photo-1549317661-bd32c8ce0db2",
-        "photo-1489824904134-891ab64532f1",
-        "photo-1492144534655-ae79c964c9d7",
-        "photo-1503376780353-7e6692767b70",
-        "photo-1552519507-da3b142c6e3d",
-        "photo-1504215680853-026ed2a45def",
-        "photo-1486262715619-67b85e0b08d3",
-        "photo-1493238792000-8113da705763"
+        "photo-1492144534655-ae79c964c9d7", "photo-1503376780353-7e6692767b70",
+        "photo-1503376780353-7e6692767b70", "photo-1493238792000-8113da705763",
+        "photo-1511919884226-fd3cad34687c", "photo-1549317661-bd32c8ce0db2"
     ],
-
     Grocery: [
-        "photo-1542838132-92c53300491e",
-        "photo-1540420773420-3366772f4999",
-        "photo-1566385101042-1a0aa0c1268c",
-        "photo-1518843875459-f738682238a6",
-        "photo-1547592180-85f173990554",
-        "photo-1490645935967-10de6ba17061",
-        "photo-1542838132-92c53300491e",
-        "photo-1543168256-418811576931",
-        "photo-1579113800032-c38bd7635818",
-        "photo-1488459716781-31db52582fe9",
-        "photo-1560806887-1e4cd0b6cbd6",
-        "photo-1540420773420-3366772f4999"
+        "photo-1542838132-92c53300491e", "photo-1540420773420-3366772f4999",
+        "photo-1566385101042-1a0aa0c1268c", "photo-1518843875459-f738682238a6",
+        "photo-1547592180-85f173990554", "photo-1490645935967-10de6ba17061"
     ],
-
     "Real Estate": [
-        "photo-1600596542815-ffad4c1539a9",
-        "photo-1600607687939-ce8a6c25118c",
-        "photo-1600210492486-724fe5c67fb0",
-        "photo-1600566753086-00f18fb6b3ea",
-        "photo-1600607687920-4e2a09cf159d",
-        "photo-1600607687644-c7171b42498f",
-        "photo-1600585154340-be6161a56a0c",
-        "photo-1600047509807-ba8f99d2cdde",
-        "photo-1600566753190-17f0baa2a6c3",
-        "photo-1600607687920-4e2a09cf159d",
-        "photo-1600573472550-8090b5e0745e",
-        "photo-1600607687939-ce8a6c25118c"
+        "photo-1600596542815-ffad4c1539a9", "photo-1600607687939-ce8a6c25118c",
+        "photo-1600210492486-724fe5c67fb0", "photo-1600566753086-00f18fb6b3ea",
+        "photo-1600607687920-4e2a09cf159d", "photo-1600607687644-c7171b42498f"
     ],
-
     Travel: [
-        "photo-1500530855697-b586d89ba3ee",
-        "photo-1501785888041-af3ef285b470",
-        "photo-1464822759023-fed622ff2c3b",
-        "photo-1476514525535-07fb3b4ae5f1",
-        "photo-1519046904884-53103b34b206",
-        "photo-1507525428034-b723cf961d3e",
-        "photo-1500534623283-312aade485b7",
-        "photo-1469474968028-56623f02e42e",
-        "photo-1470770841072-f978cf4d019e",
-        "photo-1494783367193-149034c05e8f",
-        "photo-1501785888041-af3ef285b470",
-        "photo-1518837695005-2083093ee35b"
+        "photo-1500530855697-b586d89ba3ee", "photo-1501785888041-af3ef285b470",
+        "photo-1464822759023-fed622ff2c3b", "photo-1476514525535-07fb3b4ae5f1",
+        "photo-1519046904884-53103b34b206", "photo-1507525428034-b723cf961d3e"
     ],
-
     Education: [
-        "photo-1503676260728-1c00da094a0b",
-        "photo-1523050854058-8df90110c9f1",
-        "photo-1509062522246-3755977927d7",
-        "photo-1497633762265-9d179a990aa6",
-        "photo-1434030216411-0b793f4b4173",
-        "photo-1524995997946-a1c2e315a42f",
-        "photo-1503676260728-1c00da094a0b",
-        "photo-1523050854058-8df90110c9f1",
-        "photo-1509062522246-3755977927d7",
-        "photo-1456513080510-7bf3a84b82f8",
-        "photo-1427504494785-3a9ca7044f45",
-        "photo-1503676260728-1c00da094a0b"
+        "photo-1503676260728-1c00da094a0b", "photo-1523050854058-8df90110c9f1",
+        "photo-1509062522246-3755977927d7", "photo-1497633762265-9d179a990aa6",
+        "photo-1434030216411-0b793f4b4173", "photo-1524995997946-a1c2e315a42f"
     ]
 };
 
 const BUSINESS_PHOTO_FALLBACK = [
     "photo-1497366754035-f200968a6e72",
     "photo-1497366811353-6870744d04b2",
-    "photo-1497366216548-37526070297c"
+    "photo-1497366216548-37526070297c",
+    "photo-1497366811353-6870744d04b2"
 ];
 
-export const BUSINESS_PHOTO_BACKGROUNDS =
-    BUSINESS_PHOTO_DESIGNS.flatMap((business, businessIndex) =>
-        business.designs.map((description, designIndex) => {
-            const imageList =
-                BUSINESS_PHOTO_URLS[business.category] ||
-                BUSINESS_PHOTO_FALLBACK;
+const BUSINESS_PHOTO_FALLBACK_PALETTES = {
+    Restaurant: ["#fff7ed", "#fed7aa", "#ea580c", "#7c2d12"],
+    Cafe: ["#faf3e8", "#e7c9a9", "#9a6642", "#4a2d20"],
+    Fashion: ["#fff1f2", "#fbcfe8", "#be185d", "#3f1728"],
+    Photography: ["#f5f3ff", "#ddd6fe", "#7c3aed", "#1f1b2e"],
+    Resort: ["#ecfeff", "#99f6e4", "#0f766e", "#134e4a"],
+    Fitness: ["#fff1f2", "#fda4af", "#e11d48", "#4c0519"],
+    Beauty: ["#fff1f2", "#fbcfe8", "#db2777", "#831843"],
+    Auto: ["#eff6ff", "#bfdbfe", "#2563eb", "#172554"],
+    Grocery: ["#f0fdf4", "#bbf7d0", "#16a34a", "#14532d"],
+    "Real Estate": ["#eff6ff", "#bfdbfe", "#2563eb", "#1e3a8a"],
+    Travel: ["#ecfeff", "#a5f3fc", "#0891b2", "#164e63"],
+    Education: ["#eff6ff", "#bfdbfe", "#2563eb", "#1e3a8a"]
+};
 
-            const imageId = imageList[designIndex % imageList.length];
+const BUSINESS_PHOTO_FALLBACK_ICONS = {
+    Restaurant: ["🍽", "🍔", "🍕", "🥗", "🍜", "🍰", "🥘", "🍣", "🥐", "🍝", "🧁", "🍤"],
+    Cafe: ["☕", "🥐", "🫘", "🧋", "🍰", "☕", "🥯", "🍪", "🫖", "🥞", "🍩", "🥛"],
+    Fashion: ["👗", "👜", "👠", "🧥", "👔", "👟", "🕶", "👒", "💍", "🧣", "👚", "🛍"],
+    Photography: ["📷", "📸", "🎞", "📷", "🎥", "📸", "📹", "🔍", "💡", "🎬", "📷", "🖼"],
+    Resort: ["🌴", "🏝", "🏖", "🌊", "🏨", "🌅", "🌺", "⛱", "🛟", "🌴", "🏊", "🌄"],
+    Fitness: ["🏋", "💪", "🏃", "🚴", "🥊", "🧘", "🏋", "🏃", "🏆", "💪", "🚴", "🥇"],
+    Beauty: ["🧴", "💄", "🧖", "🪞", "💅", "🧴", "🌸", "🫧", "🧖", "💋", "🧼", "✨"],
+    Auto: ["🚘", "🏎", "🚙", "🚗", "🛞", "🚘", "🚕", "🔧", "🚙", "🏁", "🚗", "⚡"],
+    Grocery: ["🥑", "🍎", "🥕", "🍋", "🥬", "🍓", "🍇", "🥦", "🍊", "🫑", "🍐", "🧺"],
+    "Real Estate": ["🏡", "🏢", "🏠", "🏘", "🏙", "🏡", "🏗", "🪟", "🏠", "🏢", "🏘", "🔑"],
+    Travel: ["✈", "🧳", "🏝", "🗺", "🚞", "🏔", "🌍", "🚢", "🏕", "🌅", "🚆", "🛫"],
+    Education: ["🎓", "📚", "📖", "✏", "🧪", "🏫", "🧮", "📝", "🔬", "📓", "🖊", "🏅"]
+};
 
-            const src =
-                `https://images.unsplash.com/${imageId}` +
-                `?auto=format&fit=crop&w=1200&h=1200&q=85`;
+const businessFallbackSvg = (category, variant) => {
+    const palette = BUSINESS_PHOTO_FALLBACK_PALETTES[category] || ["#f8fafc", "#e2e8f0", "#64748b", "#0f172a"];
+    const icon = (BUSINESS_PHOTO_FALLBACK_ICONS[category] || ["✦"])[variant % (BUSINESS_PHOTO_FALLBACK_ICONS[category] || ["✦"]).length];
+    const side = variant % 4;
+    const positions = [
+        { x: 875, y: 760, tx: 0, ty: 0 },
+        { x: 930, y: 310, tx: 0, ty: 0 },
+        { x: 280, y: 920, tx: 0, ty: 0 },
+        { x: 260, y: 300, tx: 0, ty: 0 }
+    ];
+    const pos = positions[side];
+    const dark = variant % 3 === 0;
+    const bg = dark ? palette[3] : palette[0];
+    const ink = dark ? "#ffffff" : palette[3];
+    const accent = palette[2];
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${palette[1]}"/><stop offset="1" stop-color="${bg}"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="24" stdDeviation="22" flood-color="#000" flood-opacity=".15"/></filter></defs><rect width="1200" height="1200" fill="url(#g)"/><circle cx="${pos.x}" cy="${pos.y}" r="${290 + (variant % 3) * 28}" fill="${accent}" opacity=".16"/><path d="M${pos.x - 250} ${pos.y + 160} C${pos.x - 160} ${pos.y - 130} ${pos.x + 180} ${pos.y - 190} ${pos.x + 270} ${pos.y + 80} C${pos.x + 330} ${pos.y + 270} ${pos.x + 50} ${pos.y + 340} ${pos.x - 120} ${pos.y + 230} Z" fill="${accent}" opacity=".2"/><circle cx="${pos.x}" cy="${pos.y}" r="210" fill="${bg}" filter="url(#s)"/><text x="${pos.x}" y="${pos.y + 55}" font-size="205" text-anchor="middle" font-family="Arial, sans-serif">${icon}</text><path d="M40 40 H1160 V1160 H40 Z" fill="none" stroke="${ink}" stroke-opacity=".09" stroke-width="3"/><rect x="70" y="70" width="250" height="14" rx="7" fill="${accent}" opacity=".65"/><circle cx="${side % 2 ? 140 : 1060}" cy="${side % 2 ? 1060 : 140}" r="44" fill="${accent}" opacity=".18"/></svg>`;
+    return svgData(svg);
+};
 
-            return makeItem(
+export const BUSINESS_PHOTO_BACKGROUNDS = BUSINESS_PHOTO_DESIGNS.flatMap((business, businessIndex) =>
+    business.designs.map((description, designIndex) => {
+        const imageList = BUSINESS_PHOTO_URLS[business.category] || BUSINESS_PHOTO_FALLBACK;
+        const imageId = imageList[designIndex % imageList.length];
+        const src = `https://images.unsplash.com/${imageId}?auto=format&fit=crop&w=1200&h=1200&q=85`;
+        const fallbackSrc = businessFallbackSvg(business.category, designIndex);
+        return {
+            ...makeItem(
                 `business-photo-${businessIndex + 1}-${designIndex + 1}`,
                 `${business.category} Photo ${String(designIndex + 1).padStart(2, "0")}`,
                 business.category,
                 src,
-                [
-                    business.category.toLowerCase(),
-                    ...business.tags,
-                    description.toLowerCase(),
-                    "photography",
-                    "advertisement",
-                    "professional",
-                    "business-photo"
-                ]
-            );
-        })
-    );
+                [business.category.toLowerCase(), ...business.tags, description.toLowerCase(), "photography", "advertisement", "professional", "business-photo"]
+            ),
+            fallbackSrc
+        };
+    })
+);
 
 if (BUSINESS_PHOTO_BACKGROUNDS.length !== 144) {
     throw new Error(
         `Expected 144 business photo backgrounds, got ${BUSINESS_PHOTO_BACKGROUNDS.length}`
     );
 }
-
 
 /* ============================================================
    ADSTUDIO — MODERN COLOR POP COLLECTION
@@ -3909,8 +4047,6 @@ const MODERN_COLOR_POP_BACKGROUNDS =
 ============================================================ */
 
 export const CLIP_ART_BACKGROUNDS = [
-    ...BUSINESS_PHOTO_BACKGROUNDS,
-    ...BUSINESS_IMAGE_BACKGROUNDS,
     ...MODERN_COLOR_POP_BACKGROUNDS,
     ...BASE_CLIP_ART_BACKGROUNDS
 ];
