@@ -299,7 +299,7 @@ export default function FloatingToolbar({
             <ActionButton
                 icon={FaTimes}
                 label="Close toolbar"
-                color="#f1f5f9"
+                color="#1f88f1"
                 onClick={closeToolbar}
             />
         </div>

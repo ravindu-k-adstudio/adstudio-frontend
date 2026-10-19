@@ -1,5 +1,5 @@
-import Navbar from "../../../../lifeChange/ad-studio/src/components/Navbar";
-import Footer from "../../../../lifeChange/ad-studio/src/components/Footer";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function Contact() {
@@ -28,14 +28,14 @@ export default function Contact() {
                         <MapPin className="mx-auto mb-4 text-blue-500" size={32} />
                         <h3 className="text-xl font-semibold mb-2">Our Location</h3>
                         <p className="text-gray-400">
-                            No-xxx <br />Galle rd,<br /> Aluthgama, Srilanka
+                            Your Address Here <br /> City, Country
                         </p>
                     </div>
 
                     <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-6 rounded-2xl text-center hover:bg-white/10 transition">
                         <Phone className="mx-auto mb-4 text-blue-500" size={32} />
                         <h3 className="text-xl font-semibold mb-2">Call Us</h3>
-                        <p className="text-gray-400">+94 78 670 xxxx</p>
+                        <p className="text-gray-400">+94 77 XXX XXXX</p>
                     </div>
 
                     <div className="backdrop-blur-xl bg-white/5 border border-white/10 p-6 rounded-2xl text-center hover:bg-white/10 transition">
