@@ -1,118 +1,159 @@
-// import { FaPen, FaTrash, FaCopy } from "react-icons/fa";
-
-// export default function FloatingToolbar({
-//     element,
-//     onDelete,
-//     onEdit,
-//     onDuplicate,
-//     position,
-//     activeSection
-// }) {
-//     if (!element || activeSection) return null;
-
-//     return (
-//         <div
-//             style={{
-//                 position: "fixed",
-//                 top: position.y,
-//                 left: position.x,
-//                 transform: "translate(-50%, -130%)",
-//                 background: "#ffffff",
-//                 borderRadius: 8,
-//                 padding: "4px 6px",
-//                 display: "flex",
-//                 gap: 4,
-//                 boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
-//                 zIndex: 9999
-//             }}
-//         >
-//             <button onClick={onDuplicate} style={btnStyle}>
-//                 <FaCopy size={10} />
-//             </button>
-//             <button onClick={onEdit} style={btnStyle}>
-//                 <FaPen size={10} />
-//             </button>
-
-//             <button onClick={onDelete} style={btnStyle}>
-//                 <FaTrash size={10} />
-//             </button>
-//         </div>
-//     );
-// }
-
-// const btnStyle = {
-//     background: "#1e3a8a", // dark blue
-//     color: "#ffffff",
-//     border: "none",
-//     width: 26,
-//     height: 26,
-//     borderRadius: 6,
-//     display: "flex",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     cursor: "pointer"
-// };
-
-//////////////////////////////////
-
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
-    FaPen,
-    FaTrash,
     FaCopy,
-    FaTimes
+    FaTrash,
+    FaTimes,
+    FaLayerGroup,
+    FaLock,
+    FaLockOpen,
+    FaAlignLeft,
+    FaAlignCenter,
+    FaAlignRight,
+    FaArrowUp,
+    FaArrowDown,
+    FaAngleDoubleUp,
+    FaAngleDoubleDown,
+    FaGripHorizontal,
+    FaGripVertical,
+    FaAlignJustify
 } from "react-icons/fa";
 
 export default function FloatingToolbar({
     element,
     onDelete,
-    onEdit,
     onDuplicate,
     position,
-    activeSection,
-    onClose
+    onClose,
+    onArrange,
+    onLockToggle,
+    onAlign,
+    isLocked = false,
+    selectedCount = 1
 }) {
-    const [isVisible, setIsVisible] = useState(true);
+    const [menu, setMenu] = useState(null);
+    const [hidden, setHidden] = useState(false);
 
-    // Show the toolbar again whenever a different element is selected.
-    const elementKey = element?.id ?? element?._id ?? element;
+    if (!element || !position || hidden) return null;
 
-    useEffect(() => {
-        setIsVisible(true);
-    }, [elementKey]);
+    const buttonStyle = {
+        width: 34,
+        height: 34,
+        padding: 0,
+        border: "none",
+        borderRadius: 8,
+        background: "#eff6ff",
+        color: "#1d4ed8",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        flexShrink: 0
+    };
 
-    if (!element || !position || !isVisible) {
-        return null;
-    }
+    const menuItemStyle = {
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        width: "100%",
+        padding: "10px 12px",
+        border: "none",
+        borderRadius: 7,
+        background: "transparent",
+        color: "#1e293b",
+        cursor: "pointer",
+        textAlign: "left",
+        fontSize: 12,
+        whiteSpace: "nowrap"
+    };
 
-    const handleAction = (callback) => (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-
+    const runAction = (callback, ...args) => {
         if (typeof callback === "function") {
-            callback();
+            callback(...args);
         }
+        setMenu(null);
     };
 
-    const handleClose = (event) => {
+    const closeToolbar = (event) => {
         event.preventDefault();
         event.stopPropagation();
-
-        setIsVisible(false);
-
-        if (typeof onClose === "function") {
-            onClose();
-        }
+        setHidden(true);
+        setMenu(null);
+        onClose?.();
     };
+
+    const ActionButton = ({
+        icon: Icon,
+        label,
+        onClick,
+        color,
+        disabled = false
+    }) => (
+        <button
+            type="button"
+            title={label}
+            aria-label={label}
+            disabled={disabled}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+                e.stopPropagation();
+                onClick?.(e);
+            }}
+            style={{
+                ...buttonStyle,
+                background: color || "#eff6ff",
+                color: color ? "#ffffff" : "#1d4ed8",
+                opacity: disabled ? 0.4 : 1,
+                cursor: disabled ? "not-allowed" : "pointer"
+            }}
+        >
+            <Icon size={14} />
+        </button>
+    );
+
+    const MenuButton = ({ icon: Icon, label, action, disabled = false }) => (
+        <button
+            type="button"
+            disabled={disabled}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+                e.stopPropagation();
+                runAction(action);
+            }}
+            style={{
+                ...menuItemStyle,
+                opacity: disabled ? 0.4 : 1,
+                cursor: disabled ? "not-allowed" : "pointer"
+            }}
+            onMouseEnter={(e) => {
+                if (!disabled) e.currentTarget.style.background = "#eff6ff";
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+            }}
+        >
+            <Icon size={13} />
+            {label}
+        </button>
+    );
+
+    const Divider = () => (
+        <span
+            style={{
+                width: 1,
+                height: 25,
+                background: "#e2e8f0",
+                margin: "0 2px",
+                flexShrink: 0
+            }}
+        />
+    );
 
     return (
         <div
-            className="adstudio-floating-toolbar"
             role="toolbar"
             aria-label="Selected element actions"
-            onMouseDown={(event) => event.stopPropagation()}
-            onClick={(event) => event.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             style={{
                 position: "fixed",
                 top: position.y,
@@ -127,84 +168,169 @@ export default function FloatingToolbar({
                 borderRadius: 11,
                 boxShadow: "0 8px 26px rgba(15, 23, 42, 0.18)",
                 zIndex: 9999,
-                whiteSpace: "nowrap"
+                fontFamily: "Arial, sans-serif"
             }}
         >
-            <button
-                type="button"
-                onClick={handleAction(onDuplicate)}
-                style={btnStyle}
-                title="Duplicate element"
-                aria-label="Duplicate element"
-            >
-                <FaCopy size={13} />
-            </button>
-
-            {/* <button
-                type="button"
-                onClick={handleAction(onEdit)}
-                style={{
-                    ...btnStyle,
-                    background: "#2563eb"
-                }}
-                title="Edit text / Open Word Art Library"
-                aria-label="Edit text and open Word Art Library"
-            >
-                <FaPen size={13} />
-            </button> */}
-
-            <button
-                type="button"
-                onClick={handleAction(onDelete)}
-                style={{
-                    ...btnStyle,
-                    background: "#dc2626"
-                }}
-                title="Delete element"
-                aria-label="Delete element"
-            >
-                <FaTrash size={13} />
-            </button>
-
-            <span
-                aria-hidden="true"
-                style={{
-                    width: 1,
-                    height: 22,
-                    background: "#e2e8f0",
-                    margin: "0 2px"
-                }}
+            <ActionButton
+                icon={FaCopy}
+                label="Duplicate"
+                onClick={() => runAction(onDuplicate)}
             />
 
-            <button
-                type="button"
-                onClick={handleClose}
-                style={{
-                    ...btnStyle,
-                    background: "#f1f5f9",
-                    color: "#475569"
-                }}
-                title="Close toolbar"
-                aria-label="Close floating toolbar"
-            >
-                <FaTimes size={13} />
-            </button>
+            <div style={{ position: "relative" }}>
+                <ActionButton
+                    icon={FaLayerGroup}
+                    label="Arrange layers"
+                    onClick={() =>
+                        setMenu(menu === "arrange" ? null : "arrange")
+                    }
+                />
+
+                {menu === "arrange" && (
+                    <div style={menuStyle}>
+                        <MenuButton
+                            icon={FaAngleDoubleUp}
+                            label="Bring to front"
+                            action={() => onArrange?.("front")}
+                        />
+                        <MenuButton
+                            icon={FaArrowUp}
+                            label="Bring forward"
+                            action={() => onArrange?.("forward")}
+                        />
+                        <MenuButton
+                            icon={FaArrowDown}
+                            label="Send backward"
+                            action={() => onArrange?.("backward")}
+                        />
+                        <MenuButton
+                            icon={FaAngleDoubleDown}
+                            label="Send to back"
+                            action={() => onArrange?.("back")}
+                        />
+                    </div>
+                )}
+            </div>
+
+            <ActionButton
+                icon={isLocked ? FaLockOpen : FaLock}
+                label={isLocked ? "Unlock element" : "Lock element"}
+                onClick={() => runAction(onLockToggle)}
+            />
+
+            <div style={{ position: "relative" }}>
+                <ActionButton
+                    icon={FaAlignCenter}
+                    label="Align elements"
+                    onClick={() =>
+                        setMenu(menu === "align" ? null : "align")
+                    }
+                />
+
+                {menu === "align" && (
+                    <div style={menuStyle}>
+                        <div style={menuHeading}>Align elements</div>
+
+                        <MenuButton
+                            icon={FaAlignLeft}
+                            label="Align left edges"
+                            disabled={selectedCount < 2}
+                            action={() => onAlign?.("left")}
+                        />
+                        <MenuButton
+                            icon={FaAlignCenter}
+                            label="Align horizontal centers"
+                            disabled={selectedCount < 2}
+                            action={() => onAlign?.("centerX")}
+                        />
+                        <MenuButton
+                            icon={FaAlignRight}
+                            label="Align right edges"
+                            disabled={selectedCount < 2}
+                            action={() => onAlign?.("right")}
+                        />
+
+                        <div style={menuDividerStyle} />
+
+                        <MenuButton
+                            icon={FaGripHorizontal}
+                            label="Align top edges"
+                            disabled={selectedCount < 2}
+                            action={() => onAlign?.("top")}
+                        />
+                        <MenuButton
+                            icon={FaAlignJustify}
+                            label="Align vertical centers"
+                            disabled={selectedCount < 2}
+                            action={() => onAlign?.("centerY")}
+                        />
+                        <MenuButton
+                            icon={FaGripVertical}
+                            label="Align bottom edges"
+                            disabled={selectedCount < 2}
+                            action={() => onAlign?.("bottom")}
+                        />
+
+                        <div style={menuDividerStyle} />
+
+                        <MenuButton
+                            icon={FaAlignCenter}
+                            label="Center on canvas horizontally"
+                            action={() => onAlign?.("canvasCenterX")}
+                        />
+                        <MenuButton
+                            icon={FaAlignCenter}
+                            label="Center on canvas vertically"
+                            action={() => onAlign?.("canvasCenterY")}
+                        />
+                    </div>
+                )}
+            </div>
+
+            <Divider />
+
+            <ActionButton
+                icon={FaTrash}
+                label="Delete element"
+                color="#dc2626"
+                onClick={() => runAction(onDelete)}
+            />
+
+            <ActionButton
+                icon={FaTimes}
+                label="Close toolbar"
+                color="#f1f5f9"
+                onClick={closeToolbar}
+            />
         </div>
     );
 }
 
-const btnStyle = {
-    width: 30,
-    height: 30,
-    padding: 0,
-    border: "none",
-    borderRadius: 7,
-    background: "#1e3a8a",
-    color: "#ffffff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-    flexShrink: 0,
-    transition: "background 0.18s ease, transform 0.18s ease"
+const menuStyle = {
+    position: "absolute",
+    left: "50%",
+    bottom: "calc(100% + 12px)",
+    transform: "translateX(-50%)",
+    minWidth: 215,
+    padding: 6,
+    background: "#ffffff",
+    border: "1px solid #e2e8f0",
+    borderRadius: 11,
+    boxShadow: "0 12px 30px rgba(15, 23, 42, 0.18)",
+    zIndex: 10001
+};
+
+const menuHeading = {
+    padding: "9px 12px",
+    fontSize: 11,
+    fontWeight: 700,
+    color: "#64748b",
+    textTransform: "uppercase",
+    letterSpacing: "0.06em"
+};
+
+const menuDividerStyle = {
+    height: 1,
+    background: "#e2e8f0",
+    margin: "5px 4px"
 };
