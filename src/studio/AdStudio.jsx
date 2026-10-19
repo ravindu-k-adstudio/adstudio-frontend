@@ -51,7 +51,11 @@ export default function AdStudio() {
     const [shapes, setShapes] = useState([]);
     const [blocks, setBlocks] = useState([]);
     const [borders, setBorders] = useState([]);
-    const [background, setBackground] = useState(null);
+    // const [background, setBackground] = useState(null);
+    const [background, setBackground] = useState({
+        type: "color",
+        value: "#f8fafc",
+    });
     const [selectedId, setSelectedId] = useState(null);
     const [showTemplates, setShowTemplates] = useState(false);
     const [showAIAssistance, setShowAIAssistance] = useState(false);
@@ -1632,6 +1636,7 @@ export default function AdStudio() {
                     borders={borders}
                     setBorders={setBorders}
                     background={background}
+                    setBackground={setBackground}
                     selectedId={selectedId}
                     setSelectedId={setSelectedId}
                     tool={tool}
