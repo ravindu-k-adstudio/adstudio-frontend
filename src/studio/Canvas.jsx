@@ -3087,6 +3087,7 @@ const Canvas = forwardRef(function Canvas(
     const nodeRegistryRef = useRef(new Map());
 
 
+
     const registerNode = (id, node) => {
         if (id == null) return;
 
@@ -3098,6 +3099,7 @@ const Canvas = forwardRef(function Canvas(
             nodeRegistryRef.current.delete(key);
         }
     };
+
 
     const containerRef = useRef(null);
     const canvasWrapperRef = useRef(null);
@@ -3322,40 +3324,34 @@ const Canvas = forwardRef(function Canvas(
         };
     }, []);
     /* ================= TRANSFORMER ================= */
-    // Keep the Transformer mounted in its own permanent layer. Re-mounting the
-    // whole layer every time selectedId changes can cause the canvas to flash
-    // or clear in some React-Konva render cycles.
+
     useEffect(() => {
         const transformer = trRef.current;
         if (!transformer) return;
 
-        const clearTransformer = () => {
-            transformer.nodes([]);
-            transformer.getLayer()?.batchDraw();
-        };
-
         if (
             selectedId == null ||
-            String(selectedId) === "background" ||
+            selectedId === "background" ||
             DRAW_TOOLS.includes(tool)
         ) {
-            clearTransformer();
+            transformer.nodes([]);
+            transformer.getLayer()?.batchDraw();
             return;
         }
 
-        const selectedKey = String(selectedId);
-        const isIconOrTag =
-            icons.some(item => String(item.id) === selectedKey) ||
-            discountTags.some(item => String(item.id) === selectedKey);
-
-        // Icons and discount tags must use their own registered Konva node.
-        // Never attach the previous selection's node if their ref isn't ready.
+        // Prefer the newly registered node (important for newly added icons/tags).
+        // Fall back to selectedNodeRef to preserve existing element selection.
         const node =
-            nodeRegistryRef.current.get(selectedKey) ||
-            (isIconOrTag ? null : selectedNodeRef.current);
+            nodeRegistryRef.current.get(String(selectedId)) ||
+            selectedNodeRef.current;
 
-        if (!node || !node.getStage() || node.getStage() !== stageRef.current) {
-            clearTransformer();
+        if (
+            !node ||
+            !node.getStage() ||
+            (node.id() && String(node.id()) !== String(selectedId))
+        ) {
+            transformer.nodes([]);
+            transformer.getLayer()?.batchDraw();
             return;
         }
 
@@ -3375,6 +3371,7 @@ const Canvas = forwardRef(function Canvas(
         borders,
         discountTags
     ]);
+
 
     // /* ================= toolbar ================= */
     useEffect(() => {
@@ -4795,10 +4792,12 @@ const Canvas = forwardRef(function Canvas(
 
                                     return (
 
+
                                         <KonvaImage
                                             key={icon.id}
                                             ref={node => registerNode(icon.id, node)}
                                             image={icon.image}
+
 
 
                                             x={icon.x}
@@ -4954,11 +4953,13 @@ const Canvas = forwardRef(function Canvas(
                             <Layer listening={!DRAW_TOOLS.includes(tool)}>
                                 {discountTags.map(tag => (
 
+
                                     <Group
                                         key={tag.id}
                                         ref={node => registerNode(tag.id, node)}
                                         x={tag.x}
                                         y={tag.y}
+
 
                                         scaleX={tag.width / 150}
                                         scaleY={tag.height / 100}
@@ -5657,34 +5658,39 @@ const Canvas = forwardRef(function Canvas(
                             )}
 
                             {/* TRANSFORMER: keep this layer mounted at all times */}
-                            <Layer>
-                                <Transformer
-                                    ref={trRef}
-                                    rotateEnabled={false}
-                                    keepRatio={
-                                        selectedElement?.type === "icon" ||
-                                        selectedElement?.type === "discountTag"
-                                    }
-                                    centeredScaling={false}
-                                    enabledAnchors={[
-                                        "top-left",
-                                        "top-center",
-                                        "top-right",
-                                        "middle-left",
-                                        "middle-right",
-                                        "bottom-left",
-                                        "bottom-center",
-                                        "bottom-right"
-                                    ]}
-                                    borderStroke="#0ea5e9"
-                                    borderStrokeWidth={2}
-                                    anchorSize={12}
-                                    anchorStroke="#0ea5e9"
-                                    anchorFill="#ffffff"
-                                    anchorStrokeWidth={2}
-                                    padding={0}
-                                />
-                            </Layer>
+
+                            {selectedId != null &&
+                                selectedId !== "background" && (
+                                    <Layer>
+                                        <Transformer
+                                            ref={trRef}
+                                            rotateEnabled={false}
+                                            keepRatio={
+                                                selectedElement?.type === "icon" ||
+                                                selectedElement?.type === "discountTag"
+                                            }
+                                            centeredScaling={false}
+                                            enabledAnchors={[
+                                                "top-left",
+                                                "top-center",
+                                                "top-right",
+                                                "middle-left",
+                                                "middle-right",
+                                                "bottom-left",
+                                                "bottom-center",
+                                                "bottom-right"
+                                            ]}
+                                            borderStroke="#0ea5e9"
+                                            borderStrokeWidth={2}
+                                            anchorSize={12}
+                                            anchorStroke="#0ea5e9"
+                                            anchorFill="#ffffff"
+                                            anchorStrokeWidth={2}
+                                            padding={0}
+                                        />
+                                    </Layer>
+                                )}
+
 
                         </Stage>
 
