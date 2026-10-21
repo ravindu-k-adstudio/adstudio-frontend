@@ -8,7 +8,8 @@ import {
 
 import {
     CLIP_ART_BACKGROUNDS,
-    CLIP_ART_CATEGORIES
+    CLIP_ART_CATEGORIES,
+    BUSINESS_PHOTO_BACKGROUNDS
 } from "../data/clipArtBackgrounds";
 
 
@@ -20,13 +21,21 @@ export default function ClipArtBackgroundPicker({
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("All");
     const [selectedId, setSelectedId] = useState(null);
+    const [library, setLibrary] = useState("clipart");
+    const [failedImageIds, setFailedImageIds] = useState(() => new Set());
 
+    const sourceBackgrounds = library === "photos"
+        ? BUSINESS_PHOTO_BACKGROUNDS
+        : CLIP_ART_BACKGROUNDS;
+    const categories = library === "photos"
+        ? ["All", ...new Set(BUSINESS_PHOTO_BACKGROUNDS.map(item => item.category))]
+        : CLIP_ART_CATEGORIES;
 
     const filteredBackgrounds = useMemo(() => {
 
         const query = search.trim().toLowerCase();
 
-        return CLIP_ART_BACKGROUNDS.filter(item => {
+        return sourceBackgrounds.filter(item => {
 
             const categoryMatch =
                 category === "All" ||
@@ -45,15 +54,15 @@ export default function ClipArtBackgroundPicker({
             );
         });
 
-    }, [search, category]);
+    }, [search, category, sourceBackgrounds]);
 
 
     const handleSelect = item => {
-
         setSelectedId(item.id);
-
-        onSelect(item);
-
+        const selectedItem = failedImageIds.has(item.id) && item.fallbackSrc
+            ? { ...item, src: item.fallbackSrc }
+            : item;
+        onSelect(selectedItem);
     };
 
 
@@ -203,13 +212,20 @@ export default function ClipArtBackgroundPicker({
                 <div
                     style={{
                         padding: "14px 20px",
-
-                        borderBottom:
-                            "1px solid #e5e7eb",
-
+                        borderBottom: "1px solid #e5e7eb",
                         background: "#f8fafc"
                     }}
                 >
+                    <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+                        {[{ id: "clipart", label: "Original 220 Backgrounds" }, { id: "photos", label: "Business Photo Backgrounds (144)" }].map(option => {
+                            const active = library === option.id;
+                            return (
+                                <button key={option.id} type="button" onClick={() => { setLibrary(option.id); setCategory("All"); setSearch(""); setSelectedId(null); }} style={{ border: active ? "1px solid #1d4ed8" : "1px solid #cbd5e1", background: active ? "#1d4ed8" : "#fff", color: active ? "#fff" : "#334155", borderRadius: 10, padding: "9px 13px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+                                    {option.label}
+                                </button>
+                            );
+                        })}
+                    </div>
 
                     <div
                         style={{
@@ -272,7 +288,7 @@ export default function ClipArtBackgroundPicker({
                         }}
                     >
 
-                        {CLIP_ART_CATEGORIES.map(item => {
+                        {categories.map(item => {
 
                             const active =
                                 category === item;
@@ -406,19 +422,59 @@ export default function ClipArtBackgroundPicker({
                                         }}
                                     >
 
-                                        <img
-                                            src={item.src}
-                                            alt={item.name}
-                                            draggable={false}
+                                        <div
                                             style={{
-                                                display: "block",
-
+                                                position: "relative",
                                                 width: "100%",
                                                 aspectRatio: "1 / 1",
-
-                                                objectFit: "cover"
+                                                overflow: "hidden",
+                                                background: "linear-gradient(135deg, #e0e7ff 0%, #f5f3ff 48%, #dbeafe 100%)"
                                             }}
-                                        />
+                                        >
+                                            <img
+                                                src={item.src}
+                                                alt={item.name}
+                                                draggable={false}
+                                                loading="lazy"
+                                                onError={e => {
+                                                    if (item.fallbackSrc && e.currentTarget.src !== item.fallbackSrc) {
+                                                        setFailedImageIds(previous => new Set(previous).add(item.id));
+                                                        e.currentTarget.onerror = null;
+                                                        e.currentTarget.src = item.fallbackSrc;
+                                                        return;
+                                                    }
+                                                    e.currentTarget.style.display = "none";
+                                                    const fallback = e.currentTarget.nextElementSibling;
+                                                    if (fallback) fallback.style.display = "flex";
+                                                }}
+                                                style={{
+                                                    display: "block",
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    objectFit: "cover"
+                                                }}
+                                            />
+                                            <div
+                                                aria-hidden="true"
+                                                style={{
+                                                    display: "none",
+                                                    position: "absolute",
+                                                    inset: 0,
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    flexDirection: "column",
+                                                    gap: 8,
+                                                    padding: 12,
+                                                    textAlign: "center",
+                                                    color: "#334155",
+                                                    background: "linear-gradient(135deg, #e0e7ff 0%, #f5f3ff 48%, #dbeafe 100%)"
+                                                }}
+                                            >
+                                                <FaLayerGroup size={25} />
+                                                <span style={{ fontSize: 11, fontWeight: 700 }}>{item.category}</span>
+                                                <span style={{ fontSize: 10 }}>Preview unavailable</span>
+                                            </div>
+                                        </div>
 
 
                                         <div
