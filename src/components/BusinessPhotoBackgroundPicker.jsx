@@ -1,361 +1,94 @@
 
-// import React, { useMemo, useState } from "react";
-// import {
-//     FaSearch,
-//     FaTimes,
-//     FaCheck,
-//     FaImages
-// } from "react-icons/fa";
-
-// import {
-//     BUSINESS_PHOTO_BACKGROUNDS,
-//     BUSINESS_PHOTO_CATEGORIES
-// } from "../data/businessPhotoBackgrounds";
-
-// export default function BusinessPhotoBackgroundPicker({
-//     onSelect,
-//     onClose
-// }) {
-//     const [search, setSearch] = useState("");
-//     const [category, setCategory] = useState("All");
-//     const [selectedId, setSelectedId] = useState(null);
-
-//     const filtered = useMemo(() => {
-//         const query = search.trim().toLowerCase();
-
-//         return BUSINESS_PHOTO_BACKGROUNDS.filter(item => {
-//             const categoryMatch =
-//                 category === "All" || item.category === category;
-
-//             const searchMatch =
-//                 !query ||
-//                 item.name.toLowerCase().includes(query) ||
-//                 item.category.toLowerCase().includes(query) ||
-//                 item.tags.some(tag => tag.includes(query));
-
-//             return categoryMatch && searchMatch;
-//         });
-//     }, [search, category]);
-
-//     const styles = {
-//         overlay: {
-//             position: "fixed",
-//             inset: 0,
-//             zIndex: 10001,
-//             background: "rgba(8, 15, 30, .78)",
-//             backdropFilter: "blur(8px)",
-//             display: "flex",
-//             alignItems: "center",
-//             justifyContent: "center",
-//             padding: 16
-//         },
-//         modal: {
-//             width: "min(1180px, 96vw)",
-//             height: "min(820px, 94vh)",
-//             background: "#fff",
-//             borderRadius: 18,
-//             display: "flex",
-//             flexDirection: "column",
-//             overflow: "hidden",
-//             color: "#172033",
-//             boxShadow: "0 25px 90px rgba(0,0,0,.3)"
-//         },
-//         header: {
-//             display: "flex",
-//             alignItems: "center",
-//             justifyContent: "space-between",
-//             padding: "18px 22px",
-//             borderBottom: "1px solid #e5e7eb",
-//             gap: 12
-//         },
-//         categories: {
-//             display: "flex",
-//             gap: 8,
-//             overflowX: "auto",
-//             padding: "12px 18px",
-//             borderBottom: "1px solid #e5e7eb"
-//         },
-//         grid: {
-//             flex: 1,
-//             overflowY: "auto",
-//             padding: 18,
-//             display: "grid",
-//             gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))",
-//             gap: 16,
-//             alignContent: "start"
-//         }
-//     };
-
-//     return (
-//         <div style={styles.overlay} onMouseDown={e => {
-//             if (e.target === e.currentTarget) onClose?.();
-//         }}>
-//             <section style={styles.modal}>
-//                 <header style={styles.header}>
-//                     <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-//                         <FaImages size={25} color="#6755e8" />
-//                         <div>
-//                             <div style={{ fontSize: 20, fontWeight: 800 }}>
-//                                 Business Photo Backgrounds
-//                             </div>
-//                             <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
-//                                 144 photo templates · 12 business categories
-//                             </div>
-//                         </div>
-//                     </div>
-
-//                     <button
-//                         type="button"
-//                         onClick={onClose}
-//                         aria-label="Close photo backgrounds"
-//                         style={{
-//                             width: 38,
-//                             height: 38,
-//                             border: "1px solid #e2e8f0",
-//                             borderRadius: 10,
-//                             background: "#f8fafc",
-//                             cursor: "pointer"
-//                         }}
-//                     >
-//                         <FaTimes />
-//                     </button>
-//                 </header>
-
-//                 <div style={{ padding: 16, background: "#f8fafc" }}>
-//                     <div style={{ position: "relative" }}>
-//                         <FaSearch style={{
-//                             position: "absolute",
-//                             left: 14,
-//                             top: 14,
-//                             color: "#94a3b8"
-//                         }} />
-
-//                         <input
-//                             value={search}
-//                             onChange={e => setSearch(e.target.value)}
-//                             placeholder="Search business photo backgrounds..."
-//                             style={{
-//                                 width: "100%",
-//                                 boxSizing: "border-box",
-//                                 height: 44,
-//                                 padding: "0 14px 0 40px",
-//                                 border: "1px solid #dbe2ea",
-//                                 borderRadius: 10,
-//                                 outlineColor: "#6755e8",
-//                                 background: "#fff",
-//                                 color: "#172033"
-//                             }}
-//                         />
-//                     </div>
-//                 </div>
-
-//                 <nav style={styles.categories}>
-//                     {BUSINESS_PHOTO_CATEGORIES.map(item => (
-//                         <button
-//                             key={item}
-//                             type="button"
-//                             onClick={() => setCategory(item)}
-//                             style={{
-//                                 flexShrink: 0,
-//                                 padding: "9px 13px",
-//                                 borderRadius: 9,
-//                                 border: "1px solid",
-//                                 borderColor: category === item ? "#6755e8" : "#e2e8f0",
-//                                 background: category === item ? "#6755e8" : "#fff",
-//                                 color: category === item ? "#fff" : "#475569",
-//                                 fontWeight: 650,
-//                                 cursor: "pointer",
-//                                 fontSize: 12
-//                             }}
-//                         >
-//                             {item}
-//                             {item !== "All" && (
-//                                 <span> · 12</span>
-//                             )}
-//                         </button>
-//                     ))}
-//                 </nav>
-
-//                 <main style={styles.grid}>
-//                     {filtered.map(item => (
-//                         <button
-//                             key={item.id}
-//                             type="button"
-//                             onClick={() => setSelectedId(item.id)}
-//                             onDoubleClick={() => onSelect?.(item)}
-//                             style={{
-//                                 textAlign: "left",
-//                                 padding: 0,
-//                                 borderRadius: 12,
-//                                 overflow: "hidden",
-//                                 border: selectedId === item.id
-//                                     ? "3px solid #6755e8"
-//                                     : "1px solid #e2e8f0",
-//                                 background: "#fff",
-//                                 cursor: "pointer",
-//                                 minWidth: 0
-//                             }}
-//                             title="Select, then click Use Background"
-//                         >
-//                             <div style={{
-//                                 aspectRatio: "1 / 1",
-//                                 position: "relative",
-//                                 background: "#e2e8f0",
-//                                 overflow: "hidden"
-//                             }}>
-//                                 <img
-//                                     src={item.src}
-//                                     alt={`${item.category} photo background ${item.name}`}
-//                                     loading="lazy"
-//                                     crossOrigin="anonymous"
-//                                     onError={e => {
-//                                         e.currentTarget.style.display = "none";
-//                                         e.currentTarget.parentElement.style.background =
-//                                             "linear-gradient(135deg,#dbeafe,#ede9fe)";
-//                                     }}
-//                                     style={{
-//                                         width: "100%",
-//                                         height: "100%",
-//                                         objectFit: "cover",
-//                                         display: "block"
-//                                     }}
-//                                 />
-
-//                                 <div style={{
-//                                     position: "absolute",
-//                                     inset: 0,
-//                                     background: item.layout === "left"
-//                                         ? "linear-gradient(90deg,rgba(10,15,25,.10),transparent 75%)"
-//                                         : "linear-gradient(270deg,rgba(10,15,25,.10),transparent 75%)",
-//                                     pointerEvents: "none"
-//                                 }} />
-
-//                                 {selectedId === item.id && (
-//                                     <span style={{
-//                                         position: "absolute",
-//                                         top: 8,
-//                                         right: 8,
-//                                         width: 27,
-//                                         height: 27,
-//                                         display: "grid",
-//                                         placeItems: "center",
-//                                         borderRadius: "50%",
-//                                         background: "#6755e8",
-//                                         color: "#fff"
-//                                     }}>
-//                                         <FaCheck />
-//                                     </span>
-//                                 )}
-//                             </div>
-
-//                             <div style={{ padding: "10px 11px" }}>
-//                                 <div style={{
-//                                     fontSize: 13,
-//                                     fontWeight: 750,
-//                                     color: "#172033"
-//                                 }}>
-//                                     {item.name}
-//                                 </div>
-//                                 <div style={{
-//                                     fontSize: 11,
-//                                     color: "#64748b",
-//                                     marginTop: 4
-//                                 }}>
-//                                     {item.category}
-//                                 </div>
-//                             </div>
-//                         </button>
-//                     ))}
-
-//                     {filtered.length === 0 && (
-//                         <p style={{ color: "#64748b" }}>
-//                             No backgrounds found. Try another search.
-//                         </p>
-//                     )}
-//                 </main>
-
-//                 <footer style={{
-//                     padding: 16,
-//                     display: "flex",
-//                     alignItems: "center",
-//                     justifyContent: "space-between",
-//                     gap: 12,
-//                     borderTop: "1px solid #e5e7eb"
-//                 }}>
-//                     <span style={{ fontSize: 12, color: "#64748b" }}>
-//                         {filtered.length} backgrounds
-//                     </span>
-
-//                     <div style={{ display: "flex", gap: 10 }}>
-//                         <button
-//                             type="button"
-//                             onClick={onClose}
-//                             style={{
-//                                 padding: "11px 16px",
-//                                 border: "1px solid #dbe2ea",
-//                                 borderRadius: 9,
-//                                 background: "#fff",
-//                                 cursor: "pointer"
-//                             }}
-//                         >
-//                             Cancel
-//                         </button>
-
-//                         <button
-//                             type="button"
-//                             disabled={!selectedId}
-//                             onClick={() => {
-//                                 const selected = BUSINESS_PHOTO_BACKGROUNDS.find(
-//                                     item => item.id === selectedId
-//                                 );
-//                                 if (selected) onSelect?.(selected);
-//                             }}
-//                             style={{
-//                                 padding: "11px 18px",
-//                                 border: 0,
-//                                 borderRadius: 9,
-//                                 background: selectedId ? "#6755e8" : "#cbd5e1",
-//                                 color: "#fff",
-//                                 fontWeight: 700,
-//                                 cursor: selectedId ? "pointer" : "not-allowed"
-//                             }}
-//                         >
-//                             Use Background
-//                         </button>
-//                     </div>
-//                 </footer>
-//             </section>
-//         </div>
-//     );
-// }
-//////////////////////////////////////////////
-
-
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import {
     BUSINESS_PHOTO_BACKGROUNDS,
     BUSINESS_PHOTO_CATEGORIES,
+    BUSINESS_PHOTO_SHAPES,
+    BUSINESS_PHOTO_COLORS,
 } from "../data/businessPhotoBackgrounds";
 
-const overlayColors = {
-    light: "rgba(255,255,255,0.96)",
-    dark: "rgba(10,12,18,0.90)",
-    warm: "rgba(255,246,231,0.95)",
-    cool: "rgba(235,245,255,0.95)",
-    soft: "rgba(255,255,255,0.88)",
-    minimal: "rgba(255,255,255,0.98)",
+const shapeClipPaths = {
+    left: "polygon(0 0, 67% 0, 47% 100%, 0 100%)",
+    right: "polygon(33% 0, 100% 0, 100% 100%, 53% 100%)",
+    diagonal: "polygon(0 0, 76% 0, 52% 100%, 0 100%)",
+    curve: "ellipse(78% 100% at 0% 50%)",
+    circle: "circle(64% at 0% 50%)",
+    bottom: "polygon(0 48%, 100% 22%, 100% 100%, 0 100%)",
+    top: "polygon(0 0, 100% 0, 100% 52%, 0 72%)",
+    split: "polygon(0 0, 40% 0, 32% 100%, 0 100%, 68% 0, 100% 0, 100% 100%, 60% 100%)",
+    corner: "polygon(0 0, 60% 0, 0 72%)",
+    wave: "polygon(0 0, 66% 0, 60% 18%, 49% 36%, 45% 56%, 35% 77%, 25% 100%, 0 100%)",
+    full: "none",
+    minimal: "polygon(0 0, 42% 0, 30% 100%, 0 100%)",
 };
 
-function getPreviewStyle(item) {
-    const gradient =
-        item.layout === "left"
-            ? `linear-gradient(90deg, ${overlayColors[item.overlay]} 0%, ${overlayColors[item.overlay]} 35%, transparent 100%)`
-            : `linear-gradient(270deg, ${overlayColors[item.overlay]} 0%, ${overlayColors[item.overlay]} 35%, transparent 100%)`;
+const styles = {
+    backdrop: {
+        position: "fixed",
+        inset: 0,
+        zIndex: 10000,
+        background: "rgba(15,23,42,.68)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 16,
+    },
+    modal: {
+        width: "min(1180px, 96vw)",
+        maxHeight: "92vh",
+        overflow: "auto",
+        background: "#fff",
+        color: "#172033",
+        borderRadius: 18,
+        boxShadow: "0 24px 80px rgba(0,0,0,.28)",
+        fontFamily: "Inter, system-ui, sans-serif",
+    },
+    header: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 12,
+        padding: "20px 24px",
+        borderBottom: "1px solid #e5e7eb",
+    },
+    body: {
+        display: "grid",
+        gridTemplateColumns: "minmax(0, 1.5fr) minmax(280px, .8fr)",
+        gap: 22,
+        padding: 22,
+    },
+    sectionTitle: {
+        fontSize: 14,
+        fontWeight: 750,
+        marginBottom: 10,
+    },
+    button: {
+        border: "1px solid #d1d5db",
+        background: "#fff",
+        color: "#172033",
+        borderRadius: 9,
+        padding: "9px 12px",
+        cursor: "pointer",
+        fontSize: 13,
+    },
+    primary: {
+        border: 0,
+        background: "#2563eb",
+        color: "#fff",
+        borderRadius: 9,
+        padding: "11px 18px",
+        cursor: "pointer",
+        fontWeight: 700,
+    },
+};
 
+function getShapeStyle(shape, color, opacity) {
     return {
-        backgroundImage: `${gradient}, url("${item.src}")`,
-        backgroundPosition: "center",
-        backgroundSize: "cover",
+        position: "absolute",
+        inset: 0,
+        backgroundColor: color,
+        opacity: opacity / 100,
+        clipPath: shapeClipPaths[shape] || shapeClipPaths.left,
     };
 }
 
@@ -366,379 +99,633 @@ export default function BusinessPhotoBackgroundPicker({
 }) {
     const [category, setCategory] = useState("All");
     const [search, setSearch] = useState("");
-    const [selectedId, setSelectedId] = useState(null);
+    const [selectedId, setSelectedId] = useState(
+        BUSINESS_PHOTO_BACKGROUNDS[0]?.id
+    );
+    const [color, setColor] = useState("#FFFFFF");
+    const [opacity, setOpacity] = useState(88);
+    const [shape, setShape] = useState("left");
+
+    const fileInputRef = useRef(null);
+    const [uploadedBackground, setUploadedBackground] = useState(null);
+    const [uploadError, setUploadError] = useState("");
+
+    // const selected = BUSINESS_PHOTO_BACKGROUNDS.find(
+    //     (item) => item.id === selectedId
+    // );
+
+    // const filteredBackgrounds = useMemo(() => {
+    //     const term = search.trim().toLowerCase();
+
+    //     return BUSINESS_PHOTO_BACKGROUNDS.filter((item) => {
+    //         const categoryMatches =
+    //             category === "All" || item.category === category;
+
+    //         const searchMatches =
+    //             !term ||
+    //             item.name.toLowerCase().includes(term) ||
+    //             item.category.toLowerCase().includes(term) ||
+    //             item.keywords?.some((keyword) =>
+    //                 keyword.toLowerCase().includes(term)
+    //             );
+
+    //         return categoryMatches && searchMatches;
+    //     });
+    // }, [category, search]);
+
+
+    const allBackgrounds = useMemo(
+        () =>
+            uploadedBackground
+                ? [uploadedBackground, ...BUSINESS_PHOTO_BACKGROUNDS]
+                : BUSINESS_PHOTO_BACKGROUNDS,
+        [uploadedBackground]
+    );
+
+    const selected = allBackgrounds.find(
+        (item) => item.id === selectedId
+    );
 
     const filteredBackgrounds = useMemo(() => {
-        const query = search.trim().toLowerCase();
+        const term = search.trim().toLowerCase();
 
-        return BUSINESS_PHOTO_BACKGROUNDS.filter((item) => {
-            const matchesCategory =
+        return allBackgrounds.filter((item) => {
+            const categoryMatches =
                 category === "All" || item.category === category;
 
-            const searchableText = [
-                item.name,
-                item.category,
-                ...item.tags,
-            ]
-                .join(" ")
-                .toLowerCase();
+            const searchMatches =
+                !term ||
+                item.name.toLowerCase().includes(term) ||
+                item.category.toLowerCase().includes(term) ||
+                item.keywords?.some((keyword) =>
+                    keyword.toLowerCase().includes(term)
+                );
 
-            return matchesCategory && (!query || searchableText.includes(query));
+            return categoryMatches && searchMatches;
         });
-    }, [category, search]);
+    }, [allBackgrounds, category, search]);
+
+    function chooseBackground(item) {
+        setSelectedId(item.id);
+        setColor(item.color || "#FFFFFF");
+        setOpacity(item.opacity ?? 88);
+        setShape(item.shape || "left");
+    }
+
+    function applyBackground() {
+        if (!selected?.src) {
+            console.error("Selected background has no image source:", selected);
+            return;
+        }
+
+        onApply({
+            ...selected,
+            type: "business-photo",
+            color,
+            opacity,
+            shape,
+            overlay: "custom",
+        });
+
+        onClose();
+    }
+
+
+
+    function handleCustomBackgroundUpload(event) {
+        const file = event.target.files?.[0];
+
+        // Allow the user to select the same file again later.
+        event.target.value = "";
+
+        if (!file) return;
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            setUploadError("Please upload a JPG, PNG, or WebP image.");
+            return;
+        }
+
+        const MAX_FILE_SIZE = 15 * 1024 * 1024;
+
+        if (file.size > MAX_FILE_SIZE) {
+            setUploadError("Please choose an image smaller than 15 MB.");
+            return;
+        }
+
+        setUploadError("");
+
+        const reader = new FileReader();
+
+        reader.onload = () => {
+            if (typeof reader.result !== "string") {
+                setUploadError("Unable to read this image. Please try another file.");
+                return;
+            }
+
+            const customBackground = {
+                id: `custom-upload-${Date.now()}`,
+                name: file.name,
+                category: "Your Uploads",
+                icon: "📤",
+                src: reader.result,
+                shape,
+                color,
+                opacity,
+                overlay: "custom",
+                keywords: ["custom", "uploaded", file.name.toLowerCase()],
+                tags: ["Your Uploads", "Custom"],
+                isCustomUpload: true,
+            };
+
+            setUploadedBackground(customBackground);
+            setSelectedId(customBackground.id);
+        };
+
+        reader.onerror = () => {
+            setUploadError("Unable to read this image. Please try again.");
+        };
+
+        reader.readAsDataURL(file);
+    }
 
     if (!isOpen) return null;
 
-    const selectedBackground =
-        BUSINESS_PHOTO_BACKGROUNDS.find((item) => item.id === selectedId) ||
-        null;
-
-    const handleApply = () => {
-        if (!selectedBackground) return;
-
-        onApply?.({
-            ...selectedBackground,
-            type: "business-photo",
-        });
-
-        onClose?.();
-    };
-
     return (
         <div style={styles.backdrop} onMouseDown={onClose}>
-            <section
+            <div
                 style={styles.modal}
-                role="dialog"
-                aria-modal="true"
-                aria-label="Business photo backgrounds"
                 onMouseDown={(event) => event.stopPropagation()}
             >
                 <header style={styles.header}>
                     <div>
-                        <h2 style={styles.heading}>Business Photo Backgrounds</h2>
-                        <p style={styles.subtitle}>
-                            Choose a photo layout with space for your text and promotions.
+                        <h2 style={{ margin: 0, fontSize: 21 }}>
+                            Business Photo Backgrounds
+                        </h2>
+                        <p style={{ margin: "5px 0 0", color: "#64748b", fontSize: 13 }}>
+                            Choose a photo, color and shape for your design.
                         </p>
                     </div>
 
                     <button
                         type="button"
-                        style={styles.closeButton}
-                        onClick={onClose}
                         aria-label="Close background picker"
+                        onClick={onClose}
+                        style={{ ...styles.button, fontSize: 20, padding: "5px 12px" }}
                     >
                         ×
                     </button>
                 </header>
 
-                <div style={styles.searchRow}>
-                    <input
-                        type="search"
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                        placeholder="Search backgrounds..."
-                        style={styles.search}
-                    />
+                <div style={styles.body}>
+                    <section style={{ minWidth: 0 }}>
 
-                    <span style={styles.count}>
-                        {filteredBackgrounds.length} backgrounds
-                    </span>
-                </div>
-
-                <nav style={styles.categories} aria-label="Business categories">
-                    {BUSINESS_PHOTO_CATEGORIES.map((name) => (
-                        <button
-                            key={name}
-                            type="button"
-                            onClick={() => setCategory(name)}
+                        <div
                             style={{
-                                ...styles.categoryButton,
-                                ...(category === name ? styles.categoryActive : {}),
+                                padding: 16,
+                                marginBottom: 14,
+                                border: "1px dashed #93a4bd",
+                                borderRadius: 12,
+                                background: "#f8fafc",
                             }}
                         >
-                            {name === "All"
-                                ? "All"
-                                : BUSINESS_PHOTO_BACKGROUNDS.find(
-                                    (item) => item.category === name,
-                                )?.icon + " " + name}
-                        </button>
-                    ))}
-                </nav>
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                onChange={handleCustomBackgroundUpload}
+                                style={{ display: "none" }}
+                            />
 
-                <div style={styles.grid}>
-                    {filteredBackgrounds.map((item) => {
-                        const isSelected = item.id === selectedId;
-
-                        return (
-                            <button
-                                key={item.id}
-                                type="button"
-                                onClick={() => setSelectedId(item.id)}
-                                aria-pressed={isSelected}
+                            <div
                                 style={{
-                                    ...styles.card,
-                                    ...(isSelected ? styles.cardSelected : {}),
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 12,
+                                    flexWrap: "wrap",
                                 }}
                             >
-                                <div style={styles.preview} className="business-photo-preview">
-                                    <div style={getPreviewStyle(item)} className="business-photo-art" />
-
-                                    <span style={styles.photoLabel}>
-                                        {item.layout === "left" ? "PHOTO LEFT" : "PHOTO RIGHT"}
-                                    </span>
-
-                                    {isSelected && <span style={styles.check}>✓</span>}
+                                <div
+                                    style={{
+                                        width: 44,
+                                        height: 44,
+                                        display: "grid",
+                                        placeItems: "center",
+                                        borderRadius: 10,
+                                        background: "#dbeafe",
+                                        color: "#1d4ed8",
+                                        fontSize: 22,
+                                    }}
+                                >
+                                    ↑
                                 </div>
 
-                                <span style={styles.cardName}>{item.name}</span>
-                                <span style={styles.cardCategory}>{item.category}</span>
-                            </button>
-                        );
-                    })}
+                                <div style={{ flex: 1, minWidth: 140 }}>
+                                    <div style={{ fontWeight: 750, fontSize: 14 }}>
+                                        Your Business Background
+                                    </div>
 
-                    {filteredBackgrounds.length === 0 && (
-                        <div style={styles.empty}>
-                            No backgrounds match that search. Try another keyword or category.
+                                    <div style={{ color: "#64748b", fontSize: 12, marginTop: 4 }}>
+                                        Upload your own photo and customize it before applying.
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    style={styles.primary}
+                                >
+                                    + Upload photo
+                                </button>
+                            </div>
+
+                            {uploadError && (
+                                <p
+                                    role="alert"
+                                    style={{
+                                        color: "#b91c1c",
+                                        fontSize: 12,
+                                        margin: "10px 0 0",
+                                    }}
+                                >
+                                    {uploadError}
+                                </p>
+                            )}
+
+                            {uploadedBackground && (
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 10,
+                                        marginTop: 12,
+                                    }}
+                                >
+                                    <img
+                                        src={uploadedBackground.src}
+                                        alt="Your uploaded background"
+                                        style={{
+                                            width: 64,
+                                            height: 46,
+                                            objectFit: "cover",
+                                            borderRadius: 7,
+                                        }}
+                                    />
+
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <div
+                                            style={{
+                                                fontSize: 12,
+                                                fontWeight: 700,
+                                                overflowWrap: "anywhere",
+                                            }}
+                                        >
+                                            {uploadedBackground.name}
+                                        </div>
+                                        <div style={{ fontSize: 11, color: "#64748b" }}>
+                                            Ready to preview and apply
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setUploadedBackground(null);
+
+                                            if (selectedId === uploadedBackground.id) {
+                                                setSelectedId(BUSINESS_PHOTO_BACKGROUNDS[0]?.id);
+                                            }
+                                        }}
+                                        style={styles.button}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
 
-                <footer style={styles.footer}>
-                    <span style={styles.selectionText}>
-                        {selectedBackground
-                            ? `Selected: ${selectedBackground.name}`
-                            : "Select a background to continue"}
-                    </span>
-
-                    <div style={styles.footerActions}>
-                        <button
-                            type="button"
-                            style={styles.cancelButton}
-                            onClick={onClose}
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="button"
+                        <input
+                            value={search}
+                            onChange={(event) => setSearch(event.target.value)}
+                            placeholder="Search backgrounds or business types..."
                             style={{
-                                ...styles.applyButton,
-                                opacity: selectedBackground ? 1 : 0.5,
-                                cursor: selectedBackground ? "pointer" : "not-allowed",
+                                width: "100%",
+                                boxSizing: "border-box",
+                                padding: 12,
+                                border: "1px solid #d1d5db",
+                                borderRadius: 10,
+                                marginBottom: 12,
+                                fontSize: 14,
                             }}
-                            disabled={!selectedBackground}
-                            onClick={handleApply}
+                        />
+
+                        <div
+                            style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: 7,
+                                marginBottom: 16,
+                            }}
                         >
-                            Apply Background
-                        </button>
-                    </div>
-                </footer>
-            </section>
+                            {["All", ...BUSINESS_PHOTO_CATEGORIES.map((c) => c.category)].map(
+                                (name) => (
+                                    <button
+                                        type="button"
+                                        key={name}
+                                        onClick={() => setCategory(name)}
+                                        style={{
+                                            ...styles.button,
+                                            background: category === name ? "#172033" : "#fff",
+                                            color: category === name ? "#fff" : "#172033",
+                                            borderColor: category === name ? "#172033" : "#d1d5db",
+                                        }}
+                                    >
+                                        {name}
+                                    </button>
+                                )
+                            )}
+                        </div>
 
-            <style>{`
-        .business-photo-art {
-          position: absolute;
-          inset: 0;
-          transition: transform 180ms ease;
-        }
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
+                                gap: 12,
+                            }}
+                        >
+                            {filteredBackgrounds.map((item) => {
+                                const active = selectedId === item.id;
 
-        .business-photo-preview {
-          overflow: hidden;
-        }
+                                return (
+                                    <button
+                                        key={item.id}
+                                        type="button"
+                                        onClick={() => chooseBackground(item)}
+                                        aria-pressed={active}
+                                        style={{
+                                            border: active
+                                                ? "3px solid #2563eb"
+                                                : "1px solid #e2e8f0",
+                                            borderRadius: 11,
+                                            padding: 4,
+                                            background: "#fff",
+                                            textAlign: "left",
+                                            cursor: "pointer",
+                                            minWidth: 0,
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                height: 105,
+                                                position: "relative",
+                                                overflow: "hidden",
+                                                borderRadius: 7,
+                                                background: "#e2e8f0",
+                                            }}
+                                        >
+                                            <img
+                                                src={item.src}
+                                                alt={item.name}
+                                                loading="lazy"
+                                                style={{
+                                                    width: "100%",
+                                                    height: "100%",
+                                                    objectFit: "cover",
+                                                    display: "block",
+                                                }}
+                                                onError={(event) => {
+                                                    event.currentTarget.style.opacity = "0.2";
+                                                }}
+                                            />
+                                            <div
+                                                style={getShapeStyle(
+                                                    item.shape,
+                                                    item.color || "#FFFFFF",
+                                                    item.opacity ?? 88
+                                                )}
+                                            />
+                                            {active && (
+                                                <span
+                                                    style={{
+                                                        position: "absolute",
+                                                        top: 6,
+                                                        right: 6,
+                                                        background: "#2563eb",
+                                                        color: "#fff",
+                                                        borderRadius: 20,
+                                                        padding: "3px 7px",
+                                                        fontSize: 11,
+                                                    }}
+                                                >
+                                                    Selected
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div
+                                            style={{
+                                                fontSize: 12,
+                                                fontWeight: 700,
+                                                padding: "8px 4px 5px",
+                                                lineHeight: 1.35,
+                                            }}
+                                        >
+                                            {item.name}
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
 
-        .business-photo-preview:hover .business-photo-art {
-          transform: scale(1.04);
-        }
+                        {filteredBackgrounds.length === 0 && (
+                            <p style={{ color: "#64748b" }}>
+                                No backgrounds match your search.
+                            </p>
+                        )}
+                    </section>
 
-        @media (max-width: 700px) {
-          .business-photo-preview {
-            aspect-ratio: 4 / 3;
-          }
-        }
-      `}</style>
+                    <aside style={{ minWidth: 0 }}>
+                        <div style={styles.sectionTitle}>Live preview</div>
+
+                        <div
+                            style={{
+                                position: "relative",
+                                width: "100%",
+                                aspectRatio: "4 / 3",
+                                overflow: "hidden",
+                                borderRadius: 12,
+                                background: "#e2e8f0",
+                                marginBottom: 20,
+                            }}
+                        >
+                            {selected?.src && (
+                                <img
+                                    src={selected.src}
+                                    alt="Selected background preview"
+                                    style={{
+                                        position: "absolute",
+                                        inset: 0,
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                    }}
+                                />
+                            )}
+                            <div style={getShapeStyle(shape, color, opacity)} />
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    zIndex: 1,
+                                    left: 12,
+                                    right: 12,
+                                    bottom: 12,
+                                    color: color.toLowerCase() === "#ffffff" ? "#172033" : "#fff",
+                                    textShadow: "0 1px 5px rgba(0,0,0,.45)",
+                                    fontWeight: 800,
+                                    fontSize: 20,
+                                }}
+                            >
+                                YOUR BRAND
+                                <div style={{ fontSize: 12, fontWeight: 500 }}>
+                                    Your message goes here
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={styles.sectionTitle}>Overlay color</div>
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
+                                gap: 8,
+                                marginBottom: 12,
+                            }}
+                        >
+                            {BUSINESS_PHOTO_COLORS.map((preset) => (
+                                <button
+                                    key={preset}
+                                    type="button"
+                                    title={preset}
+                                    aria-label={`Choose ${preset}`}
+                                    onClick={() => setColor(preset)}
+                                    style={{
+                                        height: 30,
+                                        borderRadius: 7,
+                                        background: preset,
+                                        border:
+                                            color.toLowerCase() === preset.toLowerCase()
+                                                ? "3px solid #2563eb"
+                                                : "1px solid #cbd5e1",
+                                        cursor: "pointer",
+                                    }}
+                                />
+                            ))}
+                        </div>
+
+                        <label
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                fontSize: 13,
+                                marginBottom: 7,
+                            }}
+                        >
+                            <span>Custom color</span>
+                            <strong>{color.toUpperCase()}</strong>
+                        </label>
+                        <input
+                            type="color"
+                            value={color}
+                            onChange={(event) => setColor(event.target.value)}
+                            style={{
+                                width: "100%",
+                                height: 40,
+                                padding: 3,
+                                border: "1px solid #d1d5db",
+                                borderRadius: 8,
+                                background: "#fff",
+                                marginBottom: 16,
+                                cursor: "pointer",
+                            }}
+                        />
+
+                        <label
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                fontSize: 13,
+                                marginBottom: 7,
+                            }}
+                        >
+                            <span>Color opacity</span>
+                            <strong>{opacity}%</strong>
+                        </label>
+                        <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            step="5"
+                            value={opacity}
+                            onChange={(event) => setOpacity(Number(event.target.value))}
+                            style={{ width: "100%", marginBottom: 20 }}
+                        />
+
+                        <div style={styles.sectionTitle}>Overlay shape</div>
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                                gap: 8,
+                                marginBottom: 20,
+                            }}
+                        >
+                            {BUSINESS_PHOTO_SHAPES.map((item) => (
+                                <button
+                                    key={item.id}
+                                    type="button"
+                                    onClick={() => setShape(item.id)}
+                                    style={{
+                                        ...styles.button,
+                                        padding: "10px 5px",
+                                        fontSize: 12,
+                                        background: shape === item.id ? "#eff6ff" : "#fff",
+                                        borderColor: shape === item.id ? "#2563eb" : "#d1d5db",
+                                        color: shape === item.id ? "#1d4ed8" : "#172033",
+                                        fontWeight: shape === item.id ? 750 : 500,
+                                    }}
+                                >
+                                    {item.name}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div
+                            style={{
+                                display: "flex",
+                                gap: 9,
+                                justifyContent: "flex-end",
+                                borderTop: "1px solid #e5e7eb",
+                                paddingTop: 16,
+                            }}
+                        >
+                            <button type="button" onClick={onClose} style={styles.button}>
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={applyBackground}
+                                style={styles.primary}
+                            >
+                                Apply background
+                            </button>
+                        </div>
+                    </aside>
+                </div>
+            </div>
         </div>
     );
 }
-
-const styles = {
-    backdrop: {
-        position: "fixed",
-        inset: 0,
-        zIndex: 10000,
-        background: "rgba(15, 23, 42, 0.72)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 16,
-    },
-    modal: {
-        background: "#fff",
-        color: "#172033",
-        width: "min(1180px, 100%)",
-        maxHeight: "92vh",
-        display: "flex",
-        flexDirection: "column",
-        borderRadius: 16,
-        overflow: "hidden",
-        boxShadow: "0 24px 80px rgba(0,0,0,0.3)",
-    },
-    header: {
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "space-between",
-        gap: 16,
-        padding: "20px 24px 14px",
-        borderBottom: "1px solid #e8ebf0",
-    },
-    heading: { margin: 0, fontSize: 21, fontWeight: 750 },
-    subtitle: { margin: "6px 0 0", color: "#687386", fontSize: 13 },
-    closeButton: {
-        border: 0,
-        background: "#f1f3f7",
-        borderRadius: 9,
-        width: 36,
-        height: 36,
-        fontSize: 26,
-        cursor: "pointer",
-        flexShrink: 0,
-    },
-    searchRow: {
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        padding: "14px 24px",
-    },
-    search: {
-        minWidth: 0,
-        flex: 1,
-        border: "1px solid #d9deea",
-        borderRadius: 9,
-        padding: "11px 13px",
-        fontSize: 14,
-        outlineColor: "#5965e8",
-    },
-    count: { color: "#687386", fontSize: 12, whiteSpace: "nowrap" },
-    categories: {
-        display: "flex",
-        flexWrap: "wrap",
-        gap: 8,
-        padding: "0 24px 16px",
-        borderBottom: "1px solid #e8ebf0",
-    },
-    categoryButton: {
-        border: "1px solid #dfe3eb",
-        background: "#fff",
-        color: "#344054",
-        borderRadius: 20,
-        padding: "7px 12px",
-        fontSize: 12,
-        cursor: "pointer",
-    },
-    categoryActive: {
-        background: "#e9ecff",
-        color: "#3e49c9",
-        borderColor: "#9ba4ff",
-        fontWeight: 700,
-    },
-    grid: {
-        padding: 20,
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))",
-        gap: 14,
-        overflowY: "auto",
-        minHeight: 180,
-    },
-    card: {
-        textAlign: "left",
-        padding: 6,
-        border: "2px solid transparent",
-        borderRadius: 12,
-        background: "#f8f9fc",
-        color: "#172033",
-        cursor: "pointer",
-        minWidth: 0,
-    },
-    cardSelected: {
-        borderColor: "#5965e8",
-        background: "#f0f1ff",
-        boxShadow: "0 0 0 2px rgba(89,101,232,0.12)",
-    },
-    preview: {
-        position: "relative",
-        width: "100%",
-        aspectRatio: "4 / 3",
-        borderRadius: 8,
-        background: "#e6eaf1",
-    },
-    photoLabel: {
-        position: "absolute",
-        left: 8,
-        bottom: 8,
-        fontSize: 9,
-        fontWeight: 800,
-        letterSpacing: 0.5,
-        background: "rgba(255,255,255,0.9)",
-        color: "#344054",
-        padding: "4px 6px",
-        borderRadius: 4,
-    },
-    check: {
-        position: "absolute",
-        top: 8,
-        right: 8,
-        width: 24,
-        height: 24,
-        borderRadius: "50%",
-        display: "grid",
-        placeItems: "center",
-        color: "#fff",
-        background: "#5965e8",
-        fontWeight: 800,
-    },
-    cardName: {
-        display: "block",
-        fontSize: 12,
-        fontWeight: 750,
-        margin: "9px 4px 3px",
-    },
-    cardCategory: {
-        display: "block",
-        fontSize: 11,
-        color: "#758095",
-        margin: "0 4px 5px",
-    },
-    empty: {
-        gridColumn: "1 / -1",
-        textAlign: "center",
-        padding: 40,
-        color: "#687386",
-    },
-    footer: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-        gap: 12,
-        padding: "14px 24px",
-        borderTop: "1px solid #e8ebf0",
-        background: "#fbfcfe",
-    },
-    selectionText: { fontSize: 12, color: "#687386" },
-    footerActions: { display: "flex", gap: 8 },
-    cancelButton: {
-        border: "1px solid #d9deea",
-        background: "#fff",
-        color: "#344054",
-        borderRadius: 8,
-        padding: "10px 14px",
-        fontWeight: 650,
-        cursor: "pointer",
-    },
-    applyButton: {
-        border: 0,
-        background: "#5965e8",
-        color: "#fff",
-        borderRadius: 8,
-        padding: "10px 16px",
-        fontWeight: 700,
-    },
-};

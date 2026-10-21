@@ -1,296 +1,209 @@
 
-// const BUSINESS_TYPES = [
-//     {
-//         name: "Restaurant",
-//         icon: "🍔",
-//         keywords: "restaurant,food,burger,meal"
-//     },
-//     {
-//         name: "Cafe",
-//         icon: "☕",
-//         keywords: "coffee,cafe,latte"
-//     },
-//     {
-//         name: "Fashion",
-//         icon: "👗",
-//         keywords: "fashion,clothing,style"
-//     },
-//     {
-//         name: "Photography",
-//         icon: "📷",
-//         keywords: "photography,camera,studio"
-//     },
-//     {
-//         name: "Resort",
-//         icon: "🏝️",
-//         keywords: "resort,hotel,pool,tropical"
-//     },
-//     {
-//         name: "Fitness",
-//         icon: "💪",
-//         keywords: "gym,fitness,workout"
-//     },
-//     {
-//         name: "Beauty",
-//         icon: "💄",
-//         keywords: "beauty,skincare,cosmetics"
-//     },
-//     {
-//         name: "Auto",
-//         icon: "🚗",
-//         keywords: "car,automotive,luxury"
-//     },
-//     {
-//         name: "Grocery",
-//         icon: "🥬",
-//         keywords: "fresh,vegetables,fruit,market"
-//     },
-//     {
-//         name: "Real Estate",
-//         icon: "🏠",
-//         keywords: "modern,house,interior,architecture"
-//     },
-//     {
-//         name: "Travel",
-//         icon: "✈️",
-//         keywords: "travel,tropical,landscape"
-//     },
-//     {
-//         name: "Education",
-//         icon: "🎓",
-//         keywords: "education,books,university"
-//     }
-// ];
-
-// const PHOTO_LAYOUTS = [
-//     { side: "right", overlay: "light" },
-//     { side: "right", overlay: "dark" },
-//     { side: "left", overlay: "light" },
-//     { side: "left", overlay: "dark" },
-//     { side: "right", overlay: "warm" },
-//     { side: "left", overlay: "cool" },
-//     { side: "right", overlay: "light" },
-//     { side: "left", overlay: "dark" },
-//     { side: "right", overlay: "cool" },
-//     { side: "left", overlay: "warm" },
-//     { side: "right", overlay: "dark" },
-//     { side: "left", overlay: "light" }
-// ];
-
-// export const BUSINESS_PHOTO_BACKGROUNDS = BUSINESS_TYPES.flatMap(
-//     (business, categoryIndex) =>
-//         Array.from({ length: 12 }, (_, index) => {
-//             const number = index + 1;
-//             const layout = PHOTO_LAYOUTS[index];
-
-//             return {
-//                 id: `business-photo-${categoryIndex + 1}-${String(number).padStart(2, "0")}`,
-//                 name: `${business.name} Photo ${String(number).padStart(2, "0")}`,
-//                 category: business.name,
-//                 icon: business.icon,
-//                 src: `https://loremflickr.com/1200/1200/${encodeURIComponent(business.keywords)}?lock=${categoryIndex * 12 + number}`,
-//                 tags: [
-//                     business.name.toLowerCase(),
-//                     "photo",
-//                     "advertising",
-//                     "promotion",
-//                     "business background"
-//                 ],
-//                 layout: layout.side,
-//                 overlay: layout.overlay
-//             };
-//         })
-// );
-
-// export const BUSINESS_PHOTO_CATEGORIES = [
-//     "All",
-//     ...BUSINESS_TYPES.map(business => business.name)
-// ];
-
-// if (BUSINESS_PHOTO_BACKGROUNDS.length !== 144) {
-//     throw new Error("Business photo library must contain exactly 144 backgrounds.");
-// }
-/////////////////////////////////////////
-
-
-const PHOTO_BASE = "https://images.unsplash.com/";
-
-const BUSINESS_TYPES = [
+const PHOTO_SETS = [
     {
-        name: "Restaurant",
+        category: "Beauty & Salon",
+        icon: "✂️",
+        photos: [
+            "photo-1560066984-138dadb4c035",
+            "photo-1521590832167-7bcbfaa6381f",
+            "photo-1633681926022-84c23e8cb2d8",
+            "photo-1600948836101-f9ffda59d250",
+        ],
+    },
+    {
+        category: "Restaurant & Cafe",
         icon: "🍽️",
-        keywords: ["restaurant", "food", "dining", "menu"],
         photos: [
-            "photo-1555939594-58d7cb561ad1",
-            "photo-1414235077428-338989a2e8c0",
             "photo-1517248135467-4c7edcad34c4",
-            "photo-1504674900247-0877df9cc836",
+            "photo-1414235077428-338989a2e8c0",
+            "photo-1559339352-11d035aa65de",
+            "photo-1552566626-52f8b828add9",
         ],
     },
     {
-        name: "Cafe",
-        icon: "☕",
-        keywords: ["coffee", "cafe", "latte", "bakery"],
-        photos: [
-            "photo-1501339847302-ac426a4a7cbb",
-            "photo-1445116572660-236099ec97a0",
-            "photo-1495474472287-4d71bcdd2085",
-            "photo-1509042239860-f550ce710b93",
-        ],
-    },
-    {
-        name: "Fashion",
-        icon: "👗",
-        keywords: ["fashion", "clothing", "style", "boutique"],
-        photos: [
-            "photo-1483985988355-763728e1935b",
-            "photo-1490481651871-ab68de25d43d",
-            "photo-1445205170230-053b83016050",
-            "photo-1487222477894-8943e31ef7b2",
-        ],
-    },
-    {
-        name: "Photography",
-        icon: "📷",
-        keywords: ["photography", "camera", "portrait", "studio"],
-        photos: [
-            "photo-1516035069371-29a1b244cc32",
-            "photo-1452587925148-ce544e77e70d",
-            "photo-1502982720700-bfff97f2ecac",
-            "photo-1542038784456-1ea8e935640e",
-        ],
-    },
-    {
-        name: "Resort",
-        icon: "🏝️",
-        keywords: ["resort", "hotel", "pool", "holiday"],
-        photos: [
-            "photo-1571896349842-33c89424de2d",
-            "photo-1571003123894-1f0594d2b5d9",
-            "photo-1566073771259-6a8506099945",
-            "photo-1582719508461-905c673771fd",
-        ],
-    },
-    {
-        name: "Fitness",
+        category: "Fitness & Gym",
         icon: "💪",
-        keywords: ["fitness", "gym", "training", "workout"],
         photos: [
             "photo-1534438327276-14e5300c3a48",
             "photo-1534258936925-c58bed479fcb",
             "photo-1517836357463-d25dfeac3438",
-            "photo-1518611012118-696072aa579a",
+            "photo-1571902943202-507ec2618e8f",
         ],
     },
     {
-        name: "Beauty",
-        icon: "💄",
-        keywords: ["beauty", "skincare", "cosmetics", "salon"],
-        photos: [
-            "photo-1596462502278-27bfdc403348",
-            "photo-1570172619644-dfd03ed5d881",
-            "photo-1608248543803-ba4f8c70ae0b",
-            "photo-1522335789203-aabd1fc54bc9",
-        ],
-    },
-    {
-        name: "Auto",
-        icon: "🚗",
-        keywords: ["automotive", "car", "vehicle", "garage"],
-        photos: [
-            "photo-1492144534655-ae79c964c9d7",
-            "photo-1503376780353-7e6692767b70",
-            "photo-1549317661-bd32c8ce0db2",
-            "photo-1489824904134-891ab64532f1",
-        ],
-    },
-    {
-        name: "Grocery",
-        icon: "🥬",
-        keywords: ["grocery", "fresh food", "fruit", "vegetables"],
-        photos: [
-            "photo-1542838132-92c53300491e",
-            "photo-1540420773420-3366772f4999",
-            "photo-1518843875459-f738682238a6",
-            "photo-1490645935967-10de6ba17061",
-        ],
-    },
-    {
-        name: "Real Estate",
+        category: "Real Estate",
         icon: "🏠",
-        keywords: ["real estate", "house", "interior", "property"],
         photos: [
-            "photo-1600596542815-ffad4c1539a9",
+            "photo-1600210492486-724fe5c67fb0",
             "photo-1600607687939-ce8a6c25118c",
             "photo-1600566753086-00f18fb6b3ea",
-            "photo-1600607687920-4e2a09cf159d",
+            "photo-1600585154340-be6161a56a0c",
         ],
     },
     {
-        name: "Travel",
+        category: "Fashion & Clothing",
+        icon: "👗",
+        photos: [
+            "photo-1483985988355-763728e1935b",
+            "photo-1490481651871-ab68de25d43d",
+            "photo-1485230895905-ec40ba36b9bc",
+            "photo-1441986300917-64674bd600d8",
+        ],
+    },
+    {
+        category: "Technology",
+        icon: "💻",
+        photos: [
+            "photo-1498050108023-c5249f4df085",
+            "photo-1519389950473-47ba0277781c",
+            "photo-1518770660439-4636190af475",
+            "photo-1521737711867-e3b97375f902",
+        ],
+    },
+    {
+        category: "Travel & Tourism",
         icon: "✈️",
-        keywords: ["travel", "adventure", "landscape", "destination"],
         photos: [
             "photo-1464822759023-fed622ff2c3b",
-            "photo-1501785888041-af3ef285b470",
-            "photo-1476514525535-07fb3b4ae5f1",
             "photo-1500530855697-b586d89ba3ee",
+            "photo-1476514525535-07fb3b4ae5f1",
+            "photo-1501785888041-af3ef285b470",
         ],
     },
     {
-        name: "Education",
-        icon: "🎓",
-        keywords: ["education", "books", "learning", "school"],
+        category: "Education",
+        icon: "📚",
         photos: [
-            "photo-1503676260728-1c00da094a0b",
             "photo-1523050854058-8df90110c9f1",
+            "photo-1503676260728-1c00da094a0b",
             "photo-1509062522246-3755977927d7",
             "photo-1427504494785-3a9ca7044f45",
         ],
     },
+    {
+        category: "Healthcare",
+        icon: "🩺",
+        photos: [
+            "photo-1576091160399-112ba8d25d1d",
+            "photo-1559757175-0eb30cd8c063",
+            "photo-1584982751601-97dcc096659c",
+            "photo-1579684385127-1ef15d508118",
+        ],
+    },
+    {
+        category: "Automotive",
+        icon: "🚗",
+        photos: [
+            "photo-1492144534655-ae79c964c9d7",
+            "photo-1503376780353-7e6692767b70",
+            "photo-1489824904134-891ab64532f1",
+            "photo-1511919884226-fd3cad34687c",
+        ],
+    },
+    {
+        category: "Construction",
+        icon: "🏗️",
+        photos: [
+            "photo-1504307651254-35680f356dfd",
+            "photo-1503387762-592deb58ef4e",
+            "photo-1541888946425-d81bb19240f5",
+            "photo-1486406146926-c627a92ad1ab",
+        ],
+    },
+    {
+        category: "Photography & Events",
+        icon: "📸",
+        photos: [
+            "photo-1492684223066-81342ee5ff30",
+            "photo-1519741497674-611481863552",
+            "photo-1507504031003-b417219a0fde",
+            "photo-1511578314322-379afb476865",
+        ],
+    },
 ];
 
-const LAYOUTS = [
-    { side: "right", overlay: "light" },
-    { side: "left", overlay: "light" },
-    { side: "right", overlay: "dark" },
-    { side: "left", overlay: "dark" },
-    { side: "right", overlay: "warm" },
-    { side: "left", overlay: "warm" },
-    { side: "right", overlay: "cool" },
-    { side: "left", overlay: "cool" },
-    { side: "right", overlay: "soft" },
-    { side: "left", overlay: "soft" },
-    { side: "right", overlay: "minimal" },
-    { side: "left", overlay: "minimal" },
+const SHAPES = [
+    { id: "left", name: "Left Panel" },
+    { id: "right", name: "Right Panel" },
+    { id: "diagonal", name: "Diagonal" },
+    { id: "curve", name: "Curved" },
+    { id: "circle", name: "Circle" },
+    { id: "bottom", name: "Bottom Fade" },
+    { id: "top", name: "Top Panel" },
+    { id: "split", name: "Split Panels" },
+    { id: "corner", name: "Corner Accent" },
+    { id: "wave", name: "Wave" },
+    { id: "full", name: "Full Tint" },
+    { id: "minimal", name: "Minimal Accent" },
 ];
 
-export const BUSINESS_PHOTO_CATEGORIES = [
-    "All",
-    ...BUSINESS_TYPES.map((business) => business.name),
+const COLORS = [
+    "#FFFFFF",
+    "#111827",
+    "#F5C542",
+    "#EF4444",
+    "#2563EB",
+    "#16A34A",
+    "#9333EA",
+    "#F97316",
+    "#0F766E",
+    "#EC4899",
+    "#7C3AED",
+    "#000000",
 ];
 
-export const BUSINESS_PHOTO_BACKGROUNDS = BUSINESS_TYPES.flatMap(
-    (business, categoryIndex) =>
-        LAYOUTS.map((layout, index) => ({
-            id: `business-photo-${categoryIndex + 1}-${String(index + 1).padStart(2, "0")}`,
-            name: `${business.name} Photo ${String(index + 1).padStart(2, "0")}`,
-            category: business.name,
-            icon: business.icon,
-            keywords: business.keywords,
-            src: `${PHOTO_BASE}${business.photos[index % business.photos.length]}?auto=format&fit=crop&w=1600&q=85`,
-            layout: layout.side,
-            overlay: layout.overlay,
-            tags: [
-                business.name.toLowerCase(),
-                ...business.keywords,
-                "photo",
-                "advertising",
-                "promotion",
-            ],
-        })),
+const DEFAULT_COLORS = [
+    "#FFFFFF",
+    "#111827",
+    "#F5C542",
+    "#FFFFFF",
+    "#111827",
+    "#FFFFFF",
+    "#0F766E",
+    "#FFFFFF",
+    "#111827",
+    "#F5C542",
+    "#FFFFFF",
+    "#111827",
+];
+
+const escapeUrl = (id) =>
+    `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1400&q=85`;
+
+export const BUSINESS_PHOTO_CATEGORIES = PHOTO_SETS.map(
+    ({ category, icon }) => ({ category, icon })
 );
 
-if (BUSINESS_PHOTO_BACKGROUNDS.length !== 144) {
-    throw new Error("Business photo library must contain exactly 144 backgrounds.");
-}
+export const BUSINESS_PHOTO_SHAPES = SHAPES;
+
+export const BUSINESS_PHOTO_COLORS = COLORS;
+
+export const BUSINESS_PHOTO_BACKGROUNDS = PHOTO_SETS.flatMap(
+    (group, categoryIndex) =>
+        Array.from({ length: 12 }, (_, designIndex) => {
+            const shape = SHAPES[designIndex];
+            const photoId = group.photos[designIndex % group.photos.length];
+
+            return {
+                id: `business-photo-${categoryIndex + 1}-${designIndex + 1}`,
+                name: `${group.category} — ${shape.name}`,
+                category: group.category,
+                icon: group.icon,
+                src: escapeUrl(photoId),
+                shape: shape.id,
+                color: DEFAULT_COLORS[categoryIndex],
+                opacity: 88,
+                layout: ["right", "left"].includes(shape.id) ? shape.id : "left",
+                overlay: "custom",
+                keywords: [
+                    group.category.toLowerCase(),
+                    shape.name.toLowerCase(),
+                    "business",
+                    "photo background",
+                ],
+                tags: [group.category, shape.name],
+            };
+        })
+);
+
+export default BUSINESS_PHOTO_BACKGROUNDS;

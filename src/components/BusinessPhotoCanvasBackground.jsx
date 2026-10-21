@@ -1,24 +1,122 @@
 
 import React, { useEffect, useState } from "react";
-import { Image as KonvaImage, Rect } from "react-konva";
+import { Image as KonvaImage, Rect, Shape } from "react-konva";
 
-const OVERLAY_COLORS = {
-    light: [255, 255, 255],
-    dark: [10, 12, 18],
-    warm: [255, 246, 231],
-    cool: [235, 245, 255],
-    soft: [255, 255, 255],
-    minimal: [255, 255, 255],
-};
+function drawOverlay(ctx, shape, width, height) {
+    const w = width;
+    const h = height;
 
-const OVERLAY_OPACITY = {
-    light: 0.96,
-    dark: 0.92,
-    warm: 0.95,
-    cool: 0.95,
-    soft: 0.88,
-    minimal: 0.98,
-};
+    ctx.beginPath();
+
+    switch (shape) {
+        case "right":
+            ctx.moveTo(w * 0.33, 0);
+            ctx.lineTo(w, 0);
+            ctx.lineTo(w, h);
+            ctx.lineTo(w * 0.53, h);
+            ctx.closePath();
+            break;
+
+        case "diagonal":
+            ctx.moveTo(0, 0);
+            ctx.lineTo(w * 0.76, 0);
+            ctx.lineTo(w * 0.52, h);
+            ctx.lineTo(0, h);
+            ctx.closePath();
+            break;
+
+        case "curve":
+            ctx.moveTo(0, 0);
+            ctx.lineTo(w * 0.43, 0);
+            ctx.bezierCurveTo(
+                w * 0.9, h * 0.25,
+                w * 0.28, h * 0.72,
+                w * 0.48, h
+            );
+            ctx.lineTo(0, h);
+            ctx.closePath();
+            break;
+
+        case "circle":
+            ctx.arc(0, h * 0.5, Math.max(w, h) * 0.65, 0, Math.PI * 2);
+            break;
+
+        case "bottom":
+            ctx.moveTo(0, h * 0.48);
+            ctx.lineTo(w, h * 0.22);
+            ctx.lineTo(w, h);
+            ctx.lineTo(0, h);
+            ctx.closePath();
+            break;
+
+        case "top":
+            ctx.moveTo(0, 0);
+            ctx.lineTo(w, 0);
+            ctx.lineTo(w, h * 0.52);
+            ctx.lineTo(0, h * 0.72);
+            ctx.closePath();
+            break;
+
+        case "split":
+            ctx.moveTo(0, 0);
+            ctx.lineTo(w * 0.4, 0);
+            ctx.lineTo(w * 0.32, h);
+            ctx.lineTo(0, h);
+            ctx.closePath();
+
+            ctx.moveTo(w * 0.68, 0);
+            ctx.lineTo(w, 0);
+            ctx.lineTo(w, h);
+            ctx.lineTo(w * 0.6, h);
+            ctx.closePath();
+            break;
+
+        case "corner":
+            ctx.moveTo(0, 0);
+            ctx.lineTo(w * 0.6, 0);
+            ctx.lineTo(0, h * 0.72);
+            ctx.closePath();
+            break;
+
+        case "wave":
+            ctx.moveTo(0, 0);
+            ctx.lineTo(w * 0.66, 0);
+            ctx.bezierCurveTo(
+                w * 0.52, h * 0.25,
+                w * 0.63, h * 0.35,
+                w * 0.49, h * 0.52
+            );
+            ctx.bezierCurveTo(
+                w * 0.4, h * 0.68,
+                w * 0.38, h * 0.84,
+                w * 0.25, h
+            );
+            ctx.lineTo(0, h);
+            ctx.closePath();
+            break;
+
+        case "full":
+            ctx.rect(0, 0, w, h);
+            break;
+
+        case "minimal":
+            ctx.moveTo(0, 0);
+            ctx.lineTo(w * 0.42, 0);
+            ctx.lineTo(w * 0.3, h);
+            ctx.lineTo(0, h);
+            ctx.closePath();
+            break;
+
+        case "left":
+        default:
+            ctx.moveTo(0, 0);
+            ctx.lineTo(w * 0.67, 0);
+            ctx.lineTo(w * 0.47, h);
+            ctx.lineTo(0, h);
+            ctx.closePath();
+            break;
+    }
+}
 
 export default function BusinessPhotoCanvasBackground({
     background,
@@ -26,24 +124,37 @@ export default function BusinessPhotoCanvasBackground({
     height,
 }) {
     const [image, setImage] = useState(null);
+    const [loadFailed, setLoadFailed] = useState(false);
 
     useEffect(() => {
+        setImage(null);
+        setLoadFailed(false);
+
         if (!background?.src || typeof window === "undefined") {
-            setImage(null);
-            return;
+            return undefined;
         }
 
         let cancelled = false;
         const img = new window.Image();
+
         img.crossOrigin = "anonymous";
 
         img.onload = () => {
-            if (!cancelled) setImage(img);
+            if (!cancelled) {
+                setImage(img);
+                setLoadFailed(false);
+            }
         };
 
         img.onerror = () => {
-            if (!cancelled) setImage(null);
-            console.error("Could not load business photo background:", background.src);
+            if (!cancelled) {
+                setImage(null);
+                setLoadFailed(true);
+                console.error(
+                    "Business background image failed to load:",
+                    background.src
+                );
+            }
         };
 
         img.src = background.src;
@@ -55,19 +166,17 @@ export default function BusinessPhotoCanvasBackground({
         };
     }, [background?.src]);
 
-    if (!background || width <= 0 || height <= 0) return null;
+    if (!background || width <= 0 || height <= 0) {
+        return null;
+    }
 
-    const [r, g, b] = OVERLAY_COLORS[background.overlay] || OVERLAY_COLORS.light;
-    const opacity = OVERLAY_OPACITY[background.overlay] ?? 0.96;
-    const solid = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-    const transparent = `rgba(${r}, ${g}, ${b}, 0)`;
+    const color = background.color || "#FFFFFF";
+    const opacity = Math.max(
+        0,
+        Math.min(100, Number(background.opacity ?? 88))
+    ) / 100;
 
-    // The photo sits on the right, leaving the left side for text,
-    // or on the left, leaving the right side for text.
-    const gradientStops =
-        background.layout === "left"
-            ? [0, transparent, 0.28, transparent, 0.58, solid, 1, solid]
-            : [0, solid, 0.42, solid, 0.72, transparent, 1, transparent];
+    const shape = background.shape || "left";
 
     return (
         <>
@@ -87,21 +196,25 @@ export default function BusinessPhotoCanvasBackground({
                     y={0}
                     width={width}
                     height={height}
-                    fill="#f0f2f5"
+                    fill={loadFailed ? "#e5e7eb" : "#f1f5f9"}
                     listening={false}
+                    perfectDrawEnabled={false}
                 />
             )}
 
-            <Rect
+            <Shape
                 x={0}
                 y={0}
                 width={width}
                 height={height}
-                fillLinearGradientStartPoint={{ x: 0, y: 0 }}
-                fillLinearGradientEndPoint={{ x: width, y: 0 }}
-                fillLinearGradientColorStops={gradientStops}
+                fill={color}
+                opacity={opacity}
                 listening={false}
                 perfectDrawEnabled={false}
+                sceneFunc={(ctx, konvaShape) => {
+                    drawOverlay(ctx, shape, width, height);
+                    ctx.fillStrokeShape(konvaShape);
+                }}
             />
         </>
     );
