@@ -943,3 +943,98 @@
         transition: none !important;
     }
 }
+
+
+/* =========================================
+   MOBILE CANVAS TOOLBAR HINTS
+   ========================================= */
+
+.adstudio-tool-button {
+    box-sizing: border-box;
+}
+
+/* Hide supplemental hints on desktop */
+.adstudio-tool-button::after {
+    content: none;
+}
+
+@media (max-width: 768px) {
+    .adstudio-toolbar-shell {
+        max-width: calc(100% - 16px) !important;
+    }
+
+    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        width: min(320px, calc(100vw - 32px));
+        max-height: min(70vh, 560px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-button {
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr);
+        align-items: center;
+        column-gap: 10px;
+        row-gap: 3px;
+        width: 100%;
+        min-height: 54px;
+        padding: 9px 12px;
+        text-align: left;
+        white-space: normal;
+        box-sizing: border-box;
+    }
+
+    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-icon {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        min-height: 32px;
+        font-size: 21px;
+        line-height: 1;
+    }
+
+    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-label {
+        grid-column: 2;
+        grid-row: 1;
+        min-width: 0;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    /* The data-hint attribute supplies each button's mobile description */
+    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-button[data-hint]::after {
+        content: attr(data-hint);
+        display: block;
+        grid-column: 2;
+        grid-row: 2;
+        min-width: 0;
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 400;
+        line-height: 1.35;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-beta-label {
+        grid-column: 2;
+        grid-row: 3;
+        justify-self: start;
+    }
+
+    /* Keep the mobile Tools toggle easy to tap */
+    .adstudio-toolbar-toggle {
+        min-height: 42px;
+        touch-action: manipulation;
+    }
+}
