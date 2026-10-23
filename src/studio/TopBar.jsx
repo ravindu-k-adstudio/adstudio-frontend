@@ -882,6 +882,18 @@ import translations from "../data/translations";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+function formatForDownloadLabel(status, progress) {
+    if (status === "Download started!") {
+        return "Your image is ready";
+    }
+
+    if (progress === 100) {
+        return "Finishing up...";
+    }
+
+    return "High-quality image";
+}
+
 export default function TopBar({
 
     texts = [],
@@ -909,15 +921,21 @@ export default function TopBar({
     const label = key =>
         translations[language]?.[key] || key;
 
-    const [
-        showDownloadPopup,
-        setShowDownloadPopup
-    ] = useState(false);
+    // const [
+    //     showDownloadPopup,
+    //     setShowDownloadPopup
+    // ] = useState(false);
 
-    const [
-        downloadImage,
-        setDownloadImage
-    ] = useState(null);
+    // const [
+    //     downloadImage,
+    //     setDownloadImage
+    // ] = useState(null);
+
+    const [showDownloadPopup, setShowDownloadPopup] = useState(false);
+    const [downloadImage, setDownloadImage] = useState(null);
+    const [downloadProgress, setDownloadProgress] = useState(0);
+    const [downloadStatus, setDownloadStatus] = useState("Preparing your ad...");
+    const [downloadError, setDownloadError] = useState(false);
 
     const languageCodes =
         Object.keys(translations);
@@ -1038,155 +1056,297 @@ export default function TopBar({
             }
         };
 
-    const download = async (
-        format = "png"
-    ) => {
-        const allowed =
-            await consumeDownloadCredit();
 
+
+    const download = async (format = "png") => {
+        // Preserve your existing authentication and credit system.
+        const allowed = await consumeDownloadCredit();
         if (!allowed) return;
 
         if (!canvasRef?.current) {
-            alert(
-                "Canvas is not ready."
-            );
+            alert("Canvas is not ready.");
             return;
         }
 
+        let blobUrl = null;
+
         try {
             const stage =
-                typeof canvasRef.current
-                    .getStage === "function"
+                typeof canvasRef.current.getStage === "function"
                     ? canvasRef.current.getStage()
                     : canvasRef.current;
 
-            if (
-                !stage ||
-                typeof stage.toDataURL !==
-                "function"
-            ) {
-                alert(
-                    "Unable to export the canvas."
-                );
-                return;
+            if (!stage || typeof stage.toDataURL !== "function") {
+                throw new Error("Unable to export the canvas.");
             }
 
-            await new Promise(resolve =>
-                setTimeout(resolve, 100)
-            );
+            // Open the popup immediately.
+            setShowDownloadPopup(true);
+            setDownloadProgress(0);
+            setDownloadStatus("Preparing your ad...");
+            setDownloadImage(null);
+            setDownloadError(false);
 
-            const mime =
-                format === "jpeg"
-                    ? "image/jpeg"
-                    : "image/png";
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            setDownloadProgress(10);
+            setDownloadStatus("Rendering your design...");
 
             const uiWidth = stage.width();
 
-            const [
-                exportWidth
-            ] =
-                EXPORT_SIZES[adSize] ||
-                [uiWidth];
-
-            const pixelRatio =
-                exportWidth / uiWidth;
-
-            const dataUrl =
-                stage.toDataURL({
-                    pixelRatio,
-                    mimeType: mime
-                });
-
-            setDownloadImage(dataUrl);
-            setShowDownloadPopup(true);
-
-            const isMobile =
-                /Mobi|Android|iPhone/i.test(
-                    navigator.userAgent
-                );
-
-            if (isMobile) {
-                const newTab =
-                    window.open();
-
-                if (!newTab) {
-                    alert(
-                        "Please allow popups to download the image."
-                    );
-                    return;
-                }
-
-                newTab.document.write(`
-                    <html>
-                    <head>
-                        <title>AdStudio Download</title>
-                        <meta
-                            name="viewport"
-                            content="width=device-width, initial-scale=1.0"
-                        />
-                    </head>
-                    <body style="
-                        margin:0;
-                        background:#000;
-                        display:flex;
-                        flex-direction:column;
-                        justify-content:center;
-                        align-items:center;
-                        min-height:100vh;
-                    ">
-                        <img
-                            src="${dataUrl}"
-                            alt="Ad"
-                            style="
-                                width:100%;
-                                height:auto;
-                                display:block;
-                            "
-                        />
-
-                        <p style="
-                            color:#fff;
-                            font-family:sans-serif;
-                            padding:10px;
-                            text-align:center;
-                        ">
-                            Long press the image → Save Image
-                        </p>
-                    </body>
-                    </html>
-                `);
-
-                newTab.document.close();
-
-                return;
+            if (!uiWidth || uiWidth <= 0) {
+                throw new Error("The canvas has an invalid width.");
             }
 
-            const link =
-                document.createElement("a");
+            const [exportWidth] = EXPORT_SIZES[adSize] || [uiWidth];
+            const pixelRatio = exportWidth / uiWidth;
 
-            link.href = dataUrl;
-            link.download =
-                `ad.${format}`;
+            const mime =
+                format === "jpeg" ? "image/jpeg" : "image/png";
+
+            // Render the user's actual canvas at the selected export size.
+            const dataUrl = stage.toDataURL({
+                pixelRatio,
+                mimeType: mime
+            });
+
+            if (!dataUrl || dataUrl === "data:,") {
+                throw new Error("The exported image is empty.");
+            }
+
+            // Show the actual exported ad as the popup thumbnail.
+            setDownloadImage(dataUrl);
+            setDownloadProgress(35);
+            setDownloadStatus("Preparing image file...");
+
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // Convert the image into a real downloadable Blob.
+            const response = await fetch(dataUrl);
+            const blob = await response.blob();
+
+            if (!blob.size) {
+                throw new Error("Unable to generate the image file.");
+            }
+
+            blobUrl = URL.createObjectURL(blob);
+
+            setDownloadProgress(55);
+            setDownloadStatus("Preparing your download...");
+
+            // Advance the preparation bar before triggering the download.
+            // Browsers do not provide reliable progress events for an
+            // anchor-triggered download of a locally generated canvas.
+            for (let progress = 65; progress <= 100; progress += 5) {
+                await new Promise(resolve => setTimeout(resolve, 70));
+                setDownloadProgress(progress);
+            }
+
+            setDownloadStatus("Starting download...");
+
+            // Trigger a browser download on desktop and mobile.
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = `ad.${format}`;
+            link.style.display = "none";
 
             document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
+            link.remove();
 
-        } catch (err) {
-            console.error(
-                "DOWNLOAD ERROR:",
-                err
-            );
+            // Keep the object URL available while the browser starts
+            // handling the download.
+            const urlToRevoke = blobUrl;
+            blobUrl = null;
 
-            alert(
-                "Download failed"
-            );
-        }
+            window.setTimeout(() => {
+                URL.revokeObjectURL(urlToRevoke);
+            }, 60000);
 
-        setTimeout(() => {
+            setDownloadStatus("Download started!");
+
+            // Leave the thumbnail and success message visible briefly.
+            await new Promise(resolve => setTimeout(resolve, 1400));
+
             setShowDownloadPopup(false);
-        }, 2000);
+            setDownloadImage(null);
+            setDownloadProgress(0);
+            setDownloadStatus("Preparing your ad...");
+
+        } catch (error) {
+            console.error("DOWNLOAD ERROR:", error);
+
+            if (blobUrl) {
+                URL.revokeObjectURL(blobUrl);
+            }
+
+            setDownloadError(true);
+            setDownloadProgress(100);
+            setDownloadStatus(
+                error?.message || "Download failed. Please try again."
+            );
+
+            // Keep the error visible so the user knows something went wrong.
+            await new Promise(resolve => setTimeout(resolve, 2500));
+
+            setShowDownloadPopup(false);
+            setDownloadImage(null);
+            setDownloadProgress(0);
+            setDownloadError(false);
+            setDownloadStatus("Preparing your ad...");
+        }
     };
+
+
+    // const download = async (
+    //     format = "png"
+    // ) => {
+    //     const allowed =
+    //         await consumeDownloadCredit();
+
+    //     if (!allowed) return;
+
+    //     if (!canvasRef?.current) {
+    //         alert(
+    //             "Canvas is not ready."
+    //         );
+    //         return;
+    //     }
+
+    //     try {
+    //         const stage =
+    //             typeof canvasRef.current
+    //                 .getStage === "function"
+    //                 ? canvasRef.current.getStage()
+    //                 : canvasRef.current;
+
+    //         if (
+    //             !stage ||
+    //             typeof stage.toDataURL !==
+    //             "function"
+    //         ) {
+    //             alert(
+    //                 "Unable to export the canvas."
+    //             );
+    //             return;
+    //         }
+
+    //         await new Promise(resolve =>
+    //             setTimeout(resolve, 100)
+    //         );
+
+    //         const mime =
+    //             format === "jpeg"
+    //                 ? "image/jpeg"
+    //                 : "image/png";
+
+    //         const uiWidth = stage.width();
+
+    //         const [
+    //             exportWidth
+    //         ] =
+    //             EXPORT_SIZES[adSize] ||
+    //             [uiWidth];
+
+    //         const pixelRatio =
+    //             exportWidth / uiWidth;
+
+    //         const dataUrl =
+    //             stage.toDataURL({
+    //                 pixelRatio,
+    //                 mimeType: mime
+    //             });
+
+    //         setDownloadImage(dataUrl);
+    //         setShowDownloadPopup(true);
+
+    //         const isMobile =
+    //             /Mobi|Android|iPhone/i.test(
+    //                 navigator.userAgent
+    //             );
+
+    //         if (isMobile) {
+    //             const newTab =
+    //                 window.open();
+
+    //             if (!newTab) {
+    //                 alert(
+    //                     "Please allow popups to download the image."
+    //                 );
+    //                 return;
+    //             }
+
+    //             newTab.document.write(`
+    //                 <html>
+    //                 <head>
+    //                     <title>AdStudio Download</title>
+    //                     <meta
+    //                         name="viewport"
+    //                         content="width=device-width, initial-scale=1.0"
+    //                     />
+    //                 </head>
+    //                 <body style="
+    //                     margin:0;
+    //                     background:#000;
+    //                     display:flex;
+    //                     flex-direction:column;
+    //                     justify-content:center;
+    //                     align-items:center;
+    //                     min-height:100vh;
+    //                 ">
+    //                     <img
+    //                         src="${dataUrl}"
+    //                         alt="Ad"
+    //                         style="
+    //                             width:100%;
+    //                             height:auto;
+    //                             display:block;
+    //                         "
+    //                     />
+
+    //                     <p style="
+    //                         color:#fff;
+    //                         font-family:sans-serif;
+    //                         padding:10px;
+    //                         text-align:center;
+    //                     ">
+    //                         Long press the image → Save Image
+    //                     </p>
+    //                 </body>
+    //                 </html>
+    //             `);
+
+    //             newTab.document.close();
+
+    //             return;
+    //         }
+
+    //         const link =
+    //             document.createElement("a");
+
+    //         link.href = dataUrl;
+    //         link.download =
+    //             `ad.${format}`;
+
+    //         document.body.appendChild(link);
+    //         link.click();
+    //         document.body.removeChild(link);
+
+    //     } catch (err) {
+    //         console.error(
+    //             "DOWNLOAD ERROR:",
+    //             err
+    //         );
+
+    //         alert(
+    //             "Download failed"
+    //         );
+    //     }
+
+    //     setTimeout(() => {
+    //         setShowDownloadPopup(false);
+    //     }, 2000);
+    // };
 
     const shareAd = async () => {
         const allowed =
@@ -1773,39 +1933,141 @@ export default function TopBar({
                 </div>
             </div>
 
+
             {showDownloadPopup && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div
+                    className="fixed top-4 left-1/2 -translate-x-1/2 z-[99999] w-[calc(100%-24px)] max-w-[360px]"
+                    role="status"
+                    aria-live="polite"
+                >
+                    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
 
-                    <div className="bg-white rounded-2xl p-5 w-[90%] max-w-sm text-center shadow-lg">
+                        {/* Popup heading */}
+                        <div className="flex items-center gap-3 p-4 pb-3">
 
-                        <h2 className="text-lg font-semibold mb-3">
-                            Preparing Download...
-                        </h2>
+                            <div
+                                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${downloadError
+                                    ? "bg-red-100 text-red-600"
+                                    : downloadProgress === 100
+                                        ? "bg-green-100 text-green-700"
+                                        : "bg-blue-100 text-blue-700"
+                                    }`}
+                            >
+                                {downloadError ? (
+                                    <span className="text-xl font-bold">!</span>
+                                ) : downloadProgress === 100 ? (
+                                    <span className="text-xl font-bold">✓</span>
+                                ) : (
+                                    <svg
+                                        className="h-6 w-6 animate-spin"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        aria-hidden="true"
+                                    >
+                                        <circle
+                                            cx="12"
+                                            cy="12"
+                                            r="9"
+                                            stroke="currentColor"
+                                            strokeWidth="3"
+                                            opacity="0.2"
+                                        />
+                                        <path
+                                            d="M21 12a9 9 0 0 0-9-9"
+                                            stroke="currentColor"
+                                            strokeWidth="3"
+                                            strokeLinecap="round"
+                                        />
+                                    </svg>
+                                )}
+                            </div>
 
-                        {downloadImage && (
-                            <img
-                                src={
-                                    downloadImage
-                                }
-                                alt="Preview"
-                                className="w-full rounded-lg mb-4"
-                            />
-                        )}
+                            <div className="min-w-0 flex-1">
+                                <h3 className="text-sm font-bold text-gray-900">
+                                    {downloadError
+                                        ? "Download failed"
+                                        : downloadProgress === 100
+                                            ? "Download started!"
+                                            : "Downloading your ad"}
+                                </h3>
 
-                        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                            <div className="h-full bg-blue-600 animate-[loading_2s_linear_infinite] w-full" />
+                                <p className="mt-1 text-xs text-gray-500">
+                                    {downloadStatus}
+                                </p>
+                            </div>
                         </div>
 
-                        <p className="text-sm text-gray-500 mt-2">
-                            Downloading...
-                        </p>
+                        {/* Actual exported ad thumbnail */}
+                        {downloadImage && (
+                            <div className="mx-4 mb-3 flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 p-2">
+                                <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-white">
+                                    <img
+                                        src={downloadImage}
+                                        alt="Preview of your exported ad"
+                                        className="h-full w-full object-contain"
+                                    />
+                                </div>
 
-                        <p className="text-xs text-gray-400 mt-1">
-                            Please wait...
-                        </p>
+                                <div className="min-w-0">
+                                    <p className="truncate text-sm font-semibold text-gray-800">
+                                        Your AdStudio design
+                                    </p>
+
+                                    <p className="mt-1 text-xs text-gray-500">
+                                        {formatForDownloadLabel(
+                                            downloadStatus,
+                                            downloadProgress
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Progress bar */}
+                        <div className="px-4 pb-4">
+                            <div
+                                className="h-2 w-full overflow-hidden rounded-full bg-gray-200"
+                                role="progressbar"
+                                aria-label="Image preparation progress"
+                                aria-valuemin={0}
+                                aria-valuemax={100}
+                                aria-valuenow={downloadProgress}
+                            >
+                                <div
+                                    className={`h-full rounded-full transition-[width] duration-200 ease-out ${downloadError
+                                        ? "bg-red-500"
+                                        : downloadProgress === 100
+                                            ? "bg-green-500"
+                                            : "bg-blue-600"
+                                        }`}
+                                    style={{
+                                        width: `${downloadProgress}%`
+                                    }}
+                                />
+                            </div>
+
+                            <div className="mt-2 flex items-center justify-between">
+                                <span className="text-xs text-gray-500">
+                                    {downloadError
+                                        ? "Please try again"
+                                        : downloadProgress === 100
+                                            ? "Complete"
+                                            : "Preparing image"}
+                                </span>
+
+                                <span className="text-xs font-semibold tabular-nums text-gray-700">
+                                    {downloadProgress}%
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
+
+
         </div>
+
+
     );
+
 }
