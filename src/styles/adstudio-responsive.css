@@ -958,83 +958,87 @@
     content: none;
 }
 
+
+/* ============================================
+   MOBILE TOOLBAR — HORIZONTAL SCROLLING FIX
+   ============================================ */
+
 @media (max-width: 768px) {
     .adstudio-toolbar-shell {
+        width: calc(100% - 16px) !important;
         max-width: calc(100% - 16px) !important;
+        align-items: flex-start !important;
     }
 
-    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
+    .adstudio-toolbar-shell .adstudio-canvas-toolbar.adstudio-toolbar-menu-open {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+
+        width: 0;
+        min-width: 0;
+        max-width: none !important;
+        flex: 1 1 auto;
+
+        max-height: none !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+
         gap: 8px;
-        width: min(320px, calc(100vw - 32px));
-        max-height: min(70vh, 560px);
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        padding: 10px;
+        padding: 8px;
         box-sizing: border-box;
     }
 
-    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-button {
-        display: grid;
-        grid-template-columns: 32px minmax(0, 1fr);
-        align-items: center;
-        column-gap: 10px;
-        row-gap: 3px;
+    .adstudio-toolbar-shell .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-button {
+        display: flex !important;
+        flex: 0 0 104px !important;
+
+        width: 104px !important;
+        min-width: 104px !important;
+        max-width: 104px !important;
+
+        height: auto !important;
+        min-height: 94px !important;
+        max-height: none !important;
+
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 5px !important;
+
+        padding: 9px 6px !important;
+        white-space: normal !important;
+        text-align: center !important;
+    }
+
+    .adstudio-toolbar-shell .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-label {
+        display: block !important;
         width: 100%;
-        min-height: 54px;
-        padding: 9px 12px;
-        text-align: left;
-        white-space: normal;
-        box-sizing: border-box;
+        font-size: 12px;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+        text-align: center;
     }
 
-    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-icon {
-        grid-column: 1;
-        grid-row: 1 / span 2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        min-height: 32px;
-        font-size: 21px;
-        line-height: 1;
+    .adstudio-toolbar-shell .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-beta-label {
+        display: inline-flex !important;
+        font-size: 9px;
     }
 
-    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-label {
-        grid-column: 2;
-        grid-row: 1;
-        min-width: 0;
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 1.3;
-    }
-
-    /* The data-hint attribute supplies each button's mobile description */
-    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-button[data-hint]::after {
+    .adstudio-toolbar-shell .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-button[data-hint]::after {
         content: attr(data-hint);
-        display: block;
-        grid-column: 2;
-        grid-row: 2;
-        min-width: 0;
+        display: block !important;
+        width: 100%;
         color: #64748b;
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 400;
-        line-height: 1.35;
+        line-height: 1.3;
+        text-align: center;
         white-space: normal;
         overflow-wrap: anywhere;
-    }
-
-    .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-beta-label {
-        grid-column: 2;
-        grid-row: 3;
-        justify-self: start;
-    }
-
-    /* Keep the mobile Tools toggle easy to tap */
-    .adstudio-toolbar-toggle {
-        min-height: 42px;
-        touch-action: manipulation;
     }
 }

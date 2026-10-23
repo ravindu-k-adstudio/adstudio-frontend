@@ -177,7 +177,7 @@ export default function FloatingToolbar({
                 onClick={() => runAction(onDuplicate)}
             />
 
-            <div style={{ position: "relative" }}>
+            {/* <div style={{ position: "relative" }}>
                 <ActionButton
                     icon={FaLayerGroup}
                     label="Arrange layers"
@@ -210,9 +210,9 @@ export default function FloatingToolbar({
                         />
                     </div>
                 )}
-            </div>
+            </div> */}
 
-            <ActionButton
+            {/* <ActionButton
                 icon={isLocked ? FaLockOpen : FaLock}
                 label={isLocked ? "Unlock element" : "Lock element"}
                 onClick={() => runAction(onLockToggle)}
@@ -285,7 +285,7 @@ export default function FloatingToolbar({
                         />
                     </div>
                 )}
-            </div>
+            </div> */}
 
             <Divider />
 
