@@ -482,7 +482,6 @@
 
 
 
-
 /* =========================================================
    ADSTUDIO CANVAS TOOLBAR
    Desktop: labeled buttons
@@ -944,101 +943,155 @@
     }
 }
 
-
-/* =========================================
-   MOBILE CANVAS TOOLBAR HINTS
-   ========================================= */
-
-.adstudio-tool-button {
-    box-sizing: border-box;
-}
-
-/* Hide supplemental hints on desktop */
-.adstudio-tool-button::after {
-    content: none;
-}
+/*//////////////////////////////*/
 
 
 /* ============================================
-   MOBILE TOOLBAR — HORIZONTAL SCROLLING FIX
+   ADSTUDIO MOBILE TOOLBAR — FINAL OVERRIDE
+   Desktop remains unchanged.
    ============================================ */
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     .adstudio-toolbar-shell {
-        width: calc(100% - 16px) !important;
+        position: absolute !important;
+        top: 8px !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%) !important;
+
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        width: calc(100vw - 16px) !important;
         max-width: calc(100% - 16px) !important;
-        align-items: flex-start !important;
+        box-sizing: border-box !important;
+        gap: 0 !important;
     }
 
-    .adstudio-toolbar-shell .adstudio-canvas-toolbar.adstudio-toolbar-menu-open {
+    /* No toggle button on mobile */
+    .adstudio-toolbar-toggle {
+        display: none !important;
+    }
+
+    /* Always-visible horizontal toolbar */
+    .adstudio-toolbar-shell .adstudio-canvas-toolbar {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: nowrap !important;
-        align-items: stretch !important;
-        justify-content: flex-start !important;
-
-        width: 0;
-        min-width: 0;
-        max-width: none !important;
-        flex: 1 1 auto;
-
-        max-height: none !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-
-        gap: 8px;
-        padding: 8px;
-        box-sizing: border-box;
-    }
-
-    .adstudio-toolbar-shell .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-button {
-        display: flex !important;
-        flex: 0 0 104px !important;
-
-        width: 104px !important;
-        min-width: 104px !important;
-        max-width: 104px !important;
-
-        height: auto !important;
-        min-height: 94px !important;
-        max-height: none !important;
-
-        flex-direction: column !important;
         align-items: center !important;
         justify-content: flex-start !important;
-        gap: 5px !important;
 
-        padding: 9px 6px !important;
-        white-space: normal !important;
-        text-align: center !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        flex: 1 1 auto !important;
+
+        gap: 6px !important;
+        padding: 5px !important;
+        box-sizing: border-box !important;
+
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        overscroll-behavior-x: contain;
+        -webkit-overflow-scrolling: touch;
+
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 13px;
+        background: rgba(7, 20, 38, 0.97);
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
     }
 
-    .adstudio-toolbar-shell .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-label {
-        display: block !important;
-        width: 100%;
-        font-size: 12px;
-        line-height: 1.25;
-        overflow-wrap: anywhere;
-        text-align: center;
-    }
-
-    .adstudio-toolbar-shell .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-beta-label {
+    /* Square icon-only buttons */
+    .adstudio-toolbar-shell .adstudio-tool-button {
         display: inline-flex !important;
-        font-size: 9px;
+        flex: 0 0 40px !important;
+
+        width: 40px !important;
+        min-width: 40px !important;
+        max-width: 40px !important;
+
+        height: 40px !important;
+        min-height: 40px !important;
+        max-height: 40px !important;
+
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        padding: 0 !important;
+        gap: 0 !important;
+        border-radius: 10px !important;
+        white-space: nowrap !important;
     }
 
-    .adstudio-toolbar-shell .adstudio-canvas-toolbar.adstudio-toolbar-menu-open .adstudio-tool-button[data-hint]::after {
-        content: attr(data-hint);
-        display: block !important;
-        width: 100%;
-        color: #64748b;
-        font-size: 10px;
-        font-weight: 400;
-        line-height: 1.3;
-        text-align: center;
-        white-space: normal;
-        overflow-wrap: anywhere;
+    .adstudio-toolbar-shell .adstudio-tool-icon {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 23px !important;
+        height: 23px !important;
+        font-size: 21px !important;
+        line-height: 1 !important;
     }
+
+    .adstudio-toolbar-shell .adstudio-tool-label,
+    .adstudio-toolbar-shell .adstudio-beta-label {
+        display: none !important;
+    }
+
+    /* Hide the horizontal scrollbar visually */
+    .adstudio-toolbar-shell .adstudio-canvas-toolbar {
+        scrollbar-width: none;
+    }
+
+    .adstudio-toolbar-shell .adstudio-canvas-toolbar::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* Extra-small phones */
+@media (max-width: 360px) {
+    .adstudio-toolbar-shell .adstudio-canvas-toolbar {
+        gap: 4px !important;
+        padding: 4px !important;
+    }
+
+    .adstudio-toolbar-shell .adstudio-tool-button {
+        flex-basis: 36px !important;
+        width: 36px !important;
+        min-width: 36px !important;
+        max-width: 36px !important;
+
+        height: 36px !important;
+        min-height: 36px !important;
+        max-height: 36px !important;
+    }
+}
+
+/* Tippy appearance */
+.tippy-box[data-theme~="adstudio-toolbar"] {
+    background: #0b1f33;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 3px 5px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.25);
+}
+
+.tippy-box[data-theme~="adstudio-toolbar"]>.tippy-arrow {
+    color: #0b1f33;
 }
