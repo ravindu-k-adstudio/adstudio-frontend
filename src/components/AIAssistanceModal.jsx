@@ -14,6 +14,8 @@ const BUSINESS_TYPES = [
     "Real Estate",
     "Travel",
     "Education",
+    "HealthCare",
+    "Construction",
     "Other"
 ];
 

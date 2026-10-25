@@ -1,8 +1,8 @@
 /**
  * AdStudio — Local AI-style design assistant
  *
- * This version uses your existing template library.
- * It does not call an external AI API or require an API key.
+ * Uses the existing template library. It does not call an external AI API
+ * or require an API key.
  */
 
 const BUSINESS_KEYWORDS = {
@@ -18,6 +18,8 @@ const BUSINESS_KEYWORDS = {
     "Real Estate": ["real estate", "property", "house", "apartment", "land", "rent"],
     Travel: ["travel", "tour", "tourism", "trip", "adventure", "destination"],
     Education: ["education", "school", "course", "class", "academy", "learning", "tuition"],
+    HealthCare: ["healthcare", "health care", "medical", "clinic", "doctor", "hospital", "dental", "patient", "wellness"],
+    Construction: ["construction", "builder", "building", "contractor", "renovation", "architecture", "engineering"],
     Other: ["business", "promotion", "product", "service", "sale", "launch"]
 };
 
@@ -113,8 +115,7 @@ export function recommendTemplate({
         (template) => template.businessType === requestedType
     );
 
-    const candidates =
-        matchingTemplates.length > 0 ? matchingTemplates : templates;
+    const candidates = matchingTemplates.length > 0 ? matchingTemplates : templates;
 
     const ranked = candidates
         .map((template) => ({
@@ -123,8 +124,7 @@ export function recommendTemplate({
         }))
         .sort((a, b) => b.score - a.score);
 
-    // Prefer a variety of existing design variants rather than always
-    // returning the first template when multiple templates score equally.
+    // Preserve the original varied-selection behavior for tied candidates.
     const highestScore = ranked[0].score;
     const tied = ranked.filter((item) => item.score === highestScore);
     const selected = tied[Math.floor(Math.random() * tied.length)].template;
