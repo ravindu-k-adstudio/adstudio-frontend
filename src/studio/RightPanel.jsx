@@ -16,6 +16,7 @@ import {
 } from "react-icons/fa";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
+import HelpCenterModal from "./HelpCenterModal";
 
 export default function RightPanel({
     texts = [],
@@ -45,6 +46,7 @@ export default function RightPanel({
 }) {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
     const [showLetterSpacing, setShowLetterSpacing] = useState(false);
+    const [showHelpCenter, setShowHelpCenter] = useState(false);
 
 
     useEffect(() => {
@@ -714,13 +716,27 @@ hover:shadow-lg active:scale-95 disabled:opacity-40
                 </div>
 
                 <div className="icon-item">
-                    <button className="icon-btn" onClick={() => alert("Help guide coming soon")}>
-                        ?
+                    <button
+                        type="button"
+                        className="icon-btn"
+                        onClick={() => setShowHelpCenter(true)}
+                        aria-label="Open Help Center"
+                        title="Help Center"
+                    >
+                        <FaQuestionCircle />
                     </button>
-                    {isMobile && <span className="icon-label">Help</span>}
+
+                    {isMobile && (
+                        <span className="icon-label">Help</span>
+                    )}
                 </div>
 
             </div>
+            {showHelpCenter && (
+                <HelpCenterModal
+                    onClose={() => setShowHelpCenter(false)}
+                />
+            )}
         </div>
 
     );
