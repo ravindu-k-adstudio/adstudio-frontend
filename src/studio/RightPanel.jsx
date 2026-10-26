@@ -12,7 +12,8 @@ import {
     FaTrash,
     FaFont,
     FaPalette,
-    FaLayerGroup
+    FaLayerGroup,
+    FaQuestionCircle
 } from "react-icons/fa";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
