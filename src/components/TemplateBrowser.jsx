@@ -145,17 +145,17 @@ export default function TemplateBrowser({ adSize = "square", onUseTemplate, onCl
     return <div className="tb-overlay" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose?.(); }}>
         <section className="tb-dialog" role="dialog" aria-modal="true" aria-label="Choose an advertisement template">
             <header className="tb-header">
-                <div className="tb-heading"><span className="tb-eyebrow">ADSTUDIO CREATIVE STUDIO</span><h2>Designs made to stand out.</h2><p>Choose a layout, tune the color treatment, then open it in your editable canvas.</p></div>
+                <div className="tb-heading "><span className="tb-eyebrow">ADSTUDIO CREATIVE STUDIO</span><h2>Designs made to stand out.</h2><p>Choose a layout, tune the color treatment, then open it in your editable canvas.</p></div>
                 <button className="tb-close" onClick={onClose} aria-label="Close template browser">×</button>
             </header>
 
             <div className="tb-toolbar">
                 <label className="tb-search"><span aria-hidden="true">⌕</span><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search templates or business types…" /></label>
-                <div className="tb-size-bar" role="group" aria-label="Ad size">
+                <div className="tb-size-bar" role="group" aria-label="Ad size " >
                     <span className="tb-bar-label">AD SIZE</span>
                     <div className="tb-size-options">{SIZE_OPTIONS.map((size) => <button type="button" key={size} className={selectedSize === size ? "active" : ""} onClick={() => setSelectedSize(size)}>{TEMPLATE_SIZE_NAMES[size] || size}</button>)}</div>
                 </div>
-                <div className="tb-count"><strong>{visible.length}</strong> templates</div>
+                {/* <div className="tb-count"><strong>{visible.length}</strong> templates</div> */}
             </div>
 
             <nav className="tb-categories" aria-label="Business type">
