@@ -3338,6 +3338,7 @@ const Canvas = forwardRef(function Canvas(
 
     const containerRef = useRef(null);
     const canvasWrapperRef = useRef(null);
+    const scrollViewportRef = useRef(null);
 
     const imageInputRef = useRef(null);
     const replaceImageIdRef = useRef(null);
@@ -3454,6 +3455,11 @@ const Canvas = forwardRef(function Canvas(
     };
 
     const finalScale = zoom * autoScale;
+
+    const scaledCanvasWidth = W * finalScale;
+    const scaledCanvasHeight = H * finalScale;
+
+    const canvasPadding = 40;
 
     /* ================= CURSOR FIX ================= */
     useEffect(() => {
@@ -4609,7 +4615,7 @@ const Canvas = forwardRef(function Canvas(
 
             {/* CENTERING WRAPPER */}
 
-            <div
+            {/* <div
                 style={{
                     display: "flex",
                     justifyContent: "center",
@@ -4618,548 +4624,409 @@ const Canvas = forwardRef(function Canvas(
                     minHeight: "100%",
                     padding: 40
                 }}
-            >
+            > */}
 
-                {/* SCALE WRAPPER */}
+            {/* SCALE WRAPPER */}
 
-                <div
+            {/* <div
                     style={{
                         transform: `scale(${finalScale})`,
                         transformOrigin: "center center",
                         transition: "transform 0.2s ease"
                     }}
+                > */}
+
+            {/* SCROLLABLE CANVAS VIEWPORT */}
+            <div
+                ref={scrollViewportRef}
+                className="adstudio-canvas-scroll-viewport"
+            >
+                {/* Creates the actual scrollable dimensions */}
+                <div
+                    className="adstudio-canvas-scroll-content"
+                    style={{
+                        width: `${(W + 36) * finalScale + canvasPadding * 2}px`,
+                        height: `${(H + 36) * finalScale + canvasPadding * 2}px`,
+                    }}
                 >
+                    {/* Scaled canvas */}
                     <div
-                        ref={canvasWrapperRef}
+                        className="adstudio-canvas-scale-wrapper"
                         style={{
-                            position: "relative",
-
-                            background:
-                                "linear-gradient(135deg, #071426 0%, #0b1f33 35%, #12385d 70%, #1e4f7a 100%)",
-
-                            borderRadius: 26,
-
-                            padding: 18,
-
-                            boxShadow:
-                                "0 25px 80px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08)",
-
-                            overflow: "hidden",
-
-                            border: "1px solid rgba(255,255,255,0.08)",
-
-                            backdropFilter: "blur(10px)"
+                            width: `${W + 36}px`,
+                            height: `${H + 36}px`,
+                            transform: `translate(-50%, -50%) scale(${finalScale})`,
+                            transformOrigin: "center center",
                         }}
                     >
+                        {/* KEEP YOUR EXISTING canvasWrapperRef DIV HERE */}
+                        {/* KEEP ITS EXISTING STAGE AND ALL CHILDREN UNCHANGED */}
+                        <div
+                            ref={canvasWrapperRef}
+                            style={{
+                                position: "relative",
 
-                        <Stage
-                            ref={(node) => {
-                                stageRef.current = node;
-                                if (ref) ref.current = node;
+                                background:
+                                    "linear-gradient(135deg, #071426 0%, #0b1f33 35%, #12385d 70%, #1e4f7a 100%)",
+
+                                borderRadius: 26,
+
+                                padding: 18,
+
+                                boxShadow:
+                                    "0 25px 80px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08)",
+
+                                overflow: "hidden",
+
+                                border: "1px solid rgba(255,255,255,0.08)",
+
+                                backdropFilter: "blur(10px)"
                             }}
-                            width={W}
-                            height={H}
-                            onMouseDown={onMouseDown}
-                            onMouseMove={onMouseMove}
-                            onMouseUp={onMouseUp}
-                            onMouseLeave={onMouseUp}
-
-                            onTouchStart={onMouseDown}
-                            onTouchMove={onMouseMove}
-                            onTouchEnd={onMouseUp}
-                            onTouchCancel={onMouseUp}
-                            onClick={e => {
-                                if (e.target === e.target.getStage()) {
-                                    setSelectedId(null);
-                                    selectedNodeRef.current = null;
-
-                                    if (!isDrawing) {
-                                        setEditingBackground(false);
-                                    }
-                                }
-                            }}
-                            onTap={e => {
-                                if (e.target === e.target.getStage()) {
-                                    setSelectedId(null);
-                                    selectedNodeRef.current = null;
-
-                                    if (!isDrawing) {
-                                        setEditingBackground(false);
-                                    }
-                                }
-                            }}
-
-                        // onMouseDown={(e) => {
-                        //     const clickedOnEmpty =
-                        //         e.target === e.target.getStage();
-
-                        //     if (clickedOnEmpty) {
-                        //         setSelectedId(null);
-                        //         setEditingBackground(false);
-                        //     }
-                        // }}
-
-                        // onTouchStart={(e) => {
-                        //     const clickedOnEmpty =
-                        //         e.target === e.target.getStage();
-
-                        //     if (clickedOnEmpty) {
-                        //         setSelectedId(null);
-                        //         setEditingBackground(false);
-                        //     }
-                        // }}
-                        //////////////////////////////////////////////////////////
-                        // onMouseDown={e => {
-                        //     if (e.target === e.target.getStage()) {
-                        //         setSelectedId(null);
-                        //         setEditingBackground(false);
-                        //     }
-                        // }}
-
-                        // onTouchStart={e => {
-                        //     if (e.target === e.target.getStage()) {
-                        //         setSelectedId(null);
-                        //         setEditingBackground(false);
-                        //     }
-                        // }}
-
-
                         >
 
-                            {/* BACKGROUND */}
+                            <Stage
+                                ref={(node) => {
+                                    stageRef.current = node;
+                                    if (ref) ref.current = node;
+                                }}
+                                width={W}
+                                height={H}
+                                onMouseDown={onMouseDown}
+                                onMouseMove={onMouseMove}
+                                onMouseUp={onMouseUp}
+                                onMouseLeave={onMouseUp}
 
-                            <Layer listening={true}>
+                                onTouchStart={onMouseDown}
+                                onTouchMove={onMouseMove}
+                                onTouchEnd={onMouseUp}
+                                onTouchCancel={onMouseUp}
+                                onClick={e => {
+                                    if (e.target === e.target.getStage()) {
+                                        setSelectedId(null);
+                                        selectedNodeRef.current = null;
 
-                                {/* default background */}
-                                <Rect
-                                    width={W}
-                                    height={H}
-                                    fill={background?.value || "#f8fafc"}
-                                    listening={false}
-                                />
-
-                                {/* BACKGROUND IMAGE */}
-                                {background?.type === "image" && background.image && (
-                                    <KonvaImage
-                                        image={background.image}
-
-                                        x={background.x ?? 0}
-                                        y={background.y ?? 0}
-
-                                        width={background.width ?? W}
-                                        height={background.height ?? H}
-
-                                        crop={background.crop}
-
-                                        rotation={background.rotation || 0}
-
-                                        listening={!DRAW_TOOLS.includes(tool)}
-
-                                        draggable={editingBackground}
-
-                                        onDblClick={(e) => {
-
-                                            if (DRAW_TOOLS.includes(tool)) return;
-
-                                            e.cancelBubble = true;
-
-                                            const node = e.target;
-
-                                            setEditingBackground(true);
-
-                                            setSelectedId("background");
-
-                                            selectedNodeRef.current = node;
-
-                                            requestAnimationFrame(() => {
-                                                node.draggable(true);
-                                            });
-                                        }}
-
-                                        onDblTap={(e) => {
-
-                                            if (DRAW_TOOLS.includes(tool)) return;
-
-                                            e.cancelBubble = true;
-
-                                            const node = e.target;
-
-                                            setEditingBackground(true);
-
-                                            setSelectedId("background");
-
-                                            selectedNodeRef.current = node;
-
-                                            requestAnimationFrame(() => {
-                                                node.draggable(true);
-                                            });
-                                        }}
-
-                                        onDragEnd={(e) => {
-
-                                            if (!editingBackground) {
-                                                e.target.stopDrag();
-                                                return;
-                                            }
-
-                                            const node = e.target;
-
-                                            const { x, y } =
-                                                node.position();
-
-                                            setBackground(prev => ({
-                                                ...prev,
-                                                x,
-                                                y
-                                            }));
-
-                                            node.stopDrag();
-                                            node.draggable(false);
-
+                                        if (!isDrawing) {
                                             setEditingBackground(false);
+                                        }
+                                    }
+                                }}
+                                onTap={e => {
+                                    if (e.target === e.target.getStage()) {
+                                        setSelectedId(null);
+                                        selectedNodeRef.current = null;
 
-                                            setSelectedId(null);
+                                        if (!isDrawing) {
+                                            setEditingBackground(false);
+                                        }
+                                    }
+                                }}
 
-                                            selectedNodeRef.current = null;
+                            // onMouseDown={(e) => {
+                            //     const clickedOnEmpty =
+                            //         e.target === e.target.getStage();
 
-                                            pushHistory();
-                                        }}
-                                    />
-                                )}
+                            //     if (clickedOnEmpty) {
+                            //         setSelectedId(null);
+                            //         setEditingBackground(false);
+                            //     }
+                            // }}
+
+                            // onTouchStart={(e) => {
+                            //     const clickedOnEmpty =
+                            //         e.target === e.target.getStage();
+
+                            //     if (clickedOnEmpty) {
+                            //         setSelectedId(null);
+                            //         setEditingBackground(false);
+                            //     }
+                            // }}
+                            //////////////////////////////////////////////////////////
+                            // onMouseDown={e => {
+                            //     if (e.target === e.target.getStage()) {
+                            //         setSelectedId(null);
+                            //         setEditingBackground(false);
+                            //     }
+                            // }}
+
+                            // onTouchStart={e => {
+                            //     if (e.target === e.target.getStage()) {
+                            //         setSelectedId(null);
+                            //         setEditingBackground(false);
+                            //     }
+                            // }}
 
 
-                                {background?.type === "business-photo" && (
-                                    <BusinessPhotoCanvasBackground
-                                        background={background}
+                            >
+
+                                {/* BACKGROUND */}
+
+                                <Layer listening={true}>
+
+                                    {/* default background */}
+                                    <Rect
                                         width={W}
                                         height={H}
+                                        fill={background?.value || "#f8fafc"}
+                                        listening={false}
                                     />
-                                )}
-                            </Layer>
 
+                                    {/* BACKGROUND IMAGE */}
+                                    {background?.type === "image" && background.image && (
+                                        <KonvaImage
+                                            image={background.image}
 
-                            {/* BLOCKS */}
+                                            x={background.x ?? 0}
+                                            y={background.y ?? 0}
 
-                            <Layer listening={!DRAW_TOOLS.includes(tool)}>
-                                {blocks.map(b => {
-                                    const shape = getBlockShape(b);
-                                    if (!shape) return null;
+                                            width={background.width ?? W}
+                                            height={background.height ?? H}
 
-                                    return (
-                                        <shape.type
-                                            {...shape.props}
-                                            key={b.id}
-                                            draggable
+                                            crop={background.crop}
 
-                                            onClick={(e) => {
-                                                setEditingBackground(false);
+                                            rotation={background.rotation || 0}
+
+                                            listening={!DRAW_TOOLS.includes(tool)}
+
+                                            draggable={editingBackground}
+
+                                            onDblClick={(e) => {
+
+                                                if (DRAW_TOOLS.includes(tool)) return;
+
                                                 e.cancelBubble = true;
-                                                setSelectedId(b.id);
-                                                selectedNodeRef.current = e.target;
+
+                                                const node = e.target;
+
+                                                setEditingBackground(true);
+
+                                                setSelectedId("background");
+
+                                                selectedNodeRef.current = node;
+
+                                                requestAnimationFrame(() => {
+                                                    node.draggable(true);
+                                                });
                                             }}
-                                            onTap={(e) => {
-                                                setEditingBackground(false);
+
+                                            onDblTap={(e) => {
+
+                                                if (DRAW_TOOLS.includes(tool)) return;
+
                                                 e.cancelBubble = true;
-                                                setSelectedId(b.id);
-                                                selectedNodeRef.current = e.target;
+
+                                                const node = e.target;
+
+                                                setEditingBackground(true);
+
+                                                setSelectedId("background");
+
+                                                selectedNodeRef.current = node;
+
+                                                requestAnimationFrame(() => {
+                                                    node.draggable(true);
+                                                });
                                             }}
 
                                             onDragEnd={(e) => {
-                                                const { x, y } = e.target.position();
-                                                setBlocks(prev =>
-                                                    prev.map(item =>
-                                                        item.id === b.id ? { ...item, x, y } : item
-                                                    )
-                                                );
-                                                pushHistory();
-                                            }}
 
-                                            onTransformEnd={(e) => {
+                                                if (!editingBackground) {
+                                                    e.target.stopDrag();
+                                                    return;
+                                                }
+
                                                 const node = e.target;
-                                                const scaleX = node.scaleX();
-                                                const scaleY = node.scaleY();
-                                                node.scaleX(1);
-                                                node.scaleY(1);
 
-                                                const updated = {
-                                                    x: node.x(),
-                                                    y: node.y(),
-                                                    width: Math.max(10, b.width * scaleX),
-                                                    height: Math.max(10, b.height * scaleY),
-                                                    rotation: node.rotation()
-                                                };
+                                                const { x, y } =
+                                                    node.position();
 
-                                                setBlocks(prev =>
-                                                    prev.map(item =>
-                                                        item.id === b.id ? { ...item, ...updated } : item
-                                                    )
-                                                );
+                                                setBackground(prev => ({
+                                                    ...prev,
+                                                    x,
+                                                    y
+                                                }));
+
+                                                node.stopDrag();
+                                                node.draggable(false);
+
+                                                setEditingBackground(false);
+
+                                                setSelectedId(null);
+
+                                                selectedNodeRef.current = null;
+
                                                 pushHistory();
                                             }}
                                         />
-                                    );
-                                })}
-                            </Layer>
+                                    )}
 
 
-                            {/* IMAGES */}
-
-                            <Layer listening={!DRAW_TOOLS.includes(tool)}>
-
-                                {images.map(img => (
-                                    <KonvaImage
-                                        key={img.id}
-
-                                        x={img.x}
-                                        y={img.y}
-
-                                        width={img.width}
-                                        height={img.height}
-
-                                        rotation={img.rotation || 0}
-
-                                        image={img.image}
-
-                                        onDblClick={e => {
-
-                                            if (DRAW_TOOLS.includes(tool)) return;
-
-                                            if (img.assetType === "social" || img.type === "social") {
-                                                e.cancelBubble = true;
-                                                setEditingBackground(false);
-                                                setSelectedId(img.id);
-                                                selectedNodeRef.current = e.target;
-                                                onReplaceIcon?.(img.id, "images");
-                                                return;
-                                            }
-
-                                            // Template logos and decorative photos use image replacement.
-                                            if (
-                                                img.assetType !== "logo" &&
-                                                img.assetType !== "photo"
-                                            ) {
-                                                return;
-                                            }
-
-                                            e.cancelBubble = true;
-
-                                            setEditingBackground(false);
-
-                                            setSelectedId(img.id);
-
-                                            selectedNodeRef.current = e.target;
-
-                                            openImageReplacement(img.id);
-                                        }}
-
-                                        onDblTap={e => {
-
-                                            if (DRAW_TOOLS.includes(tool)) return;
-
-                                            if (img.assetType === "social" || img.type === "social") {
-                                                e.cancelBubble = true;
-                                                setEditingBackground(false);
-                                                setSelectedId(img.id);
-                                                selectedNodeRef.current = e.target;
-                                                onReplaceIcon?.(img.id, "images");
-                                                return;
-                                            }
-
-                                            // Template logos and decorative photos use image replacement.
-                                            if (
-                                                img.assetType !== "logo" &&
-                                                img.assetType !== "photo"
-                                            ) {
-                                                return;
-                                            }
-
-                                            e.cancelBubble = true;
-
-                                            setEditingBackground(false);
-
-                                            setSelectedId(img.id);
-
-                                            selectedNodeRef.current = e.target;
-
-                                            openImageReplacement(img.id);
-                                        }}
-
-                                        draggable={!DRAW_TOOLS.includes(tool)}
-
-                                        listening={!DRAW_TOOLS.includes(tool)}
-
-                                        onClick={e => {
-
-                                            setEditingBackground(false);
-
-                                            e.cancelBubble = true;
-
-                                            setSelectedId(img.id);
-
-                                            selectedNodeRef.current =
-                                                e.target;
-                                        }}
-
-                                        onTap={e => {
-
-                                            setEditingBackground(false);
-
-                                            e.cancelBubble = true;
-
-                                            setSelectedId(img.id);
-
-                                            selectedNodeRef.current =
-                                                e.target;
-                                        }}
-
-                                        onDragEnd={e => {
-
-                                            const { x, y } =
-                                                e.target.position();
-
-                                            setImages(prev =>
-                                                prev.map(item =>
-                                                    item.id === img.id
-                                                        ? {
-                                                            ...item,
-                                                            x,
-                                                            y
-                                                        }
-                                                        : item
-                                                )
-                                            );
-
-                                            pushHistory();
-                                        }}
-
-                                        onTransformEnd={e => {
-
-                                            const node = e.target;
-
-                                            const scaleX =
-                                                node.scaleX();
-
-                                            const scaleY =
-                                                node.scaleY();
-
-                                            const newWidth =
-                                                Math.max(
-                                                    20,
-                                                    node.width() *
-                                                    scaleX
-                                                );
-
-                                            const newHeight =
-                                                Math.max(
-                                                    20,
-                                                    node.height() *
-                                                    scaleY
-                                                );
-
-                                            node.scaleX(1);
-                                            node.scaleY(1);
-
-                                            setImages(prev =>
-                                                prev.map(item =>
-                                                    item.id === img.id
-                                                        ? {
-                                                            ...item,
-
-                                                            x: node.x(),
-                                                            y: node.y(),
-
-                                                            width: newWidth,
-                                                            height: newHeight,
-
-                                                            rotation:
-                                                                node.rotation()
-                                                        }
-                                                        : item
-                                                )
-                                            );
-
-                                            pushHistory();
-                                        }}
-
-                                    />
-                                ))}
-
-                            </Layer>
+                                    {background?.type === "business-photo" && (
+                                        <BusinessPhotoCanvasBackground
+                                            background={background}
+                                            width={W}
+                                            height={H}
+                                        />
+                                    )}
+                                </Layer>
 
 
-                            {/* =========================================================
-    ICONS
-========================================================= */}
+                                {/* BLOCKS */}
 
-                            <Layer listening={!DRAW_TOOLS.includes(tool)}>
+                                <Layer listening={!DRAW_TOOLS.includes(tool)}>
+                                    {blocks.map(b => {
+                                        const shape = getBlockShape(b);
+                                        if (!shape) return null;
 
-                                {icons.map(icon => {
+                                        return (
+                                            <shape.type
+                                                {...shape.props}
+                                                key={b.id}
+                                                draggable
 
-                                    if (!icon.image) {
-                                        return null;
-                                    }
+                                                onClick={(e) => {
+                                                    setEditingBackground(false);
+                                                    e.cancelBubble = true;
+                                                    setSelectedId(b.id);
+                                                    selectedNodeRef.current = e.target;
+                                                }}
+                                                onTap={(e) => {
+                                                    setEditingBackground(false);
+                                                    e.cancelBubble = true;
+                                                    setSelectedId(b.id);
+                                                    selectedNodeRef.current = e.target;
+                                                }}
 
-                                    return (
+                                                onDragEnd={(e) => {
+                                                    const { x, y } = e.target.position();
+                                                    setBlocks(prev =>
+                                                        prev.map(item =>
+                                                            item.id === b.id ? { ...item, x, y } : item
+                                                        )
+                                                    );
+                                                    pushHistory();
+                                                }}
 
+                                                onTransformEnd={(e) => {
+                                                    const node = e.target;
+                                                    const scaleX = node.scaleX();
+                                                    const scaleY = node.scaleY();
+                                                    node.scaleX(1);
+                                                    node.scaleY(1);
+
+                                                    const updated = {
+                                                        x: node.x(),
+                                                        y: node.y(),
+                                                        width: Math.max(10, b.width * scaleX),
+                                                        height: Math.max(10, b.height * scaleY),
+                                                        rotation: node.rotation()
+                                                    };
+
+                                                    setBlocks(prev =>
+                                                        prev.map(item =>
+                                                            item.id === b.id ? { ...item, ...updated } : item
+                                                        )
+                                                    );
+                                                    pushHistory();
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </Layer>
+
+
+                                {/* IMAGES */}
+
+                                <Layer listening={!DRAW_TOOLS.includes(tool)}>
+
+                                    {images.map(img => (
                                         <KonvaImage
-                                            key={icon.id}
-                                            ref={node => registerNode(icon.id, node)}
-                                            image={icon.image}
+                                            key={img.id}
 
+                                            x={img.x}
+                                            y={img.y}
 
-                                            x={icon.x}
-                                            y={icon.y}
+                                            width={img.width}
+                                            height={img.height}
 
-                                            width={icon.width}
-                                            height={icon.height}
+                                            rotation={img.rotation || 0}
 
-                                            rotation={
-                                                icon.rotation || 0
-                                            }
-
-                                            draggable={
-                                                !DRAW_TOOLS.includes(tool)
-                                            }
-
-                                            listening={
-                                                !DRAW_TOOLS.includes(tool)
-                                            }
+                                            image={img.image}
 
                                             onDblClick={e => {
+
                                                 if (DRAW_TOOLS.includes(tool)) return;
-                                                e.cancelBubble = true;
-                                                setEditingBackground(false);
-                                                setSelectedId(icon.id);
-                                                onReplaceIcon?.(icon.id, "icons");
-                                            }}
 
-                                            onDblTap={e => {
-                                                if (DRAW_TOOLS.includes(tool)) return;
-                                                e.cancelBubble = true;
-                                                setEditingBackground(false);
-                                                setSelectedId(icon.id);
-                                                onReplaceIcon?.(icon.id, "icons");
-                                            }}
+                                                if (img.assetType === "social" || img.type === "social") {
+                                                    e.cancelBubble = true;
+                                                    setEditingBackground(false);
+                                                    setSelectedId(img.id);
+                                                    selectedNodeRef.current = e.target;
+                                                    onReplaceIcon?.(img.id, "images");
+                                                    return;
+                                                }
 
-                                            onClick={e => {
-
+                                                // Template logos and decorative photos use image replacement.
                                                 if (
-                                                    DRAW_TOOLS.includes(
-                                                        tool
-                                                    )
+                                                    img.assetType !== "logo" &&
+                                                    img.assetType !== "photo"
                                                 ) {
                                                     return;
                                                 }
 
-                                                setEditingBackground(
-                                                    false
-                                                );
+                                                e.cancelBubble = true;
+
+                                                setEditingBackground(false);
+
+                                                setSelectedId(img.id);
+
+                                                selectedNodeRef.current = e.target;
+
+                                                openImageReplacement(img.id);
+                                            }}
+
+                                            onDblTap={e => {
+
+                                                if (DRAW_TOOLS.includes(tool)) return;
+
+                                                if (img.assetType === "social" || img.type === "social") {
+                                                    e.cancelBubble = true;
+                                                    setEditingBackground(false);
+                                                    setSelectedId(img.id);
+                                                    selectedNodeRef.current = e.target;
+                                                    onReplaceIcon?.(img.id, "images");
+                                                    return;
+                                                }
+
+                                                // Template logos and decorative photos use image replacement.
+                                                if (
+                                                    img.assetType !== "logo" &&
+                                                    img.assetType !== "photo"
+                                                ) {
+                                                    return;
+                                                }
 
                                                 e.cancelBubble = true;
 
-                                                setSelectedId(
-                                                    icon.id
-                                                );
+                                                setEditingBackground(false);
+
+                                                setSelectedId(img.id);
+
+                                                selectedNodeRef.current = e.target;
+
+                                                openImageReplacement(img.id);
+                                            }}
+
+                                            draggable={!DRAW_TOOLS.includes(tool)}
+
+                                            listening={!DRAW_TOOLS.includes(tool)}
+
+                                            onClick={e => {
+
+                                                setEditingBackground(false);
+
+                                                e.cancelBubble = true;
+
+                                                setSelectedId(img.id);
 
                                                 selectedNodeRef.current =
                                                     e.target;
@@ -5167,23 +5034,11 @@ const Canvas = forwardRef(function Canvas(
 
                                             onTap={e => {
 
-                                                if (
-                                                    DRAW_TOOLS.includes(
-                                                        tool
-                                                    )
-                                                ) {
-                                                    return;
-                                                }
-
-                                                setEditingBackground(
-                                                    false
-                                                );
+                                                setEditingBackground(false);
 
                                                 e.cancelBubble = true;
 
-                                                setSelectedId(
-                                                    icon.id
-                                                );
+                                                setSelectedId(img.id);
 
                                                 selectedNodeRef.current =
                                                     e.target;
@@ -5191,15 +5046,12 @@ const Canvas = forwardRef(function Canvas(
 
                                             onDragEnd={e => {
 
-                                                const {
-                                                    x,
-                                                    y
-                                                } =
+                                                const { x, y } =
                                                     e.target.position();
 
-                                                setIcons(prev =>
+                                                setImages(prev =>
                                                     prev.map(item =>
-                                                        item.id === icon.id
+                                                        item.id === img.id
                                                             ? {
                                                                 ...item,
                                                                 x,
@@ -5214,8 +5066,7 @@ const Canvas = forwardRef(function Canvas(
 
                                             onTransformEnd={e => {
 
-                                                const node =
-                                                    e.target;
+                                                const node = e.target;
 
                                                 const scaleX =
                                                     node.scaleX();
@@ -5240,20 +5091,17 @@ const Canvas = forwardRef(function Canvas(
                                                 node.scaleX(1);
                                                 node.scaleY(1);
 
-                                                setIcons(prev =>
+                                                setImages(prev =>
                                                     prev.map(item =>
-                                                        item.id === icon.id
+                                                        item.id === img.id
                                                             ? {
                                                                 ...item,
 
                                                                 x: node.x(),
                                                                 y: node.y(),
 
-                                                                width:
-                                                                    newWidth,
-
-                                                                height:
-                                                                    newHeight,
+                                                                width: newWidth,
+                                                                height: newHeight,
 
                                                                 rotation:
                                                                     node.rotation()
@@ -5264,453 +5112,274 @@ const Canvas = forwardRef(function Canvas(
 
                                                 pushHistory();
                                             }}
+
                                         />
-                                    );
-                                })}
+                                    ))}
 
-                            </Layer>
+                                </Layer>
 
 
-                            {/* ================= DISCOUNT / SALE TAGS ================= */}
+                                {/* =========================================================
+    ICONS
+========================================================= */}
 
-                            <Layer listening={!DRAW_TOOLS.includes(tool)}>
-                                {discountTags.map(tag => (
+                                <Layer listening={!DRAW_TOOLS.includes(tool)}>
 
-                                    <Group
-                                        key={tag.id}
-                                        ref={node => registerNode(tag.id, node)}
-                                        x={tag.x}
-                                        y={tag.y}
+                                    {icons.map(icon => {
 
-                                        scaleX={tag.width / 150}
-                                        scaleY={tag.height / 100}
-                                        rotation={tag.rotation || 0}
-                                        draggable={!DRAW_TOOLS.includes(tool)}
-                                        onDblClick={e => {
-                                            if (DRAW_TOOLS.includes(tool)) return;
-                                            e.cancelBubble = true;
-                                            setSelectedId(tag.id);
-                                            setEditingBackground(false);
-                                            onReplaceDiscountTag?.(tag.id);
-                                        }}
-                                        onDblTap={e => {
-                                            if (DRAW_TOOLS.includes(tool)) return;
-                                            e.cancelBubble = true;
-                                            setSelectedId(tag.id);
-                                            setEditingBackground(false);
-                                            onReplaceDiscountTag?.(tag.id);
-                                        }}
-                                        onClick={e => {
-                                            if (DRAW_TOOLS.includes(tool)) return;
+                                        if (!icon.image) {
+                                            return null;
+                                        }
 
-                                            e.cancelBubble = true;
-                                            setEditingBackground(false);
-                                            setSelectedId(tag.id);
-                                            selectedNodeRef.current = e.currentTarget;
-                                        }}
-                                        onTap={e => {
-                                            if (DRAW_TOOLS.includes(tool)) return;
-
-                                            e.cancelBubble = true;
-                                            setEditingBackground(false);
-                                            setSelectedId(tag.id);
-                                            selectedNodeRef.current = e.currentTarget;
-                                        }}
-                                        onDragEnd={e => {
-                                            const node = e.currentTarget;
-                                            const { x, y } = node.position();
-
-                                            setDiscountTags(prev =>
-                                                prev.map(item =>
-                                                    item.id === tag.id ? { ...item, x, y } : item
-                                                )
-                                            );
-
-                                            pushHistory();
-                                        }}
-                                        onTransformEnd={e => {
-                                            const node = e.currentTarget;
-
-                                            const newWidth = Math.max(35, 150 * node.scaleX());
-                                            const newHeight = Math.max(25, 100 * node.scaleY());
-
-                                            const updated = {
-                                                x: node.x(),
-                                                y: node.y(),
-                                                width: newWidth,
-                                                height: newHeight,
-                                                rotation: node.rotation(),
-                                            };
-
-                                            node.scaleX(newWidth / 150);
-                                            node.scaleY(newHeight / 100);
-
-                                            setDiscountTags(prev =>
-                                                prev.map(item =>
-                                                    item.id === tag.id
-                                                        ? { ...item, ...updated }
-                                                        : item
-                                                )
-                                            );
-
-                                            pushHistory();
-                                        }}
-                                    >
-                                        {/* TAG SHAPE */}
-                                        {tag.shape === "burst" && (
-                                            <Star
-                                                x={75}
-                                                y={50}
-                                                numPoints={12}
-                                                innerRadius={35}
-                                                outerRadius={45}
-                                                fill={tag.fill}
-                                                stroke={tag.borderColor}
-                                                strokeWidth={2}
-                                                shadowColor="#000000"
-                                                shadowBlur={3}
-                                                shadowOpacity={0.12}
-                                            />
-                                        )}
-
-                                        {tag.shape === "circle" && (
-                                            <Circle
-                                                x={75}
-                                                y={50}
-                                                radius={42}
-                                                fill={tag.fill}
-                                                stroke={tag.borderColor}
-                                                strokeWidth={2}
-                                            />
-                                        )}
-
-                                        {tag.shape === "rounded" && (
-                                            <Rect
-                                                x={18}
-                                                y={22}
-                                                width={114}
-                                                height={56}
-                                                cornerRadius={15}
-                                                fill={tag.fill}
-                                                stroke={tag.borderColor}
-                                                strokeWidth={2}
-                                            />
-                                        )}
-
-                                        {tag.shape === "rectangle" && (
-                                            <Rect
-                                                x={10}
-                                                y={27}
-                                                width={130}
-                                                height={46}
-                                                cornerRadius={3}
-                                                fill={tag.fill}
-                                                stroke={tag.borderColor}
-                                                strokeWidth={2}
-                                            />
-                                        )}
-
-                                        {tag.shape === "ribbon" && (
-                                            <Line
-                                                points={[
-                                                    15, 18, 135, 18, 135, 80,
-                                                    115, 68, 95, 80, 75, 68,
-                                                    55, 80, 35, 68, 15, 80
-                                                ]}
-                                                closed
-                                                fill={tag.fill}
-                                                stroke={tag.borderColor}
-                                                strokeWidth={2}
-                                                lineJoin="round"
-                                            />
-                                        )}
-
-                                        {tag.shape === "bookmark" && (
-                                            <Line
-                                                points={[42, 8, 108, 8, 108, 92, 75, 73, 42, 92]}
-                                                closed
-                                                fill={tag.fill}
-                                                stroke={tag.borderColor}
-                                                strokeWidth={2}
-                                                lineJoin="round"
-                                            />
-                                        )}
-
-                                        {tag.shape === "hexagon" && (
-                                            <RegularPolygon
-                                                x={75}
-                                                y={50}
-                                                sides={6}
-                                                radius={43}
-                                                fill={tag.fill}
-                                                stroke={tag.borderColor}
-                                                strokeWidth={2}
-                                            />
-                                        )}
-
-                                        {tag.shape === "ticket" && (
-                                            <Line
-                                                points={[
-                                                    12, 22, 138, 22, 138, 39,
-                                                    127, 50, 138, 61, 138, 78,
-                                                    12, 78, 12, 61, 23, 50, 12, 39
-                                                ]}
-                                                closed
-                                                fill={tag.fill}
-                                                stroke={tag.borderColor}
-                                                strokeWidth={2}
-                                                lineJoin="round"
-                                            />
-                                        )}
-
-                                        {/* EDITABLE TEXT */}
-                                        <Text
-                                            x={15}
-                                            y={30}
-                                            width={120}
-                                            height={40}
-                                            text={tag.text}
-                                            fill={tag.textColor}
-                                            fontSize={
-                                                tag.text.length > 12
-                                                    ? 11
-                                                    : tag.text.length > 8
-                                                        ? 14
-                                                        : 18
-                                            }
-                                            fontFamily="Arial"
-                                            fontStyle="bold"
-                                            align="center"
-                                            verticalAlign="middle"
-                                            wrap="word"
-                                            listening={false}
-                                        />
-                                    </Group>
-                                ))}
-                            </Layer>
-
-                            {/* ================= BORDERS ================= */}
-
-                            <Layer listening={!DRAW_TOOLS.includes(tool)}>
-                                {borders.map(border => {
-
-                                    const isSelected = selectedId === border.id;
-
-                                    const dash =
-                                        border.style === "dashed"
-                                            ? [18, 10]
-                                            : border.style === "dotted"
-                                                ? [3, 8]
-                                                : undefined;
-
-                                    if (border.style === "double") {
                                         return (
-                                            <Fragment key={border.id}>
 
-                                                {/* OUTER BORDER */}
-                                                <Rect
-                                                    x={border.x}
-                                                    y={border.y}
-                                                    width={border.width}
-                                                    height={border.height}
-                                                    stroke={border.stroke}
-                                                    strokeWidth={border.strokeWidth}
-                                                    cornerRadius={border.cornerRadius || 0}
-                                                    dash={undefined}
-                                                    fillEnabled={false}
-                                                    draggable
+                                            <KonvaImage
+                                                key={icon.id}
+                                                ref={node => registerNode(icon.id, node)}
+                                                image={icon.image}
 
-                                                    onClick={e => {
-                                                        if (DRAW_TOOLS.includes(tool)) return;
 
-                                                        setEditingBackground(false);
+                                                x={icon.x}
+                                                y={icon.y}
 
-                                                        e.cancelBubble = true;
+                                                width={icon.width}
+                                                height={icon.height}
 
-                                                        setSelectedId(border.id);
-                                                        selectedNodeRef.current = e.target;
-                                                    }}
+                                                rotation={
+                                                    icon.rotation || 0
+                                                }
 
-                                                    onTap={e => {
-                                                        if (DRAW_TOOLS.includes(tool)) return;
+                                                draggable={
+                                                    !DRAW_TOOLS.includes(tool)
+                                                }
 
-                                                        setEditingBackground(false);
+                                                listening={
+                                                    !DRAW_TOOLS.includes(tool)
+                                                }
 
-                                                        e.cancelBubble = true;
+                                                onDblClick={e => {
+                                                    if (DRAW_TOOLS.includes(tool)) return;
+                                                    e.cancelBubble = true;
+                                                    setEditingBackground(false);
+                                                    setSelectedId(icon.id);
+                                                    onReplaceIcon?.(icon.id, "icons");
+                                                }}
 
-                                                        setSelectedId(border.id);
-                                                        selectedNodeRef.current = e.target;
-                                                    }}
+                                                onDblTap={e => {
+                                                    if (DRAW_TOOLS.includes(tool)) return;
+                                                    e.cancelBubble = true;
+                                                    setEditingBackground(false);
+                                                    setSelectedId(icon.id);
+                                                    onReplaceIcon?.(icon.id, "icons");
+                                                }}
 
-                                                    onDragEnd={e => {
-                                                        const { x, y } = e.target.position();
+                                                onClick={e => {
 
-                                                        setBorders(prev =>
-                                                            prev.map(item =>
-                                                                item.id === border.id
-                                                                    ? { ...item, x, y }
-                                                                    : item
-                                                            )
+                                                    if (
+                                                        DRAW_TOOLS.includes(
+                                                            tool
+                                                        )
+                                                    ) {
+                                                        return;
+                                                    }
+
+                                                    setEditingBackground(
+                                                        false
+                                                    );
+
+                                                    e.cancelBubble = true;
+
+                                                    setSelectedId(
+                                                        icon.id
+                                                    );
+
+                                                    selectedNodeRef.current =
+                                                        e.target;
+                                                }}
+
+                                                onTap={e => {
+
+                                                    if (
+                                                        DRAW_TOOLS.includes(
+                                                            tool
+                                                        )
+                                                    ) {
+                                                        return;
+                                                    }
+
+                                                    setEditingBackground(
+                                                        false
+                                                    );
+
+                                                    e.cancelBubble = true;
+
+                                                    setSelectedId(
+                                                        icon.id
+                                                    );
+
+                                                    selectedNodeRef.current =
+                                                        e.target;
+                                                }}
+
+                                                onDragEnd={e => {
+
+                                                    const {
+                                                        x,
+                                                        y
+                                                    } =
+                                                        e.target.position();
+
+                                                    setIcons(prev =>
+                                                        prev.map(item =>
+                                                            item.id === icon.id
+                                                                ? {
+                                                                    ...item,
+                                                                    x,
+                                                                    y
+                                                                }
+                                                                : item
+                                                        )
+                                                    );
+
+                                                    pushHistory();
+                                                }}
+
+                                                onTransformEnd={e => {
+
+                                                    const node =
+                                                        e.target;
+
+                                                    const scaleX =
+                                                        node.scaleX();
+
+                                                    const scaleY =
+                                                        node.scaleY();
+
+                                                    const newWidth =
+                                                        Math.max(
+                                                            20,
+                                                            node.width() *
+                                                            scaleX
                                                         );
 
-                                                        pushHistory();
-                                                    }}
-
-                                                    onTransformEnd={e => {
-                                                        const node = e.target;
-
-                                                        const scaleX = node.scaleX();
-                                                        const scaleY = node.scaleY();
-
-                                                        node.scaleX(1);
-                                                        node.scaleY(1);
-
-                                                        const updated = {
-                                                            x: node.x(),
-                                                            y: node.y(),
-                                                            width: Math.max(
-                                                                20,
-                                                                node.width() * scaleX
-                                                            ),
-                                                            height: Math.max(
-                                                                20,
-                                                                node.height() * scaleY
-                                                            )
-                                                        };
-
-                                                        setBorders(prev =>
-                                                            prev.map(item =>
-                                                                item.id === border.id
-                                                                    ? { ...item, ...updated }
-                                                                    : item
-                                                            )
+                                                    const newHeight =
+                                                        Math.max(
+                                                            20,
+                                                            node.height() *
+                                                            scaleY
                                                         );
 
-                                                        pushHistory();
-                                                    }}
-                                                />
+                                                    node.scaleX(1);
+                                                    node.scaleY(1);
 
-                                                {/* INNER BORDER */}
-                                                <Rect
-                                                    x={
-                                                        border.x +
-                                                        border.strokeWidth * 3
-                                                    }
-                                                    y={
-                                                        border.y +
-                                                        border.strokeWidth * 3
-                                                    }
-                                                    width={Math.max(
-                                                        1,
-                                                        border.width -
-                                                        border.strokeWidth * 6
-                                                    )}
-                                                    height={Math.max(
-                                                        1,
-                                                        border.height -
-                                                        border.strokeWidth * 6
-                                                    )}
-                                                    stroke={border.stroke}
-                                                    strokeWidth={Math.max(
-                                                        1,
-                                                        border.strokeWidth / 2
-                                                    )}
-                                                    cornerRadius={Math.max(
-                                                        0,
-                                                        (border.cornerRadius || 0) -
-                                                        border.strokeWidth * 2
-                                                    )}
-                                                    listening={false}
-                                                />
+                                                    setIcons(prev =>
+                                                        prev.map(item =>
+                                                            item.id === icon.id
+                                                                ? {
+                                                                    ...item,
 
-                                            </Fragment>
+                                                                    x: node.x(),
+                                                                    y: node.y(),
+
+                                                                    width:
+                                                                        newWidth,
+
+                                                                    height:
+                                                                        newHeight,
+
+                                                                    rotation:
+                                                                        node.rotation()
+                                                                }
+                                                                : item
+                                                        )
+                                                    );
+
+                                                    pushHistory();
+                                                }}
+                                            />
                                         );
-                                    }
+                                    })}
 
-                                    return (
-                                        <Rect
-                                            key={border.id}
+                                </Layer>
 
-                                            x={border.x}
-                                            y={border.y}
 
-                                            width={border.width}
-                                            height={border.height}
+                                {/* ================= DISCOUNT / SALE TAGS ================= */}
 
-                                            stroke={border.stroke}
-                                            strokeWidth={border.strokeWidth}
+                                <Layer listening={!DRAW_TOOLS.includes(tool)}>
+                                    {discountTags.map(tag => (
 
-                                            dash={dash}
+                                        <Group
+                                            key={tag.id}
+                                            ref={node => registerNode(tag.id, node)}
+                                            x={tag.x}
+                                            y={tag.y}
 
-                                            cornerRadius={border.cornerRadius || 0}
-
-                                            fillEnabled={false}
-
-                                            draggable
-
+                                            scaleX={tag.width / 150}
+                                            scaleY={tag.height / 100}
+                                            rotation={tag.rotation || 0}
+                                            draggable={!DRAW_TOOLS.includes(tool)}
+                                            onDblClick={e => {
+                                                if (DRAW_TOOLS.includes(tool)) return;
+                                                e.cancelBubble = true;
+                                                setSelectedId(tag.id);
+                                                setEditingBackground(false);
+                                                onReplaceDiscountTag?.(tag.id);
+                                            }}
+                                            onDblTap={e => {
+                                                if (DRAW_TOOLS.includes(tool)) return;
+                                                e.cancelBubble = true;
+                                                setSelectedId(tag.id);
+                                                setEditingBackground(false);
+                                                onReplaceDiscountTag?.(tag.id);
+                                            }}
                                             onClick={e => {
                                                 if (DRAW_TOOLS.includes(tool)) return;
 
-                                                setEditingBackground(false);
-
                                                 e.cancelBubble = true;
-
-                                                setSelectedId(border.id);
-                                                selectedNodeRef.current = e.target;
+                                                setEditingBackground(false);
+                                                setSelectedId(tag.id);
+                                                selectedNodeRef.current = e.currentTarget;
                                             }}
-
                                             onTap={e => {
                                                 if (DRAW_TOOLS.includes(tool)) return;
 
-                                                setEditingBackground(false);
-
                                                 e.cancelBubble = true;
-
-                                                setSelectedId(border.id);
-                                                selectedNodeRef.current = e.target;
+                                                setEditingBackground(false);
+                                                setSelectedId(tag.id);
+                                                selectedNodeRef.current = e.currentTarget;
                                             }}
-
                                             onDragEnd={e => {
-                                                const { x, y } = e.target.position();
+                                                const node = e.currentTarget;
+                                                const { x, y } = node.position();
 
-                                                setBorders(prev =>
+                                                setDiscountTags(prev =>
                                                     prev.map(item =>
-                                                        item.id === border.id
-                                                            ? { ...item, x, y }
-                                                            : item
+                                                        item.id === tag.id ? { ...item, x, y } : item
                                                     )
                                                 );
 
                                                 pushHistory();
                                             }}
-
                                             onTransformEnd={e => {
-                                                const node = e.target;
+                                                const node = e.currentTarget;
 
-                                                const scaleX = node.scaleX();
-                                                const scaleY = node.scaleY();
-
-                                                node.scaleX(1);
-                                                node.scaleY(1);
+                                                const newWidth = Math.max(35, 150 * node.scaleX());
+                                                const newHeight = Math.max(25, 100 * node.scaleY());
 
                                                 const updated = {
                                                     x: node.x(),
                                                     y: node.y(),
-
-                                                    width: Math.max(
-                                                        20,
-                                                        node.width() * scaleX
-                                                    ),
-
-                                                    height: Math.max(
-                                                        20,
-                                                        node.height() * scaleY
-                                                    )
+                                                    width: newWidth,
+                                                    height: newHeight,
+                                                    rotation: node.rotation(),
                                                 };
 
-                                                setBorders(prev =>
+                                                node.scaleX(newWidth / 150);
+                                                node.scaleY(newHeight / 100);
+
+                                                setDiscountTags(prev =>
                                                     prev.map(item =>
-                                                        item.id === border.id
+                                                        item.id === tag.id
                                                             ? { ...item, ...updated }
                                                             : item
                                                     )
@@ -5718,73 +5387,336 @@ const Canvas = forwardRef(function Canvas(
 
                                                 pushHistory();
                                             }}
-                                        />
-                                    );
-                                })}
-                            </Layer>
+                                        >
+                                            {/* TAG SHAPE */}
+                                            {tag.shape === "burst" && (
+                                                <Star
+                                                    x={75}
+                                                    y={50}
+                                                    numPoints={12}
+                                                    innerRadius={35}
+                                                    outerRadius={45}
+                                                    fill={tag.fill}
+                                                    stroke={tag.borderColor}
+                                                    strokeWidth={2}
+                                                    shadowColor="#000000"
+                                                    shadowBlur={3}
+                                                    shadowOpacity={0.12}
+                                                />
+                                            )}
 
-                            {/* SHAPES */}
+                                            {tag.shape === "circle" && (
+                                                <Circle
+                                                    x={75}
+                                                    y={50}
+                                                    radius={42}
+                                                    fill={tag.fill}
+                                                    stroke={tag.borderColor}
+                                                    strokeWidth={2}
+                                                />
+                                            )}
 
-                            <Layer listening={!DRAW_TOOLS.includes(tool)}>
-                                {shapes.map(s => {
+                                            {tag.shape === "rounded" && (
+                                                <Rect
+                                                    x={18}
+                                                    y={22}
+                                                    width={114}
+                                                    height={56}
+                                                    cornerRadius={15}
+                                                    fill={tag.fill}
+                                                    stroke={tag.borderColor}
+                                                    strokeWidth={2}
+                                                />
+                                            )}
 
-                                    if (s.type === "free") {
-                                        return (
-                                            <Line
-                                                key={s.id}
-                                                points={s.points}
-                                                stroke={s.stroke}
-                                                strokeWidth={s.strokeWidth}
-                                                tension={0.5}
-                                                lineCap="round"
-                                                lineJoin="round"
-                                                globalCompositeOperation={
-                                                    s.tool === "eraser"
-                                                        ? "destination-out"
-                                                        : "source-over"
+                                            {tag.shape === "rectangle" && (
+                                                <Rect
+                                                    x={10}
+                                                    y={27}
+                                                    width={130}
+                                                    height={46}
+                                                    cornerRadius={3}
+                                                    fill={tag.fill}
+                                                    stroke={tag.borderColor}
+                                                    strokeWidth={2}
+                                                />
+                                            )}
+
+                                            {tag.shape === "ribbon" && (
+                                                <Line
+                                                    points={[
+                                                        15, 18, 135, 18, 135, 80,
+                                                        115, 68, 95, 80, 75, 68,
+                                                        55, 80, 35, 68, 15, 80
+                                                    ]}
+                                                    closed
+                                                    fill={tag.fill}
+                                                    stroke={tag.borderColor}
+                                                    strokeWidth={2}
+                                                    lineJoin="round"
+                                                />
+                                            )}
+
+                                            {tag.shape === "bookmark" && (
+                                                <Line
+                                                    points={[42, 8, 108, 8, 108, 92, 75, 73, 42, 92]}
+                                                    closed
+                                                    fill={tag.fill}
+                                                    stroke={tag.borderColor}
+                                                    strokeWidth={2}
+                                                    lineJoin="round"
+                                                />
+                                            )}
+
+                                            {tag.shape === "hexagon" && (
+                                                <RegularPolygon
+                                                    x={75}
+                                                    y={50}
+                                                    sides={6}
+                                                    radius={43}
+                                                    fill={tag.fill}
+                                                    stroke={tag.borderColor}
+                                                    strokeWidth={2}
+                                                />
+                                            )}
+
+                                            {tag.shape === "ticket" && (
+                                                <Line
+                                                    points={[
+                                                        12, 22, 138, 22, 138, 39,
+                                                        127, 50, 138, 61, 138, 78,
+                                                        12, 78, 12, 61, 23, 50, 12, 39
+                                                    ]}
+                                                    closed
+                                                    fill={tag.fill}
+                                                    stroke={tag.borderColor}
+                                                    strokeWidth={2}
+                                                    lineJoin="round"
+                                                />
+                                            )}
+
+                                            {/* EDITABLE TEXT */}
+                                            <Text
+                                                x={15}
+                                                y={30}
+                                                width={120}
+                                                height={40}
+                                                text={tag.text}
+                                                fill={tag.textColor}
+                                                fontSize={
+                                                    tag.text.length > 12
+                                                        ? 11
+                                                        : tag.text.length > 8
+                                                            ? 14
+                                                            : 18
                                                 }
+                                                fontFamily="Arial"
+                                                fontStyle="bold"
+                                                align="center"
+                                                verticalAlign="middle"
+                                                wrap="word"
+                                                listening={false}
                                             />
-                                        );
-                                    }
+                                        </Group>
+                                    ))}
+                                </Layer>
 
-                                    if (s.type === "line") {
-                                        return renderLine(s);
-                                    }
+                                {/* ================= BORDERS ================= */}
 
-                                    if (s.type === "rectangle") {
+                                <Layer listening={!DRAW_TOOLS.includes(tool)}>
+                                    {borders.map(border => {
+
+                                        const isSelected = selectedId === border.id;
+
+                                        const dash =
+                                            border.style === "dashed"
+                                                ? [18, 10]
+                                                : border.style === "dotted"
+                                                    ? [3, 8]
+                                                    : undefined;
+
+                                        if (border.style === "double") {
+                                            return (
+                                                <Fragment key={border.id}>
+
+                                                    {/* OUTER BORDER */}
+                                                    <Rect
+                                                        x={border.x}
+                                                        y={border.y}
+                                                        width={border.width}
+                                                        height={border.height}
+                                                        stroke={border.stroke}
+                                                        strokeWidth={border.strokeWidth}
+                                                        cornerRadius={border.cornerRadius || 0}
+                                                        dash={undefined}
+                                                        fillEnabled={false}
+                                                        draggable
+
+                                                        onClick={e => {
+                                                            if (DRAW_TOOLS.includes(tool)) return;
+
+                                                            setEditingBackground(false);
+
+                                                            e.cancelBubble = true;
+
+                                                            setSelectedId(border.id);
+                                                            selectedNodeRef.current = e.target;
+                                                        }}
+
+                                                        onTap={e => {
+                                                            if (DRAW_TOOLS.includes(tool)) return;
+
+                                                            setEditingBackground(false);
+
+                                                            e.cancelBubble = true;
+
+                                                            setSelectedId(border.id);
+                                                            selectedNodeRef.current = e.target;
+                                                        }}
+
+                                                        onDragEnd={e => {
+                                                            const { x, y } = e.target.position();
+
+                                                            setBorders(prev =>
+                                                                prev.map(item =>
+                                                                    item.id === border.id
+                                                                        ? { ...item, x, y }
+                                                                        : item
+                                                                )
+                                                            );
+
+                                                            pushHistory();
+                                                        }}
+
+                                                        onTransformEnd={e => {
+                                                            const node = e.target;
+
+                                                            const scaleX = node.scaleX();
+                                                            const scaleY = node.scaleY();
+
+                                                            node.scaleX(1);
+                                                            node.scaleY(1);
+
+                                                            const updated = {
+                                                                x: node.x(),
+                                                                y: node.y(),
+                                                                width: Math.max(
+                                                                    20,
+                                                                    node.width() * scaleX
+                                                                ),
+                                                                height: Math.max(
+                                                                    20,
+                                                                    node.height() * scaleY
+                                                                )
+                                                            };
+
+                                                            setBorders(prev =>
+                                                                prev.map(item =>
+                                                                    item.id === border.id
+                                                                        ? { ...item, ...updated }
+                                                                        : item
+                                                                )
+                                                            );
+
+                                                            pushHistory();
+                                                        }}
+                                                    />
+
+                                                    {/* INNER BORDER */}
+                                                    <Rect
+                                                        x={
+                                                            border.x +
+                                                            border.strokeWidth * 3
+                                                        }
+                                                        y={
+                                                            border.y +
+                                                            border.strokeWidth * 3
+                                                        }
+                                                        width={Math.max(
+                                                            1,
+                                                            border.width -
+                                                            border.strokeWidth * 6
+                                                        )}
+                                                        height={Math.max(
+                                                            1,
+                                                            border.height -
+                                                            border.strokeWidth * 6
+                                                        )}
+                                                        stroke={border.stroke}
+                                                        strokeWidth={Math.max(
+                                                            1,
+                                                            border.strokeWidth / 2
+                                                        )}
+                                                        cornerRadius={Math.max(
+                                                            0,
+                                                            (border.cornerRadius || 0) -
+                                                            border.strokeWidth * 2
+                                                        )}
+                                                        listening={false}
+                                                    />
+
+                                                </Fragment>
+                                            );
+                                        }
+
                                         return (
                                             <Rect
-                                                key={s.id}
-                                                {...s}
+                                                key={border.id}
+
+                                                x={border.x}
+                                                y={border.y}
+
+                                                width={border.width}
+                                                height={border.height}
+
+                                                stroke={border.stroke}
+                                                strokeWidth={border.strokeWidth}
+
+                                                dash={dash}
+
+                                                cornerRadius={border.cornerRadius || 0}
+
+                                                fillEnabled={false}
+
                                                 draggable
 
-                                                onClick={(e) => {
+                                                onClick={e => {
+                                                    if (DRAW_TOOLS.includes(tool)) return;
+
                                                     setEditingBackground(false);
+
                                                     e.cancelBubble = true;
-                                                    setSelectedId(s.id);
+
+                                                    setSelectedId(border.id);
                                                     selectedNodeRef.current = e.target;
                                                 }}
 
-                                                onTap={(e) => {
+                                                onTap={e => {
+                                                    if (DRAW_TOOLS.includes(tool)) return;
+
                                                     setEditingBackground(false);
+
                                                     e.cancelBubble = true;
-                                                    setSelectedId(s.id);
+
+                                                    setSelectedId(border.id);
                                                     selectedNodeRef.current = e.target;
                                                 }}
 
-                                                onDragEnd={(e) => {
+                                                onDragEnd={e => {
                                                     const { x, y } = e.target.position();
 
-                                                    setShapes(prev =>
+                                                    setBorders(prev =>
                                                         prev.map(item =>
-                                                            item.id === s.id ? { ...item, x, y } : item
+                                                            item.id === border.id
+                                                                ? { ...item, x, y }
+                                                                : item
                                                         )
                                                     );
 
                                                     pushHistory();
                                                 }}
 
-                                                onTransformEnd={(e) => {
+                                                onTransformEnd={e => {
                                                     const node = e.target;
 
                                                     const scaleX = node.scaleX();
@@ -5796,14 +5728,23 @@ const Canvas = forwardRef(function Canvas(
                                                     const updated = {
                                                         x: node.x(),
                                                         y: node.y(),
-                                                        width: Math.max(10, node.width() * scaleX),
-                                                        height: Math.max(10, node.height() * scaleY),
-                                                        rotation: node.rotation()
+
+                                                        width: Math.max(
+                                                            20,
+                                                            node.width() * scaleX
+                                                        ),
+
+                                                        height: Math.max(
+                                                            20,
+                                                            node.height() * scaleY
+                                                        )
                                                     };
 
-                                                    setShapes(prev =>
+                                                    setBorders(prev =>
                                                         prev.map(item =>
-                                                            item.id === s.id ? { ...item, ...updated } : item
+                                                            item.id === border.id
+                                                                ? { ...item, ...updated }
+                                                                : item
                                                         )
                                                     );
 
@@ -5811,45 +5752,239 @@ const Canvas = forwardRef(function Canvas(
                                                 }}
                                             />
                                         );
-                                    }
+                                    })}
+                                </Layer>
 
-                                    if (s.type === "circle") {
-                                        return (
-                                            <Circle
-                                                key={s.id}
-                                                {...s}
+                                {/* SHAPES */}
+
+                                <Layer listening={!DRAW_TOOLS.includes(tool)}>
+                                    {shapes.map(s => {
+
+                                        if (s.type === "free") {
+                                            return (
+                                                <Line
+                                                    key={s.id}
+                                                    points={s.points}
+                                                    stroke={s.stroke}
+                                                    strokeWidth={s.strokeWidth}
+                                                    tension={0.5}
+                                                    lineCap="round"
+                                                    lineJoin="round"
+                                                    globalCompositeOperation={
+                                                        s.tool === "eraser"
+                                                            ? "destination-out"
+                                                            : "source-over"
+                                                    }
+                                                />
+                                            );
+                                        }
+
+                                        if (s.type === "line") {
+                                            return renderLine(s);
+                                        }
+
+                                        if (s.type === "rectangle") {
+                                            return (
+                                                <Rect
+                                                    key={s.id}
+                                                    {...s}
+                                                    draggable
+
+                                                    onClick={(e) => {
+                                                        setEditingBackground(false);
+                                                        e.cancelBubble = true;
+                                                        setSelectedId(s.id);
+                                                        selectedNodeRef.current = e.target;
+                                                    }}
+
+                                                    onTap={(e) => {
+                                                        setEditingBackground(false);
+                                                        e.cancelBubble = true;
+                                                        setSelectedId(s.id);
+                                                        selectedNodeRef.current = e.target;
+                                                    }}
+
+                                                    onDragEnd={(e) => {
+                                                        const { x, y } = e.target.position();
+
+                                                        setShapes(prev =>
+                                                            prev.map(item =>
+                                                                item.id === s.id ? { ...item, x, y } : item
+                                                            )
+                                                        );
+
+                                                        pushHistory();
+                                                    }}
+
+                                                    onTransformEnd={(e) => {
+                                                        const node = e.target;
+
+                                                        const scaleX = node.scaleX();
+                                                        const scaleY = node.scaleY();
+
+                                                        node.scaleX(1);
+                                                        node.scaleY(1);
+
+                                                        const updated = {
+                                                            x: node.x(),
+                                                            y: node.y(),
+                                                            width: Math.max(10, node.width() * scaleX),
+                                                            height: Math.max(10, node.height() * scaleY),
+                                                            rotation: node.rotation()
+                                                        };
+
+                                                        setShapes(prev =>
+                                                            prev.map(item =>
+                                                                item.id === s.id ? { ...item, ...updated } : item
+                                                            )
+                                                        );
+
+                                                        pushHistory();
+                                                    }}
+                                                />
+                                            );
+                                        }
+
+                                        if (s.type === "circle") {
+                                            return (
+                                                <Circle
+                                                    key={s.id}
+                                                    {...s}
+                                                    draggable
+
+                                                    onClick={(e) => {
+                                                        setEditingBackground(false);
+                                                        e.cancelBubble = true;
+                                                        setSelectedId(s.id);
+                                                        selectedNodeRef.current = e.target;
+                                                    }}
+
+                                                    onTap={(e) => {
+                                                        setEditingBackground(false);
+                                                        e.cancelBubble = true;
+                                                        setSelectedId(s.id);
+                                                        selectedNodeRef.current = e.target;
+                                                    }}
+
+                                                    onDragEnd={(e) => {
+                                                        const { x, y } = e.target.position();
+
+                                                        setShapes(prev =>
+                                                            prev.map(item =>
+                                                                item.id === s.id ? { ...item, x, y } : item
+                                                            )
+                                                        );
+
+                                                        pushHistory();
+                                                    }}
+
+                                                    onTransformEnd={(e) => {
+                                                        const node = e.target;
+
+                                                        const scale = node.scaleX(); // circle uses one scale
+
+                                                        node.scaleX(1);
+                                                        node.scaleY(1);
+
+                                                        const updated = {
+                                                            x: node.x(),
+                                                            y: node.y(),
+                                                            radius: Math.max(5, s.radius * scale),
+                                                            rotation: node.rotation()
+                                                        };
+
+                                                        setShapes(prev =>
+                                                            prev.map(item =>
+                                                                item.id === s.id ? { ...item, ...updated } : item
+                                                            )
+                                                        );
+
+                                                        pushHistory();
+                                                    }}
+                                                />
+                                            );
+                                        }
+
+                                        return null;
+                                    })}
+                                </Layer>
+
+
+                                {/* TEXT */}
+
+
+
+                                {/* TEXT */}
+                                <Layer listening={!DRAW_TOOLS.includes(tool)}>
+                                    {texts.map(t => (
+                                        <Fragment key={t.id}>
+                                            <Text
+                                                {...t}
+
+                                                // Do not give text an arbitrary 250px width.
+                                                // Ignore old widths that span almost the entire canvas.
+                                                width={
+                                                    Number.isFinite(Number(t.width)) &&
+                                                        Number(t.width) > 0 &&
+                                                        Number(t.width) < W * 0.85
+                                                        ? Number(t.width)
+                                                        : undefined
+                                                }
+
                                                 draggable
+                                                textDecoration={t.underline ? "underline" : ""}
 
-                                                onClick={(e) => {
+                                                align={
+                                                    ["ar"].includes(language)
+                                                        ? "right"
+                                                        : t.align || "left"
+                                                }
+
+                                                onClick={e => {
                                                     setEditingBackground(false);
                                                     e.cancelBubble = true;
-                                                    setSelectedId(s.id);
+                                                    setSelectedId(t.id);
                                                     selectedNodeRef.current = e.target;
                                                 }}
 
-                                                onTap={(e) => {
+                                                onTap={e => {
                                                     setEditingBackground(false);
                                                     e.cancelBubble = true;
-                                                    setSelectedId(s.id);
+                                                    setSelectedId(t.id);
                                                     selectedNodeRef.current = e.target;
                                                 }}
 
-                                                onDragEnd={(e) => {
+                                                onDragEnd={e => {
                                                     const { x, y } = e.target.position();
 
-                                                    setShapes(prev =>
+                                                    setTexts(prev =>
                                                         prev.map(item =>
-                                                            item.id === s.id ? { ...item, x, y } : item
+                                                            item.id === t.id
+                                                                ? { ...item, x, y }
+                                                                : item
                                                         )
                                                     );
 
                                                     pushHistory();
                                                 }}
 
-                                                onTransformEnd={(e) => {
+                                                onTransformEnd={e => {
                                                     const node = e.target;
 
-                                                    const scale = node.scaleX(); // circle uses one scale
+                                                    const scaleX = node.scaleX();
+                                                    const scaleY = node.scaleY();
+
+                                                    // Use the node's actual rendered width, not a stale
+                                                    // saved width that may equal the whole canvas width.
+                                                    const newWidth = Math.max(
+                                                        50,
+                                                        node.width() * scaleX
+                                                    );
+
+                                                    const newFontSize = Math.max(
+                                                        8,
+                                                        (Number(t.fontSize) || 24) * scaleY
+                                                    );
 
                                                     node.scaleX(1);
                                                     node.scaleY(1);
@@ -5857,132 +5992,29 @@ const Canvas = forwardRef(function Canvas(
                                                     const updated = {
                                                         x: node.x(),
                                                         y: node.y(),
-                                                        radius: Math.max(5, s.radius * scale),
+                                                        width: newWidth,
+                                                        fontSize: newFontSize,
                                                         rotation: node.rotation()
                                                     };
 
-                                                    setShapes(prev =>
+                                                    setTexts(prev =>
                                                         prev.map(item =>
-                                                            item.id === s.id ? { ...item, ...updated } : item
+                                                            item.id === t.id
+                                                                ? { ...item, ...updated }
+                                                                : item
                                                         )
                                                     );
 
                                                     pushHistory();
                                                 }}
                                             />
-                                        );
-                                    }
-
-                                    return null;
-                                })}
-                            </Layer>
-
-
-                            {/* TEXT */}
+                                        </Fragment>
+                                    ))}
+                                </Layer>
 
 
 
-                            {/* TEXT */}
-                            <Layer listening={!DRAW_TOOLS.includes(tool)}>
-                                {texts.map(t => (
-                                    <Fragment key={t.id}>
-                                        <Text
-                                            {...t}
-
-                                            // Do not give text an arbitrary 250px width.
-                                            // Ignore old widths that span almost the entire canvas.
-                                            width={
-                                                Number.isFinite(Number(t.width)) &&
-                                                    Number(t.width) > 0 &&
-                                                    Number(t.width) < W * 0.85
-                                                    ? Number(t.width)
-                                                    : undefined
-                                            }
-
-                                            draggable
-                                            textDecoration={t.underline ? "underline" : ""}
-
-                                            align={
-                                                ["ar"].includes(language)
-                                                    ? "right"
-                                                    : t.align || "left"
-                                            }
-
-                                            onClick={e => {
-                                                setEditingBackground(false);
-                                                e.cancelBubble = true;
-                                                setSelectedId(t.id);
-                                                selectedNodeRef.current = e.target;
-                                            }}
-
-                                            onTap={e => {
-                                                setEditingBackground(false);
-                                                e.cancelBubble = true;
-                                                setSelectedId(t.id);
-                                                selectedNodeRef.current = e.target;
-                                            }}
-
-                                            onDragEnd={e => {
-                                                const { x, y } = e.target.position();
-
-                                                setTexts(prev =>
-                                                    prev.map(item =>
-                                                        item.id === t.id
-                                                            ? { ...item, x, y }
-                                                            : item
-                                                    )
-                                                );
-
-                                                pushHistory();
-                                            }}
-
-                                            onTransformEnd={e => {
-                                                const node = e.target;
-
-                                                const scaleX = node.scaleX();
-                                                const scaleY = node.scaleY();
-
-                                                // Use the node's actual rendered width, not a stale
-                                                // saved width that may equal the whole canvas width.
-                                                const newWidth = Math.max(
-                                                    50,
-                                                    node.width() * scaleX
-                                                );
-
-                                                const newFontSize = Math.max(
-                                                    8,
-                                                    (Number(t.fontSize) || 24) * scaleY
-                                                );
-
-                                                node.scaleX(1);
-                                                node.scaleY(1);
-
-                                                const updated = {
-                                                    x: node.x(),
-                                                    y: node.y(),
-                                                    width: newWidth,
-                                                    fontSize: newFontSize,
-                                                    rotation: node.rotation()
-                                                };
-
-                                                setTexts(prev =>
-                                                    prev.map(item =>
-                                                        item.id === t.id
-                                                            ? { ...item, ...updated }
-                                                            : item
-                                                    )
-                                                );
-
-                                                pushHistory();
-                                            }}
-                                        />
-                                    </Fragment>
-                                ))}
-                            </Layer>
-
-
-
-                            {/* 
+                                {/* 
                             <Layer listening={!DRAW_TOOLS.includes(tool)}>
 
 
@@ -6076,85 +6108,86 @@ const Canvas = forwardRef(function Canvas(
                             </Layer> */}
 
 
-                            {draftShape && (
-                                <Layer listening={false}>
-                                    {draftShape.type === "rectangle" && (
-                                        <Rect
-                                            {...draftShape}
-                                        />
-                                    )}
+                                {draftShape && (
+                                    <Layer listening={false}>
+                                        {draftShape.type === "rectangle" && (
+                                            <Rect
+                                                {...draftShape}
+                                            />
+                                        )}
 
-                                    {draftShape.type === "circle" && (
-                                        <Circle
-                                            x={draftShape.x}
-                                            y={draftShape.y}
-                                            radius={draftShape.radius}
-                                            stroke={draftShape.stroke}
-                                            strokeWidth={draftShape.strokeWidth}
-                                        />
-                                    )}
+                                        {draftShape.type === "circle" && (
+                                            <Circle
+                                                x={draftShape.x}
+                                                y={draftShape.y}
+                                                radius={draftShape.radius}
+                                                stroke={draftShape.stroke}
+                                                strokeWidth={draftShape.strokeWidth}
+                                            />
+                                        )}
+                                    </Layer>
+                                )}
+
+                                {/* TRANSFORMER: keep this layer mounted at all times */}
+                                <Layer>
+                                    <Transformer
+                                        ref={trRef}
+                                        rotateEnabled={true}
+                                        keepRatio={
+                                            selectedElement?.type === "icon" ||
+                                            selectedElement?.type === "discountTag"
+                                        }
+                                        centeredScaling={false}
+                                        enabledAnchors={[
+                                            "top-left",
+                                            "top-center",
+                                            "top-right",
+                                            "middle-left",
+                                            "middle-right",
+                                            "bottom-left",
+                                            "bottom-center",
+                                            "bottom-right"
+                                        ]}
+                                        borderStroke="#0ea5e9"
+                                        borderStrokeWidth={2}
+                                        anchorSize={12}
+                                        anchorStroke="#0ea5e9"
+                                        anchorFill="#ffffff"
+                                        anchorStrokeWidth={2}
+                                        padding={0}
+                                    />
                                 </Layer>
-                            )}
 
-                            {/* TRANSFORMER: keep this layer mounted at all times */}
-                            <Layer>
-                                <Transformer
-                                    ref={trRef}
-                                    rotateEnabled={true}
-                                    keepRatio={
-                                        selectedElement?.type === "icon" ||
-                                        selectedElement?.type === "discountTag"
-                                    }
-                                    centeredScaling={false}
-                                    enabledAnchors={[
-                                        "top-left",
-                                        "top-center",
-                                        "top-right",
-                                        "middle-left",
-                                        "middle-right",
-                                        "bottom-left",
-                                        "bottom-center",
-                                        "bottom-right"
-                                    ]}
-                                    borderStroke="#0ea5e9"
-                                    borderStrokeWidth={2}
-                                    anchorSize={12}
-                                    anchorStroke="#0ea5e9"
-                                    anchorFill="#ffffff"
-                                    anchorStrokeWidth={2}
-                                    padding={0}
-                                />
-                            </Layer>
+                            </Stage>
 
-                        </Stage>
-
+                        </div>
                     </div>
-                </div>
-                {showWordArtLibrary && (
-                    <WordArtPicker
-                        onClose={() => setShowWordArtLibrary(false)}
-                        onApply={handleApplyWordArt}
+                    {showWordArtLibrary && (
+                        <WordArtPicker
+                            onClose={() => setShowWordArtLibrary(false)}
+                            onApply={handleApplyWordArt}
+                        />
+                    )}
+
+
+                    <BusinessPhotoBackgroundPicker
+                        isOpen={isBusinessPhotoLibraryOpen}
+                        onClose={() => setIsBusinessPhotoLibraryOpen(false)}
+                        onApply={(photo) => {
+                            // Record the current state if your existing history system supports it.
+                            if (typeof pushHistory === "function") {
+                                pushHistory();
+                            }
+
+                            setBackground({
+                                ...photo,
+                                type: "business-photo",
+                            });
+
+                            setSelectedId(null);
+                        }}
                     />
-                )}
-
-
-                <BusinessPhotoBackgroundPicker
-                    isOpen={isBusinessPhotoLibraryOpen}
-                    onClose={() => setIsBusinessPhotoLibraryOpen(false)}
-                    onApply={(photo) => {
-                        // Record the current state if your existing history system supports it.
-                        if (typeof pushHistory === "function") {
-                            pushHistory();
-                        }
-
-                        setBackground({
-                            ...photo,
-                            type: "business-photo",
-                        });
-
-                        setSelectedId(null);
-                    }}
-                />
+                </div>
             </div>
         </div>
 

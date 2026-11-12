@@ -1611,6 +1611,212 @@ const addSocialRow = ({
 };
 
 
+
+function addFloatingSocialIcons({
+    images,
+    blocks,
+    x = 0.08,
+    y = 0.15,
+    socialKeys = [
+        "facebook",
+        "instagram",
+        "whatsapp",
+        "youtube",
+        "tiktok",
+        "linkedin",
+    ],
+}) {
+    const positions = [
+        { x: 0.00, y: 0.00, size: 0.075, rotation: -12 },
+        { x: 0.10, y: 0.00, size: 0.055, rotation: 14 },
+        { x: 0.18, y: 0.00, size: 0.065, rotation: -8 },
+        { x: 0.00, y: 0.10, size: 0.085, rotation: 10 },
+        { x: 0.10, y: 0.10, size: 0.060, rotation: -15 },
+        { x: 0.18, y: 0.12, size: 0.070, rotation: 8 },
+    ];
+
+    const colors = [
+        "#1877F2",
+        "#E1306C",
+        "#25D366",
+        "#FF0000",
+        "#111111",
+        "#0A66C2",
+    ];
+
+    socialKeys.forEach((key, index) => {
+        const icon = SOCIAL_ICONS[key];
+        if (!icon) return;
+
+        const pos = positions[index % positions.length];
+        const size = pos.size;
+
+        // Colored circular backing
+        blocks.push({
+            shape: "circle",
+            nx: x + pos.x,
+            ny: y + pos.y,
+            nw: size,
+            nh: size,
+            fill: colors[index % colors.length],
+            opacity: 1,
+        });
+
+        // Social icon
+        images.push(
+            imageItem({
+                type: "social",
+                social: key,
+                src: icon,
+                x: x + pos.x + size * 0.18,
+                y: y + pos.y + size * 0.18,
+                width: size * 0.64,
+                height: size * 0.64,
+                rotation: pos.rotation,
+            })
+        );
+    });
+}
+
+
+function addScatteredSocialBubbles({
+    images,
+    blocks,
+    x = 0.08,
+    y = 0.15,
+    socialKeys = [
+        "facebook",
+        "instagram",
+        "whatsapp",
+        "youtube",
+        "tiktok",
+        "linkedin",
+    ],
+}) {
+    const bubbles = [
+        { x: 0.00, y: 0.02, size: 0.11 },
+        { x: 0.22, y: 0.03, size: 0.095 },
+        { x: 0.12, y: 0.05, size: 0.09 },
+        { x: 0.05, y: 0.14, size: 0.085 },
+        { x: 0.18, y: 0.14, size: 0.095 },
+        { x: 0.04, y: 0.68, size: 0.075 },
+
+    ];
+
+    const colors = [
+        "#1877F2",
+        "#E1306C",
+        "#25D366",
+        "#FF0000",
+        "#111111",
+        "#0A66C2",
+    ];
+
+    socialKeys.forEach((key, index) => {
+        const icon = SOCIAL_ICONS[key];
+        if (!icon) return;
+
+        const bubble = bubbles[index % bubbles.length];
+        const size = bubble.size;
+
+        // Circular bubble background
+        blocks.push({
+            shape: "circle",
+            nx: x + bubble.x,
+            ny: y + bubble.y,
+            nw: size,
+            nh: size,
+            fill: colors[index % colors.length],
+            opacity: 0.95,
+        });
+
+        // Social icon inside the bubble
+        images.push(
+            imageItem({
+                type: "social",
+                social: key,
+                src: icon,
+                x: x + bubble.x + size * 0.20,
+                y: y + bubble.y + size * 0.20,
+                width: size * 0.60,
+                height: size * 0.60,
+            })
+        );
+    });
+}
+
+
+/* ============================================================
+   VERTICAL SOCIAL MEDIA PANEL
+   ============================================================ */
+
+const addVerticalSocialPanel = ({
+    images,
+    blocks,
+    x,
+    y,
+    iconSize = 0.038,
+    gap = 0.012,
+    padding = 0.014,
+    background = "rgba(0,0,0,0.65)",
+    socialKeys = [
+        "facebook",
+        "instagram",
+        "whatsapp",
+        "youtube",
+        "tiktok",
+        "linkedin"
+    ]
+}) => {
+
+    const validKeys = socialKeys.filter(
+        key => SOCIAL_ICONS[key]
+    );
+
+    const panelWidth =
+        iconSize + padding * 2;
+
+    const panelHeight =
+        validKeys.length * iconSize +
+        Math.max(0, validKeys.length - 1) * gap +
+        padding * 2;
+
+    // Background block
+    blocks.push({
+        shape: "rectangle",
+        nx: x,
+        ny: y,
+        nw: panelWidth,
+        nh: panelHeight,
+        fill: background,
+        rotation: 0
+    });
+
+    // Vertical icons
+    validKeys.forEach((key, index) => {
+
+        images.push(
+            imageItem({
+                type: "social",
+                social: key,
+                src: SOCIAL_ICONS[key],
+
+                x: x + padding,
+
+                y: y + padding +
+                    index * (iconSize + gap),
+
+                width: iconSize,
+                height: iconSize
+            })
+        );
+
+    });
+
+};
+
+
+
 /* ============================================================
    LOGO
    ============================================================ */
@@ -2058,19 +2264,31 @@ export const prepareTemplateForSize = (
 };
 
 
-/* ============================================================
-   BASE TEXT BUILDER
-   ============================================================ */
-
 const addMainText = ({
     texts,
     data,
     variant,
     palette,
+
+    // BUSINESS NAME
     titleX,
     titleY,
     titleWidth,
+
+    // TAGLINE - independent coordinates
+    taglineX = titleX,
+    taglineY = titleY + 0.145,
+    taglineWidth = titleWidth,
+
+    // DESCRIPTION - independent coordinates
+    descriptionX = titleX,
+    descriptionY = titleY + 0.205,
+    descriptionWidth = titleWidth,
+
     align = "left",
+    taglineAlign = align,
+    descriptionAlign = align,
+
     fontFamily
 }) => {
 
@@ -2083,80 +2301,45 @@ const addMainText = ({
     ];
 
     const titleColor =
-        titleColors[
-        variant %
-        titleColors.length
-        ];
+        titleColors[variant % titleColors.length];
 
-
+    // BUSINESS NAME
     texts.push(
-
         textItem({
-
             id: 1,
-
             role: "businessName",
+            text: data.name,
 
-            text:
-                data.name,
+            x: titleX,
+            y: titleY,
+            width: titleWidth,
 
-            x:
-                titleX,
-
-            y:
-                titleY,
-
-            width:
-                titleWidth,
-
-            fontScale:
-                0.115,
-
-            fill:
-                titleColor,
-
+            fontScale: 0.115,
+            fill: titleColor,
             fontFamily,
 
             fontStyle:
-                variant % 3 === 0
-                    ? "bold"
-                    : "normal",
+                variant % 3 === 0 ? "bold" : "normal",
 
             align,
 
             letterSpacing:
-                variant % 4 === 0
-                    ? 1.5
-                    : 0
-
+                variant % 4 === 0 ? 1.5 : 0
         })
-
     );
 
-
+    // TAGLINE
     texts.push(
-
         textItem({
-
             id: 2,
-
             role: "tagline",
+            text: data.tagline,
 
-            text:
-                data.tagline,
+            x: taglineX,
+            y: taglineY,
+            width: taglineWidth,
 
-            x:
-                titleX,
-
-            y:
-                titleY +
-                0.145,
-
-            width:
-                titleWidth,
-
-            fontScale:
-                0.047,
+            fontScale: 0.047,
 
             fill:
                 variant % 2 === 0
@@ -2164,57 +2347,33 @@ const addMainText = ({
                     : palette[2],
 
             fontFamily,
-
-            fontStyle:
-                "bold",
-
-            align
-
+            fontStyle: "bold",
+            align: taglineAlign
         })
-
     );
 
-
+    // DESCRIPTION
     texts.push(
-
         textItem({
-
             id: 3,
-
             role: "description",
+            text: data.description,
 
-            text:
-                data.description,
+            x: descriptionX,
+            y: descriptionY,
+            width: descriptionWidth,
 
-            x:
-                titleX,
+            fontScale: 0.029,
 
-            y:
-                titleY +
-                0.205,
+            fill: "rgba(255,255,255,.92)",
 
-            width:
-                titleWidth,
-
-            fontScale:
-                0.029,
-
-            fill:
-                "rgba(255,255,255,.92)",
-
-            fontFamily:
-                "DM Sans",
-
-            fontStyle:
-                "normal",
-
-            align
-
+            fontFamily: "DM Sans",
+            fontStyle: "normal",
+            align: descriptionAlign
         })
-
     );
-
 };
+
 
 
 /* ============================================================
@@ -2227,9 +2386,8 @@ const buildTemplate = (
     id
 ) => {
 
-    // Twelve carefully composed base layouts plus eight transformed editorial
-    // variants. The original index is retained for color/font/photo variation.
-    const variant = variantIndex % 12;
+    // Twenty independently composed layouts. Each category receives all 20 designs.
+    const variant = variantIndex % 20;
 
     const data = {
         ...BUSINESS_DATA[business],
@@ -2296,7 +2454,7 @@ const buildTemplate = (
                 src: backgroundPhotos[variantIndex % backgroundPhotos.length],
                 color: accent,
                 opacity: 72,
-                shape: ["left", "right", "diagonal", "curve", "circle", "bottom", "top", "split", "corner", "wave", "full", "minimal"][variant % 12],
+                shape: ["left", "right", "diagonal", "curve", "circle", "bottom", "top", "split", "corner", "wave", "full", "minimal", "right", "mosaic", "center", "minimal", "diagonal", "bottom", "split", "top"][variant % 20],
                 overlay: "custom",
                 value: accent,
                 x: 0,
@@ -2324,22 +2482,57 @@ const buildTemplate = (
             data,
             palette,
             x: 0.055,
-            y: 0.055,
+            y: 0.035,
             size: 0.105
         });
 
 
-        addMainText({
-            texts,
-            data,
-            variant,
-            palette,
-            titleX: 0.055,
-            titleY: 0.205,
-            titleWidth: 0.43,
-            fontFamily
-        });
 
+        texts.push(
+            textItem({
+                id: 1,
+                role: "businessName",
+                text: data.name,
+                x: 0.055,
+                y: 0.16,
+                width: 0.85,
+                fontScale: 0.13,
+                fill: "white",
+                fontFamily: "Lobster two",
+                fontStyle: "bold",
+
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 2,
+                role: "tagline",
+                text: data.tagline,
+                x: 0.06,
+                y: 0.28,
+                width: 0.76,
+                fontScale: 0.048,
+                fill: "#FFFFFF",
+                fontFamily: "Montserrat",
+                fontStyle: "bold"
+            })
+        );
+
+        texts.push(
+            textItem({
+                id: 3,
+                role: "description",
+                text: data.description,
+                x: 0.25,
+                y: 0.50,
+                width: 0.30,
+                fontScale: 0.027,
+                fill: "#FFFFFF",
+                fontFamily: "DM Sans"
+            })
+        );
 
         addPhoto({
             images,
@@ -2407,7 +2600,7 @@ const buildTemplate = (
             data,
             accent,
             textColor: "#FFFFFF",
-            fontFamily: "Poppins",
+            fontFamily: "Times New Roman",
             x: 0.055,
             y: 0.775,
             width: 0.61
@@ -2416,10 +2609,96 @@ const buildTemplate = (
 
         addSocialRow({
             images,
-            x: 0.705,
-            y: 0.875,
-            size: 0.035
+            x: 0.535,
+            y: 0.825,
+            size: 0.050
         });
+
+
+
+        /* ============================================================
+           VERTICAL SOCIAL MEDIA PANEL
+           ============================================================ */
+
+        const addVerticalSocialPanel = ({
+            images,
+            blocks,
+
+            // Panel position
+            x,
+            y,
+
+            // Icon settings
+            iconSize = 0.038,
+            gap = 0.012,
+
+            // Panel appearance
+            padding = 0.014,
+            background = "rgba(0,0,0,0.65)",
+
+            // Which social icons to display
+            socialKeys = [
+                "facebook",
+                "instagram",
+                "whatsapp",
+                "youtube",
+                "tiktok",
+                "linkedin"
+            ]
+        }) => {
+
+            const panelWidth = iconSize + padding * 2;
+
+            const panelHeight =
+                socialKeys.length * iconSize +
+                Math.max(0, socialKeys.length - 1) * gap +
+                padding * 2;
+
+            // Background block
+            blocks.push({
+                shape: "rectangle",
+
+                nx: x,
+                ny: y,
+
+                nw: panelWidth,
+                nh: panelHeight,
+
+                fill: background,
+                rotation: 0
+            });
+
+            // Social media icons
+            socialKeys.forEach((key, index) => {
+
+                if (!SOCIAL_ICONS[key]) return;
+
+                images.push(
+                    imageItem({
+
+                        type: "social",
+
+                        social: key,
+
+                        src: SOCIAL_ICONS[key],
+
+                        x: x + padding,
+
+                        y:
+                            y +
+                            padding +
+                            index * (iconSize + gap),
+
+                        width: iconSize,
+                        height: iconSize
+
+                    })
+                );
+
+            });
+
+        };
+
 
     }
 
@@ -2441,17 +2720,31 @@ const buildTemplate = (
         });
 
 
+
         addMainText({
             texts,
             data,
             variant,
             palette,
-            titleX: 0.07,
-            titleY: 0.12,
-            titleWidth: 0.53,
-            fontFamily
-        });
 
+            titleX: 0.07,
+            titleY: 0.07,
+            titleWidth: 0.50,
+
+            taglineX: 0.03,
+            taglineY: 0.40,
+            taglineWidth: 0.40,
+
+            descriptionX: 0.07,
+            descriptionY: 0.57,
+            descriptionWidth: 0.40,
+
+            align: "left",
+            taglineAlign: "center",
+            descriptionAlign: "left",
+
+            fontFamily: "Times New Roman"
+        });
 
         addPhoto({
             images,
@@ -2483,8 +2776,8 @@ const buildTemplate = (
             data,
             palette,
             variant,
-            x: 0.07,
-            y: 0.47,
+            x: 0.47,
+            y: 0.74,
             size: 0.19,
             fontFamily
         });
@@ -2507,18 +2800,26 @@ const buildTemplate = (
             data,
             accent,
             textColor: "#FFFFFF",
-            fontFamily: "Montserrat",
+            // fontFamily: "Montserrat",
+            fontFamily: "Times New Roman",
             x: 0.055,
             y: 0.765,
             width: 0.60
         });
 
 
-        addSocialRow({
+        // addSocialRow({
+        //     images,
+        //     x: 0.70,
+        //     y: 0.75,
+        //     size: 0.035
+        // });
+
+        addFloatingSocialIcons({
             images,
+            blocks,
             x: 0.70,
-            y: 0.87,
-            size: 0.035
+            y: 0.75,
         });
 
     }
@@ -2536,8 +2837,8 @@ const buildTemplate = (
             data,
             palette,
             x: 0.055,
-            y: 0.055,
-            size: 0.11
+            y: 0.030,
+            size: 0.18
         });
 
 
@@ -2565,17 +2866,51 @@ const buildTemplate = (
         });
 
 
-        addMainText({
-            texts,
-            data,
-            variant,
-            palette,
-            titleX: 0.53,
-            titleY: 0.20,
-            titleWidth: 0.40,
-            align: "right",
-            fontFamily
-        });
+        texts.push(
+            textItem({
+                id: 1,
+                role: "businessName",
+                text: data.name,
+                x: 0.33,
+                y: 0.07,
+                width: 0.50,
+                fontScale: 0.13,
+                fill: "black",
+                fontFamily: "great vibes",
+                fontStyle: "bold",
+
+            })
+        );
+
+
+        texts.push(
+            textItem({
+                id: 2,
+                role: "tagline",
+                text: data.tagline,
+                x: 0.50,
+                y: 0.32,
+                width: 0.40,
+                fontScale: 0.048,
+                fill: "black",
+                fontFamily: "Montserrat",
+                fontStyle: "bold"
+            })
+        );
+
+        texts.push(
+            textItem({
+                id: 3,
+                role: "description",
+                text: data.description,
+                x: 0.53,
+                y: 0.55,
+                width: 0.30,
+                fontScale: 0.027,
+                fill: "black",
+                fontFamily: "DM Sans"
+            })
+        );
 
 
         addPromotion({
@@ -2585,7 +2920,7 @@ const buildTemplate = (
             palette,
             variant,
             x: 0.68,
-            y: 0.505,
+            y: 0.770,
             size: 0.17,
             fontFamily
         });
@@ -2615,12 +2950,34 @@ const buildTemplate = (
         });
 
 
-        addSocialRow({
+
+        addVerticalSocialPanel({
             images,
-            x: 0.70,
-            y: 0.87,
-            size: 0.035
+            blocks,
+
+            // Panel coordinates
+            x: 0.88,
+            y: 0.38,
+
+            // Icon size and spacing
+            iconSize: 0.038,
+            gap: 0.015,
+
+            // Background
+            padding: 0.015,
+            background: "#111827",
+
+            // Social media icons
+            socialKeys: [
+                "facebook",
+                "instagram",
+                "whatsapp",
+                "youtube",
+                "tiktok",
+                "linkedin"
+            ]
         });
+
 
     }
 
@@ -2636,44 +2993,35 @@ const buildTemplate = (
             business,
             data,
             palette,
-            x: 0.055,
-            y: 0.055,
-            size: 0.10
+            x: 0.050,
+            y: 0.050,
+            size: 0.16
         });
 
+        addMainText({
+            texts,
+            data,
+            variant,
+            palette,
 
-        texts.push(
-            textItem({
-                id: 1,
-                role: "businessName",
-                text: data.name,
-                x: 0.14,
-                y: 0.065,
-                width: 0.72,
-                fontScale: 0.105,
-                fill: "#FFFFFF",
-                fontFamily,
-                fontStyle: "bold",
-                align: "center"
-            })
-        );
+            titleX: 0.22,
+            titleY: 0.050,
+            titleWidth: 0.70,
 
+            taglineX: 0.22,
+            taglineY: 0.10,
+            taglineWidth: 0.70,
 
-        texts.push(
-            textItem({
-                id: 2,
-                role: "tagline",
-                text: data.tagline,
-                x: 0.12,
-                y: 0.20,
-                width: 0.76,
-                fontScale: 0.043,
-                fill: palette[2],
-                fontFamily,
-                fontStyle: "bold",
-                align: "center"
-            })
-        );
+            descriptionX: 0.24,
+            descriptionY: 0.40,
+            descriptionWidth: 0.50,
+
+            align: "left",
+            taglineAlign: "center",
+            descriptionAlign: "center",
+
+            fontFamily: "Times New Roman"
+        });
 
 
         addPhoto({
@@ -2692,8 +3040,8 @@ const buildTemplate = (
             images,
             src:
                 photos[2 % photos.length],
-            x: 0.08,
-            y: 0.40,
+            x: 0.78,
+            y: 0.56,
             width: 0.14,
             height: 0.14,
             rotation: -8
@@ -2749,11 +3097,31 @@ const buildTemplate = (
         });
 
 
-        addSocialRow({
+        addVerticalSocialPanel({
             images,
-            x: 0.70,
-            y: 0.875,
-            size: 0.035
+            blocks,
+
+            // Panel coordinates
+            x: 0.06,
+            y: 0.38,
+
+            // Icon size and spacing
+            iconSize: 0.038,
+            gap: 0.015,
+
+            // Background
+            padding: 0.015,
+            background: "#111827",
+
+            // Social media icons
+            socialKeys: [
+                "facebook",
+                "instagram",
+                "whatsapp",
+                "youtube",
+                "tiktok",
+                "linkedin"
+            ]
         });
 
     }
@@ -2815,7 +3183,7 @@ const buildTemplate = (
                 role: "description",
                 text: data.description,
                 x: 0.06,
-                y: 0.41,
+                y: 0.50,
                 width: 0.48,
                 fontScale: 0.027,
                 fill: "#FFFFFF",
@@ -2854,8 +3222,8 @@ const buildTemplate = (
             data,
             palette,
             variant,
-            x: 0.46,
-            y: 0.59,
+            x: 0.45,
+            y: 0.77,
             size: 0.18,
             fontFamily: "Montserrat"
         });
@@ -2887,10 +3255,11 @@ const buildTemplate = (
 
         addSocialRow({
             images,
-            x: 0.70,
+            x: 0.65,
             y: 0.875,
-            size: 0.035
+            size: 0.045
         });
+
 
     }
 
@@ -2921,9 +3290,10 @@ const buildTemplate = (
                 y: 0.16,
                 width: 0.85,
                 fontScale: 0.13,
-                fill: "#FFFFFF",
+                fill: "yellow",
                 fontFamily: "Bebas Neue",
-                fontStyle: "bold"
+                fontStyle: "bold",
+
             })
         );
 
@@ -2934,12 +3304,26 @@ const buildTemplate = (
                 role: "tagline",
                 text: data.tagline,
                 x: 0.06,
-                y: 0.31,
+                y: 0.28,
                 width: 0.76,
                 fontScale: 0.048,
                 fill: "#FFFFFF",
                 fontFamily: "Montserrat",
                 fontStyle: "bold"
+            })
+        );
+
+        texts.push(
+            textItem({
+                id: 3,
+                role: "description",
+                text: data.description,
+                x: 0.06,
+                y: 0.50,
+                width: 0.30,
+                fontScale: 0.027,
+                fill: "#FFFFFF",
+                fontFamily: "DM Sans"
             })
         );
 
@@ -2961,10 +3345,10 @@ const buildTemplate = (
             images,
             src:
                 photos[1 % photos.length],
-            x: 0.08,
+            x: 0.32,
             y: 0.42,
-            width: 0.84,
-            height: 0.34,
+            width: 0.64,
+            height: 0.24,
             rotation: 0
         });
 
@@ -2973,8 +3357,8 @@ const buildTemplate = (
             images,
             src:
                 photos[2 % photos.length],
-            x: 0.07,
-            y: 0.59,
+            x: 0.70,
+            y: 0.62,
             width: 0.14,
             height: 0.13,
             rotation: -6
@@ -2999,19 +3383,25 @@ const buildTemplate = (
             accent,
             textColor: "#FFFFFF",
             fontFamily: "Poppins",
-            x: 0.055,
+            x: 0.45,
             y: 0.795,
             width: 0.60
         });
 
 
-        addSocialRow({
-            images,
-            x: 0.70,
-            y: 0.885,
-            size: 0.032
-        });
+        // addSocialRow({
+        //     images,
+        //     x: 0.08,
+        //     y: 0.885,
+        //     size: 0.045
+        // });
 
+        addScatteredSocialBubbles({
+            images,
+            blocks,
+            x: 0.08,
+            y: 0.75,
+        });
     }
 
 
@@ -3062,7 +3452,7 @@ const buildTemplate = (
                 role: "businessName",
                 text: data.name,
                 x: 0.07,
-                y: 0.21,
+                y: 0.14,
                 width: 0.43,
                 fontScale: 0.125,
                 fill: "#FFFFFF",
@@ -3081,7 +3471,7 @@ const buildTemplate = (
                 y: 0.39,
                 width: 0.41,
                 fontScale: 0.044,
-                fill: palette[2],
+                fill: palette[1],
                 fontFamily,
                 fontStyle: "bold"
             })
@@ -3094,7 +3484,7 @@ const buildTemplate = (
                 role: "description",
                 text: data.description,
                 x: 0.07,
-                y: 0.48,
+                y: 0.50,
                 width: 0.38,
                 fontScale: 0.027,
                 fill: "#FFFFFF",
@@ -3110,7 +3500,7 @@ const buildTemplate = (
             palette,
             variant,
             x: 0.30,
-            y: 0.62,
+            y: 0.58,
             size: 0.16,
             fontFamily
         });
@@ -3142,9 +3532,9 @@ const buildTemplate = (
 
         addSocialRow({
             images,
-            x: 0.70,
-            y: 0.875,
-            size: 0.035
+            x: 0.56,
+            y: 0.825,
+            size: 0.055
         });
 
     }
@@ -3209,10 +3599,10 @@ const buildTemplate = (
                 role: "businessName",
                 text: data.name,
                 x: 0.07,
-                y: 0.535,
+                y: 0.600,
                 width: 0.75,
                 fontScale: 0.11,
-                fill: "#FFFFFF",
+                fill: "yellow",
                 fontFamily: "Playfair Display",
                 fontStyle: "bold"
             })
@@ -3225,10 +3615,10 @@ const buildTemplate = (
                 role: "tagline",
                 text: data.tagline,
                 x: 0.075,
-                y: 0.68,
+                y: 0.48,
                 width: 0.60,
                 fontScale: 0.043,
-                fill: palette[2],
+                fill: palette[4],
                 fontFamily: "Montserrat",
                 fontStyle: "bold"
             })
@@ -3264,7 +3654,7 @@ const buildTemplate = (
             texts,
             data,
             accent,
-            textColor: "#FFFFFF",
+            textColor: "yellow",
             fontFamily: "DM Sans",
             x: 0.055,
             y: 0.78,
@@ -3272,12 +3662,20 @@ const buildTemplate = (
         });
 
 
-        addSocialRow({
+        // addSocialRow({
+        //     images,
+        //     x: 0.70,
+        //     y: 0.875,
+        //     size: 0.035
+        // });
+
+        addScatteredSocialBubbles({
             images,
-            x: 0.70,
-            y: 0.875,
-            size: 0.035
+            blocks,
+            x: 0.60,
+            y: 0.72,
         });
+
 
     }
 
@@ -3309,9 +3707,10 @@ const buildTemplate = (
                 width: 0.70,
                 fontScale: 0.105,
                 fill: "#FFFFFF",
-                fontFamily: "Libre Baskerville",
+                fontFamily: "great vibes",
                 fontStyle: "bold",
-                align: "center"
+                align: "center",
+                letterSpacing: 2
             })
         );
 
@@ -3322,7 +3721,7 @@ const buildTemplate = (
                 role: "tagline",
                 text: data.tagline,
                 x: 0.18,
-                y: 0.235,
+                y: 0.205,
                 width: 0.64,
                 fontScale: 0.038,
                 fill: palette[2],
@@ -3395,11 +3794,17 @@ const buildTemplate = (
         });
 
 
-        addSocialRow({
+        // addSocialRow({
+        //     images,
+        //     x: 0.70,
+        //     y: 0.875,
+        //     size: 0.034
+        // });
+        addFloatingSocialIcons({
             images,
-            x: 0.70,
-            y: 0.875,
-            size: 0.034
+            blocks,
+            x: 0.65,
+            y: 0.775,
         });
 
     }
@@ -3445,7 +3850,7 @@ const buildTemplate = (
                 role: "tagline",
                 text: data.tagline.toUpperCase(),
                 x: 0.06,
-                y: 0.33,
+                y: 0.23,
                 width: 0.62,
                 fontScale: 0.047,
                 fill: palette[2],
@@ -3532,12 +3937,19 @@ const buildTemplate = (
         });
 
 
-        addSocialRow({
+        // addSocialRow({
+        //     images,
+        //     x: 0.70,
+        //     y: 0.875,
+        //     size: 0.035
+        // });
+        addFloatingSocialIcons({
             images,
-            x: 0.70,
-            y: 0.875,
-            size: 0.035
+            blocks,
+            x: 0.65,
+            y: 0.775,
         });
+
 
     }
 
@@ -3564,12 +3976,12 @@ const buildTemplate = (
                 id: 1,
                 role: "businessName",
                 text: data.name,
-                x: 0.055,
-                y: 0.16,
-                width: 0.50,
+                x: 0.175,
+                y: 0.08,
+                width: 0.40,
                 fontScale: 0.115,
-                fill: "#FFFFFF",
-                fontFamily: "Montserrat",
+                fill: "red",
+                fontFamily: "great Vibes",
                 fontStyle: "bold"
             })
         );
@@ -3584,7 +3996,7 @@ const buildTemplate = (
                 y: 0.31,
                 width: 0.48,
                 fontScale: 0.045,
-                fill: palette[2],
+                fill: "gray",
                 fontFamily: "Poppins",
                 fontStyle: "bold"
             })
@@ -3622,7 +4034,7 @@ const buildTemplate = (
             palette,
             variant,
             x: 0.70,
-            y: 0.54,
+            y: 0.74,
             size: 0.20,
             fontFamily: "Montserrat"
         });
@@ -3654,9 +4066,9 @@ const buildTemplate = (
 
         addSocialRow({
             images,
-            x: 0.70,
-            y: 0.875,
-            size: 0.035
+            x: 0.08,
+            y: 0.455,
+            size: 0.055
         });
 
     }
@@ -3725,7 +4137,7 @@ const buildTemplate = (
                 role: "tagline",
                 text: data.tagline,
                 x: 0.06,
-                y: 0.675,
+                y: 0.500,
                 width: 0.63,
                 fontScale: 0.044,
                 fill: palette[2],
@@ -3743,7 +4155,7 @@ const buildTemplate = (
             variant,
             x: 0.75,
             y: 0.52,
-            size: 0.16,
+            size: 0.20,
             fontFamily: "Lora"
         });
 
@@ -3772,12 +4184,295 @@ const buildTemplate = (
         });
 
 
-        addSocialRow({
+        // addSocialRow({
+        //     images,
+        //     x: 0.70,
+        //     y: 0.875,
+        //     size: 0.035
+        // });
+
+        addScatteredSocialBubbles({
             images,
-            x: 0.70,
-            y: 0.875,
-            size: 0.035
+            blocks,
+            x: 0.60,
+            y: 0.750,
         });
+    }
+
+
+    /* ========================================================
+       DESIGN 13 — EDITORIAL SPLIT REVERSE
+       ======================================================== */
+
+    if (variant === 12) {
+
+        blocks.push({ shape: "rectangle", nx: 0.50, ny: 0.04, nw: 0.47, nh: 0.70, fill: "rgba(255,255,255,0.50)", rotation: 0 });
+
+        addLogo({ images, business, data, palette, x: 0.065, y: 0.055, size: 0.095 });
+
+        texts.push(textItem({
+            id: 1, role: "businessName", text: data.name.toUpperCase(),
+            x: 0.04, y: 0.22, width: 0.44, fontScale: 0.095,
+            fill: "#FFFFFF", fontFamily: "Playfair Display", fontStyle: "bold"
+        }));
+
+        texts.push(textItem({
+            id: 2, role: "tagline", text: data.tagline,
+            x: 0.065, y: 0.46, width: 0.40, fontScale: 0.042,
+            fill: palette[1], fontFamily: "Montserrat", fontStyle: "bold"
+        }));
+
+        texts.push(textItem({
+            id: 3, role: "description", text: data.description,
+            x: 0.065, y: 0.62, width: 0.39, fontScale: 0.027,
+            fill: "#FFFFFF", fontFamily: "DM Sans"
+        }));
+
+        addPhoto({ images, src: photos[1 % photos.length], x: 0.56, y: 0.12, width: 0.37, height: 0.43, rotation: 0 });
+        addPhoto({ images, src: photos[2 % photos.length], x: 0.67, y: 0.58, width: 0.22, height: 0.15, rotation: 3 });
+
+        addPromotion({ images, texts, data, palette, variant, x: 0.42, y: 0.635, size: 0.16, fontFamily: "Oswald" });
+
+        blocks.push({ shape: "rectangle", nx: 0, ny: 0.76, nw: 1, nh: 0.24, fill: "rgba(255,255,255,0.82)", rotation: 0 });
+        addContacts({ images, texts, data, accent, textColor: "#F4320b", fontFamily: "DM Sans", x: 0.085, y: 0.795, width: 0.64 });
+        addSocialRow({ images, x: 0.55, y: 0.86, size: 0.055 });
+    }
+
+
+    /* ========================================================
+       DESIGN 14 — PHOTO MOSAIC
+       ======================================================== */
+
+    if (variant === 13) {
+
+        blocks.push({ shape: "rectangle", nx: 0, ny: 0, nw: 1, nh: 0.27, fill: "rgba(217,16,30,0.92)", rotation: 0 });
+        addLogo({ images, business, data, palette, x: 0.055, y: 0.055, size: 0.085 });
+
+        texts.push(textItem({ id: 1, role: "businessName", text: data.name, x: 0.17, y: 0.065, width: 0.76, fontScale: 0.085, fill: "#FFFFFF", fontFamily: "lobster two", fontStyle: "bold" }));
+        texts.push(textItem({ id: 2, role: "tagline", text: data.tagline, x: 0.10, y: 0.17, width: 0.75, fontScale: 0.035, fill: palette[2], fontFamily: "Poppins", fontStyle: "bold" }));
+
+        addPhoto({ images, src: photos[1 % photos.length], x: 0.045, y: 0.31, width: 0.43, height: 0.34, rotation: 0 });
+        addPhoto({ images, src: photos[2 % photos.length], x: 0.505, y: 0.31, width: 0.445, height: 0.20, rotation: 0 });
+        addPhoto({ images, src: photos[3 % photos.length], x: 0.505, y: 0.535, width: 0.215, height: 0.20, rotation: 0 });
+        addPhoto({ images, src: photos[4 % photos.length], x: 0.735, y: 0.535, width: 0.215, height: 0.20, rotation: 0 });
+
+        texts.push(textItem({ id: 3, role: "description", text: data.description, x: 0.06, y: 0.665, width: 0.40, fontScale: 0.025, fill: "#FFFFFF", fontFamily: "DM Sans" }));
+        addPromotion({ images, texts, data, palette, variant, x: 0.72, y: 0.755, size: 0.16, fontFamily: "Montserrat" });
+        blocks.push({ shape: "rectangle", nx: 0, ny: 0.79, nw: 1, nh: 0.21, fill: "rgba(6,15,28,0.88)", rotation: 0 });
+        addContacts({ images, texts, data, accent, textColor: "#FFFFFF", fontFamily: "Poppins", x: 0.055, y: 0.82, width: 0.60 });
+        addFloatingSocialIcons({
+            images,
+            blocks,
+            x: 0.70,
+            y: 0.04,
+        });
+
+
+    }
+
+
+    /* ========================================================
+       DESIGN 15 — BOLD TYPE & BADGE
+       ======================================================== */
+
+    if (variant === 14) {
+
+        blocks.push({ shape: "rectangle", nx: 0, ny: 0, nw: 1, nh: 1, fill: "rgba(5,12,25,0.18)", rotation: 0 });
+        blocks.push({ shape: "rectangle", nx: 0.035, ny: 0.05, nw: 0.93, nh: 0.88, fill: "rgba(8,18,34,0.38)", rotation: 0 });
+        addLogo({ images, business, data, palette, x: 0.075, y: 0.075, size: 0.09 });
+
+        texts.push(textItem({ id: 1, role: "businessName", text: data.name.toUpperCase(), x: 0.07, y: 0.235, width: 0.86, fontScale: 0.12, fill: "#FFFFFF", fontFamily: "Bebas Neue", fontStyle: "bold", letterSpacing: 1.5, align: "center" }));
+        texts.push(textItem({ id: 2, role: "tagline", text: data.tagline.toUpperCase(), x: 0.12, y: 0.20, width: 0.76, fontScale: 0.043, fill: palette[2], fontFamily: "Oswald", fontStyle: "bold", align: "center" }));
+
+        addPhoto({ images, src: photos[1 % photos.length], x: 0.15, y: 0.40, width: 0.76, height: 0.29, rotation: 0 });
+        texts.push(textItem({ id: 3, role: "description", text: data.description, x: 0.14, y: 0.695, width: 0.72, fontScale: 0.025, fill: "#FFFFFF", fontFamily: "DM Sans", align: "center" }));
+        addPromotion({ images, texts, data, palette, variant, x: 0.73, y: 0.805, size: 0.16, fontFamily: "Oswald" });
+
+        blocks.push({ shape: "rectangle", nx: 0.035, ny: 0.775, nw: 0.53, nh: 0.20, fill: "rgba(4,10,20,0.86)", rotation: 0 });
+        addContacts({ images, texts, data, accent, textColor: "#FFFFFF", fontFamily: "Montserrat", x: 0.055, y: 0.795, width: 0.62 });
+        // addSocialRow({ images, x: 0.75, y: 0.91, size: 0.03 });
+        addVerticalSocialPanel({
+            images,
+            blocks,
+
+            // Panel coordinates
+            x: 0.05,
+            y: 0.38,
+
+            // Icon size and spacing
+            iconSize: 0.038,
+            gap: 0.015,
+
+            // Background
+            padding: 0.015,
+            background: "#111827",
+
+            // Social media icons
+            socialKeys: [
+                "facebook",
+                "instagram",
+                "whatsapp",
+                "youtube",
+                "tiktok",
+                "linkedin"
+            ]
+        });
+
+
+    }
+
+
+    /* ========================================================
+       DESIGN 16 — MINIMAL LUXURY
+       ======================================================== */
+
+    if (variant === 15) {
+
+        blocks.push({ shape: "rectangle", nx: 0.045, ny: 0.045, nw: 0.91, nh: 0.91, fill: "rgba(12,18,28,0.35)", rotation: 0 });
+        blocks.push({ shape: "rectangle", nx: 0.075, ny: 0.075, nw: 0.85, nh: 0.002, fill: palette[2], rotation: 0 });
+        blocks.push({ shape: "rectangle", nx: 0.075, ny: 0.925, nw: 0.85, nh: 0.002, fill: palette[2], rotation: 0 });
+        addLogo({ images, business, data, palette, x: 0.445, y: 0.10, size: 0.11 });
+
+        texts.push(textItem({ id: 1, role: "businessName", text: data.name, x: 0.12, y: 0.205, width: 0.76, fontScale: 0.095, fill: "#FFFFFF", fontFamily: "Cormorant Garamond", fontStyle: "bold", align: "center", letterSpacing: 1.2 }));
+        texts.push(textItem({ id: 2, role: "tagline", text: data.tagline, x: 0.16, y: 0.285, width: 0.68, fontScale: 0.036, fill: palette[2], fontFamily: "Raleway", align: "center", letterSpacing: 1 }));
+
+        addPhoto({ images, src: photos[1 % photos.length], x: 0.27, y: 0.42, width: 0.48, height: 0.25, rotation: 0 });
+        texts.push(textItem({ id: 3, role: "description", text: data.description, x: 0.19, y: 0.675, width: 0.62, fontScale: 0.025, fill: "#FFFFFF", fontFamily: "Lora", align: "center" }));
+        addPromotion({ images, texts, data, palette, variant, x: 0.81, y: 0.315, size: 0.15, fontFamily: "Cormorant Garamond" });
+        blocks.push({ shape: "circle", nx: 0.22, ny: 0.75, nw: 0.59, nh: 0.20, fill: "rgba(12,18,28,0.65)", rotation: 0 });
+        addContacts({ images, texts, data, accent, textColor: "#FFFFFF", fontFamily: "Raleway", x: 0.32, y: 0.78, width: 0.76 });
+        // addSocialRow({ images, x: 0.43, y: 0.945, size: 0.025 });
+        addFloatingSocialIcons({
+            images,
+            blocks,
+            x: 0.05,
+            y: 0.73,
+        });
+    }
+
+
+    /* ========================================================
+       DESIGN 17 — DIAGONAL FEATURE
+       ======================================================== */
+
+    if (variant === 16) {
+
+        blocks.push({ shape: "rectangle", nx: 0, ny: 0, nw: 1, nh: 0.48, fill: accent, rotation: -7 });
+        blocks.push({ shape: "rectangle", nx: 0, ny: 0.72, nw: 1, nh: 0.28, fill: "rgba(5,13,26,0.82)", rotation: 0 });
+        addLogo({ images, business, data, palette, x: 0.06, y: 0.055, size: 0.09 });
+
+        texts.push(textItem({ id: 1, role: "businessName", text: data.name.toUpperCase(), x: 0.66, y: 0.15, width: 0.53, fontScale: 0.10, fill: "#FFFFFF", fontFamily: "Oswald", fontStyle: "bold" }));
+        texts.push(textItem({ id: 2, role: "tagline", text: data.tagline, x: 0.065, y: 0.16, width: 0.47, fontScale: 0.04, fill: "#FFFFFF", fontFamily: "Montserrat", fontStyle: "bold" }));
+
+        addPhoto({ images, src: photos[1 % photos.length], x: 0.53, y: 0.12, width: 0.40, height: 0.48, rotation: 4 });
+        addPhoto({ images, src: photos[2 % photos.length], x: 0.39, y: 0.48, width: 0.18, height: 0.17, rotation: -5 });
+        texts.push(textItem({ id: 3, role: "description", text: data.description, x: 0.065, y: 0.53, width: 0.31, fontScale: 0.025, fill: "#FFFFFF", fontFamily: "DM Sans" }));
+        addPromotion({ images, texts, data, palette, variant, x: 0.72, y: 0.66, size: 0.16, fontFamily: "Oswald" });
+        addContacts({ images, texts, data, accent, textColor: "#FFFFFF", fontFamily: "Poppins", x: 0.055, y: 0.79, width: 0.63 });
+        addSocialRow({ images, x: 0.65, y: 0.89, size: 0.042 });
+    }
+
+
+    /* ========================================================
+       DESIGN 18 — STACKED SHOWCASE
+       ======================================================== */
+
+    if (variant === 17) {
+
+        addLogo({ images, business, data, palette, x: 0.06, y: 0.055, size: 0.085 });
+        texts.push(textItem({ id: 1, role: "businessName", text: data.name, x: 0.17, y: 0.07, width: 0.75, fontScale: 0.09, fill: "#FFFFFF", fontFamily: "Playfair Display", fontStyle: "bold" }));
+        texts.push(textItem({ id: 2, role: "tagline", text: data.tagline, x: 0.17, y: 0.18, width: 0.72, fontScale: 0.035, fill: palette[2], fontFamily: "Raleway", fontStyle: "bold" }));
+
+        addPhoto({ images, src: photos[1 % photos.length], x: 0.055, y: 0.29, width: 0.65, height: 0.34, rotation: 0 });
+        addPhoto({ images, src: photos[2 % photos.length], x: 0.08, y: 0.65, width: 0.24, height: 0.17, rotation: -2 });
+        addPhoto({ images, src: photos[3 % photos.length], x: 0.35, y: 0.65, width: 0.24, height: 0.17, rotation: 0 });
+        addPhoto({ images, src: photos[4 % photos.length], x: 0.62, y: 0.65, width: 0.24, height: 0.17, rotation: 2 });
+
+        texts.push(textItem({ id: 3, role: "description", text: data.description, x: 0.72, y: 0.360, width: 0.25, fontScale: 0.030, fill: "#FFFFFF", fontFamily: "DM Sans" }));
+        addPromotion({ images, texts, data, palette, variant, x: 0.79, y: 0.20, size: 0.15, fontFamily: "Montserrat" });
+        blocks.push({ shape: "rectangle", nx: 0, ny: 0.83, nw: 1, nh: 0.20, fill: "rgba(5,13,26,0.86)", rotation: 0 });
+        addContacts({ images, texts, data, accent, textColor: "#FFFFFF", fontFamily: "Poppins", x: 0.045, y: 0.85, width: 0.68 });
+        addSocialRow({ images, x: 0.63, y: 0.90, size: 0.045 });
+    }
+
+
+    /* ========================================================
+       DESIGN 19 — COLOR-BLOCK STORY
+       ======================================================== */
+
+    if (variant === 18) {
+
+        blocks.push({ shape: "rectangle", nx: 0, ny: 0, nw: 0.36, nh: 1, fill: accent, rotation: 0 });
+        blocks.push({ shape: "rectangle", nx: 0.36, ny: 0, nw: 0.64, nh: 0.22, fill: "rgba(6,14,27,0.78)", rotation: 0 });
+        addLogo({ images, business, data, palette, x: 0.07, y: 0.065, size: 0.09 });
+
+        texts.push(textItem({ id: 1, role: "businessName", text: data.name, x: 0.405, y: 0.035, width: 0.54, fontScale: 0.085, fill: "#FFFFFF", fontFamily: "Montserrat", fontStyle: "bold" }));
+        texts.push(textItem({ id: 2, role: "tagline", text: data.tagline, x: 0.505, y: 0.24, width: 0.54, fontScale: 0.034, fill: "black", fontFamily: "Poppins", fontStyle: "bold" }));
+
+        addPhoto({ images, src: photos[1 % photos.length], x: 0.405, y: 0.32, width: 0.54, height: 0.40, rotation: 0 });
+        addPhoto({ images, src: photos[2 % photos.length], x: 0.10, y: 0.39, width: 0.20, height: 0.18, rotation: -4 });
+        texts.push(textItem({ id: 3, role: "description", text: data.description, x: 0.055, y: 0.60, width: 0.27, fontScale: 0.028, fill: "#000", fontFamily: "DM Sans", align: "center" }));
+        addPromotion({ images, texts, data, palette, variant, x: 0.79, y: 0.65, size: 0.18, fontFamily: "Montserrat" });
+
+        blocks.push({ shape: "rectangle", nx: 0.36, ny: 0.75, nw: 0.64, nh: 0.25, fill: "rgba(5,13,26,0.88)", rotation: 0 });
+        addContacts({ images, texts, data, accent, textColor: "#FFFFFF", fontFamily: "Poppins", x: 0.405, y: 0.80, width: 0.52 });
+        // addSocialRow({ images, x: 0.72, y: 0.92, size: 0.03 });
+        addScatteredSocialBubbles({
+            images,
+            blocks,
+            x: 0.03,
+            y: 0.75,
+        });
+    }
+
+
+    /* ========================================================
+       DESIGN 20 — CAMPAIGN SPOTLIGHT
+       ======================================================== */
+
+    if (variant === 19) {
+
+        blocks.push({ shape: "circle", nx: 0.035, ny: 0.04, nw: 0.93, nh: 0.92, fill: "rgba(5,13,26,0.42)", rotation: 0 });
+        addLogo({ images, business, data, palette, x: 0.07, y: 0.07, size: 0.09 });
+
+        texts.push(textItem({ id: 1, role: "businessName", text: data.name.toUpperCase(), x: 0.19, y: 0.08, width: 0.72, fontScale: 0.095, fill: "#FFFFFF", fontFamily: "Bebas Neue", fontStyle: "bold" }));
+        texts.push(textItem({ id: 2, role: "tagline", text: data.tagline, x: 0.08, y: 0.22, width: 0.84, fontScale: 0.043, fill: palette[2], fontFamily: "Montserrat", fontStyle: "bold", align: "center" }));
+
+        addPhoto({ images, src: photos[1 % photos.length], x: 0.20, y: 0.32, width: 0.60, height: 0.39, rotation: 0 });
+        addPhoto({ images, src: photos[2 % photos.length], x: 0.09, y: 0.48, width: 0.19, height: 0.16, rotation: -5 });
+        addPhoto({ images, src: photos[3 % photos.length], x: 0.74, y: 0.48, width: 0.19, height: 0.16, rotation: 5 });
+
+        addPromotion({ images, texts, data, palette, variant, x: 0.75, y: 0.79, size: 0.18, fontFamily: "Montserrat" });
+        texts.push(textItem({ id: 3, role: "description", text: data.description, x: 0.55, y: 0.72, width: 0.30, fontScale: 0.024, fill: "#FFFFFF", fontFamily: "DM Sans", align: "center" }));
+        addContacts({ images, texts, data, accent, textColor: "#FFFFFF", fontFamily: "Poppins", x: 0.07, y: 0.80, width: 0.63 });
+        // addSocialRow({ images, x: 0.77, y: 0.91, size: 0.03 });
+        addVerticalSocialPanel({
+            images,
+            blocks,
+
+            // Panel coordinates
+            x: 0.02,
+            y: 0.38,
+
+            // Icon size and spacing
+            iconSize: 0.038,
+            gap: 0.015,
+
+            // Background
+            padding: 0.015,
+            background: "#111827",
+
+            // Social media icons
+            socialKeys: [
+                "facebook",
+                "instagram",
+                "whatsapp",
+                "youtube",
+                "tiktok",
+                "linkedin"
+            ]
+        });
+
 
     }
 
@@ -4051,109 +4746,56 @@ const buildTemplate = (
     };
 
 
-    if (variantIndex >= 12) {
-        // Eight extra compositions apply different editorial transforms rather
-        // than simply renaming an existing design.
-        const mode = variantIndex - 12;
-
-        const mirrorX = item => {
-            if (typeof item.nx === "number" && typeof item.nw === "number") {
-                item.nx = Math.max(0.015, Math.min(0.985 - item.nw, 1 - item.nx - item.nw));
-            }
-            if (item.align === "left") item.align = "right";
-            else if (item.align === "right") item.align = "left";
-            return item;
-        };
-
-        const mirrorY = item => {
-            if (typeof item.ny === "number" && typeof item.nh === "number") {
-                item.ny = Math.max(0.015, Math.min(0.985 - item.nh, 1 - item.ny - item.nh));
-            }
-            return item;
-        };
-
-        const scaleTowardCenter = (item, factor) => {
-            if (typeof item.nx === "number" && typeof item.nw === "number") {
-                const center = item.nx + item.nw / 2;
-                item.nw *= factor;
-                item.nx = center - item.nw / 2;
-            }
-            if (typeof item.ny === "number" && typeof item.nh === "number") {
-                const center = item.ny + item.nh / 2;
-                item.nh *= factor;
-                item.ny = center - item.nh / 2;
-            }
-            return item;
-        };
-
-        const transformLayoutItem = (item, index, kind) => {
-            const next = { ...item };
-
-            if ([0, 3, 6].includes(mode)) mirrorX(next);
-            else if ([1, 4, 7].includes(mode)) mirrorY(next);
-            else { mirrorX(next); mirrorY(next); }
-
-            if ([3, 6].includes(mode)) scaleTowardCenter(next, mode === 3 ? 0.90 : 0.84);
-            if (mode === 4 && kind === "image") {
-                next.rotation = (Number(next.rotation) || 0) + (index % 2 ? 7 : -7);
-                next.ny = Math.min(0.76, Math.max(0.04, (next.ny ?? 0.1) + (index % 2 ? 0.035 : -0.025)));
-            }
-            if (mode === 5 && kind === "text" && ["businessName", "tagline", "description"].includes(next.role)) {
-                next.nx = 0.08;
-                next.nw = 0.84;
-                next.align = "center";
-                if (next.role === "businessName") {
-                    next.fontScale = Math.min(0.125, (Number(next.fontScale) || 0.06) * 1.08);
-                }
-            }
-            if (mode === 7 && kind === "image" && !["logo", "social"].includes(next.type)) {
-                next.rotation = (Number(next.rotation) || 0) * -1 + (index % 2 ? 5 : -4);
-                next.nw = Math.min(0.52, (Number(next.nw) || 0.2) * 1.08);
-                next.nx = Math.max(0.02, Math.min(0.98 - next.nw, (Number(next.nx) || 0.1) - 0.02));
-            }
-            return next;
-        };
-
-        template.images = template.images.map((item, index) => {
-            const next = transformLayoutItem(item, index, "image");
-            if (next.type !== "logo" && next.type !== "social") {
-                const alternate = photos[(index + variantIndex + 2) % Math.max(photos.length, 1)];
-                if (alternate) next.src = alternate;
-            }
-            return next;
-        });
-
-        template.texts = template.texts.map((item, index) => transformLayoutItem(item, index, "text"));
-        template.blocks = template.blocks.map((item, index) => transformLayoutItem(item, index, "block"));
-        template.discountTags = (template.discountTags || []).map((item, index) => ({
-            ...transformLayoutItem(item, index, "tag"),
-            fill: palette[(variantIndex + index) % palette.length],
-            borderColor: palette[(variantIndex + index + 1) % palette.length]
-        }));
-
-        template.background = {
-            ...template.background,
-            ...(template.background.type === "business-photo" ? {
-                src: backgroundPhotos[(variantIndex + 3) % backgroundPhotos.length],
-                color: palette[(variantIndex + 1) % palette.length],
-                opacity: [58, 64, 70, 76][variantIndex % 4],
-                shape: ["right", "diagonal", "bottom", "wave", "corner", "split", "circle", "left"][mode]
-            } : {
-                value: [
-                    `linear-gradient(135deg, ${palette[2]} 0%, ${palette[0]} 45%, ${palette[3]} 100%)`,
-                    `linear-gradient(35deg, ${palette[3]} 0%, ${palette[1]} 50%, ${palette[0]} 100%)`,
-                    `linear-gradient(145deg, ${palette[1]} 0%, ${palette[2]} 48%, ${palette[3]} 100%)`
-                ][variantIndex % 3]
-            })
-        };
-        template.description = `${template.description} ${DESIGN_NAMES[variantIndex]} composition.`;
-    }
+    // Variants 13–20 are authored above as independent compositions. No
+    // mirroring/scaling transformation is used to manufacture extra designs.
 
     // Keep the three key business-copy elements visually distinct. Some legacy
     // layout families used very tight baselines, especially after mirroring.
     // Only move a line when its estimated text box collides with the previous
     // line, so each composition keeps its original visual direction.
-    const primaryRoles = ["businessName", "tagline", "description"];
+    // const primaryRoles = ["businessName", "tagline", "description"];
+
+    // Keep the text elements independently positioned.
+    // Do not automatically change their X or Y coordinates.
+
+    const primaryRoles = [
+        "businessName",
+        "tagline",
+        "description"
+    ];
+
+    primaryRoles.forEach(role => {
+
+        const item = template.texts.find(
+            text => text.role === role
+        );
+
+        if (!item) return;
+
+        const maxFont =
+            role === "businessName"
+                ? 0.105
+                : role === "tagline"
+                    ? 0.052
+                    : 0.039;
+
+        const minFont =
+            role === "businessName"
+                ? 0.038
+                : role === "tagline"
+                    ? 0.025
+                    : 0.020;
+
+        item.fontScale = Math.max(
+            minFont,
+            Math.min(
+                maxFont,
+                Number(item.fontScale) || minFont
+            )
+        );
+
+    });
+
     const primaryItems = primaryRoles
         .map(role => template.texts.find(item => item.role === role))
         .filter(Boolean)

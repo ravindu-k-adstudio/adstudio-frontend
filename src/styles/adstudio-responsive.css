@@ -1313,3 +1313,128 @@
         animation: none !important;
     }
 }
+
+
+/* =====================================================
+   ADSTUDIO SCROLLABLE CANVAS — FINAL FIX
+   Desktop: horizontal + vertical scrolling
+   Mobile: finger scrolling
+===================================================== */
+
+/* The canvas area in the studio layout */
+.studio-layout>*:nth-child(2) {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex: 1 1 auto !important;
+}
+
+/* Scrollable viewport */
+.adstudio-canvas-scroll-viewport {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    overflow: auto !important;
+
+    display: block !important;
+    box-sizing: border-box;
+
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: auto;
+    scrollbar-color: #0b1f33 #e2e8f0;
+}
+
+/* Scrollable dimensions */
+/* Scrollable content area */
+.adstudio-canvas-scroll-content {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+/* Scaled canvas */
+.adstudio-canvas-scale-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+/* Keep canvas decorations and contents intact */
+.adstudio-canvas-scale-wrapper>div {
+    flex-shrink: 0;
+}
+
+/* Visible desktop scrollbars */
+.adstudio-canvas-scroll-viewport::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.adstudio-canvas-scroll-viewport::-webkit-scrollbar-track {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+
+.adstudio-canvas-scroll-viewport::-webkit-scrollbar-thumb {
+    background: #0b1f33;
+    border-radius: 10px;
+}
+
+.adstudio-canvas-scroll-viewport::-webkit-scrollbar-thumb:hover {
+    background: #1e4f7a;
+}
+
+/* Mobile scrolling */
+@media (max-width: 768px) {
+    .studio-layout>*:nth-child(2) {
+        width: 100%;
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+    }
+
+    .adstudio-canvas-scroll-viewport {
+        width: 100%;
+        height: 100%;
+        overflow: auto !important;
+
+        touch-action: pan-x pan-y;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .adstudio-canvas-scroll-viewport::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+
+    .adstudio-canvas-scale-wrapper {
+        transition: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .adstudio-canvas-scroll-viewport .konvajs-content {
+        touch-action: pan-x pan-y !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .adstudio-canvas-scroll-content {
+        align-items: center;
+        justify-content: center;
+    }
+}

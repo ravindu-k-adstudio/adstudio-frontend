@@ -1,0 +1,503 @@
+/* AdStudio Template Browser — focused layout and responsive preview fixes.
+   Imported after template-browser.css so existing visual styling is preserved. */
+
+.tb-dialog {
+    width: min(96vw, 1480px);
+    height: min(94dvh, 980px);
+    max-height: 94dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.tb-header,
+.tb-toolbar,
+.tb-categories,
+.tb-footer {
+    flex: 0 0 auto;
+}
+
+.tb-toolbar {
+    min-width: 0;
+    gap: 12px;
+}
+
+.tb-size-bar {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.tb-size-options {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 7px;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 3px 2px 9px;
+    scrollbar-width: thin;
+    scrollbar-color: #8ba2bc #e8eef5;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+.tb-size-options::-webkit-scrollbar {
+    height: 6px;
+}
+
+.tb-size-options::-webkit-scrollbar-track {
+    background: #e8eef5;
+    border-radius: 99px;
+}
+
+.tb-size-options::-webkit-scrollbar-thumb {
+    background: #8ba2bc;
+    border-radius: 99px;
+}
+
+.tb-size-options button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.tb-results {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px 4px 18px;
+    scrollbar-gutter: stable;
+}
+
+.tb-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    align-items: stretch;
+}
+
+.tb-card {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.tb-preview-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 194px;
+    min-height: 194px;
+    max-height: 194px;
+    padding: 8px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.tb-preview-button .tb-artwork {
+    position: relative;
+    display: block;
+    flex: 0 1 auto;
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    min-width: 0;
+    overflow: hidden;
+    container-type: size;
+    border-radius: 7px;
+}
+
+.tb-card-info {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 11px 12px 12px;
+}
+
+.tb-card-info>p {
+    margin: 5px 0 10px;
+}
+
+.tb-use-button {
+    width: 100%;
+    min-height: 38px;
+    margin-top: auto;
+}
+
+/* Each thumbnail uses the selected format's actual aspect ratio. */
+.tb-artwork {
+    position: relative;
+    flex: 0 0 auto;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    container-type: size;
+    isolation: isolate;
+}
+
+.tb-art-bg,
+.tb-art-background-image,
+.tb-business-photo-overlay,
+.tb-art-block,
+.tb-art-image,
+.tb-art-text,
+.tb-art-discount,
+.tb-art-border,
+.tb-art-vignette {
+    position: absolute;
+}
+
+.tb-art-bg,
+.tb-art-background-image,
+.tb-business-photo-overlay,
+.tb-art-vignette {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.tb-art-background-image {
+    object-fit: cover;
+}
+
+.tb-art-block,
+.tb-art-image,
+.tb-art-text,
+.tb-art-discount,
+.tb-art-border {
+    box-sizing: border-box;
+}
+
+/* Preview dialog: artwork never gets its own scrollbar. */
+.tb-detail-overlay {
+    overflow: hidden;
+}
+
+.tb-detail-dialog {
+    width: min(96vw, 1120px);
+    max-height: 94dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.tb-detail-header {
+    flex: 0 0 auto;
+}
+
+.tb-detail-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+    gap: 18px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.tb-detail-art-wrap {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.tb-detail-canvas {
+    flex: 0 0 auto;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.tb-detail-canvas>.tb-artwork {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    container-type: size;
+}
+
+.tb-detail-controls {
+    min-width: 0;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px 14px 14px;
+    scrollbar-width: thin;
+}
+
+.tb-detail-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+    display: flex;
+    gap: 10px;
+    padding: 12px 0 4px;
+    background: inherit;
+}
+
+.tb-detail-actions button {
+    min-height: 42px;
+}
+
+@media (min-width: 761px) and (max-width: 1099px) {
+    .tb-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 13px;
+    }
+
+    .tb-preview-button {
+        height: 180px;
+        min-height: 180px;
+        max-height: 180px;
+    }
+
+    .tb-detail-content {
+        grid-template-columns: minmax(0, 1fr) minmax(300px, .9fr);
+    }
+}
+
+@media (max-width: 760px) {
+    .tb-dialog {
+        width: calc(100vw - 12px);
+        height: 96dvh;
+        max-height: 96dvh;
+        border-radius: 15px;
+    }
+
+    .tb-header {
+        padding: 12px 14px 8px;
+    }
+
+    .tb-toolbar {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 9px;
+        padding: 8px 12px;
+    }
+
+    .tb-size-bar {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .tb-size-options {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+
+    .tb-count {
+        flex: 0 0 auto;
+    }
+
+    .tb-categories {
+        padding: 8px 12px;
+    }
+
+    .tb-category-options {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .tb-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    .tb-preview-button {
+        height: 190px;
+        min-height: 190px;
+        max-height: 190px;
+    }
+
+    .tb-card-info {
+        padding: 10px 12px 12px;
+    }
+
+    .tb-use-button {
+        min-height: 42px;
+    }
+
+    .tb-footer {
+        padding: 8px 12px;
+    }
+
+    .tb-detail-overlay {
+        padding: 6px;
+    }
+
+    .tb-detail-dialog {
+        width: calc(100vw - 12px);
+        height: 96dvh;
+        max-height: 96dvh;
+        border-radius: 15px;
+    }
+
+    .tb-detail-header {
+        flex: 0 0 auto;
+        padding: 10px 12px;
+    }
+
+    .tb-detail-content {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .tb-detail-art-wrap {
+        flex: 0 0 auto;
+        height: 31dvh;
+        min-height: 150px;
+        max-height: 31dvh;
+        padding: 4px 8px;
+        overflow: hidden;
+    }
+
+    .tb-detail-canvas {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .tb-detail-controls {
+        flex: 1 1 auto;
+        min-height: 0;
+        padding: 8px 12px 12px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .tb-detail-actions {
+        position: sticky;
+        bottom: -12px;
+        margin: 0 -12px;
+        padding: 10px 12px 12px;
+        background: #fff;
+    }
+
+    .tb-detail-actions button {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .tb-upload-background {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .tb-shape-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 380px) {
+    .tb-preview-button {
+        height: 176px;
+        min-height: 176px;
+        max-height: 176px;
+    }
+
+    .tb-detail-art-wrap {
+        height: 28dvh;
+        max-height: 28dvh;
+    }
+
+    .tb-detail-actions {
+        gap: 7px;
+    }
+
+    .tb-detail-actions button {
+        font-size: 12px;
+    }
+}
+
+/* ==========================================================
+   THUMBNAIL SCALE BALANCE — 3 desktop columns / 1 mobile
+   Each format is fitted inside the same preview frame while
+   preserving its real aspect ratio. This prevents wide card
+   formats from dominating and gives square designs more room.
+   ========================================================== */
+.tb-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.tb-preview-button {
+    height: 274px;
+    min-height: 274px;
+    max-height: 274px;
+    padding: 12px;
+}
+
+.tb-preview-button .tb-artwork {
+    flex: 0 0 auto;
+    width: min(100%, calc(250px * var(--tb-art-ratio)));
+    height: min(250px, calc(250px / var(--tb-art-ratio)));
+    max-width: 100%;
+    max-height: 100%;
+    min-width: 0;
+    min-height: 0;
+    container-type: size;
+}
+
+@media (min-width: 761px) and (max-width: 1099px) {
+    .tb-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .tb-preview-button {
+        height: 258px;
+        min-height: 258px;
+        max-height: 258px;
+    }
+
+    .tb-preview-button .tb-artwork {
+        width: min(100%, calc(230px * var(--tb-art-ratio)));
+        height: min(230px, calc(230px / var(--tb-art-ratio)));
+    }
+}
+
+@media (max-width: 760px) {
+    .tb-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+    }
+
+    .tb-preview-button {
+        height: 270px;
+        min-height: 270px;
+        max-height: 270px;
+    }
+
+    .tb-preview-button .tb-artwork {
+        width: min(100%, calc(250px * var(--tb-art-ratio)));
+        height: min(250px, calc(250px / var(--tb-art-ratio)));
+    }
+}
+
+@media (max-width: 380px) {
+    .tb-preview-button {
+        height: 254px;
+        min-height: 254px;
+        max-height: 254px;
+    }
+
+    .tb-preview-button .tb-artwork {
+        width: min(100%, calc(232px * var(--tb-art-ratio)));
+        height: min(232px, calc(232px / var(--tb-art-ratio)));
+    }
+}
