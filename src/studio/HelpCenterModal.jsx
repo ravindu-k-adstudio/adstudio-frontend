@@ -214,7 +214,7 @@ const HELP_VIDEOS = [
         title: "Getting Started with AdStudio",
         description: "Learn the basics of the editor and canvas.",
         category: "Beginner",
-        videoUrl: "",
+        videoUrl: "https://youtu.be/f1DPM2qkjhY",
     },
     {
         id: "text-styling",
@@ -336,8 +336,8 @@ export default function HelpCenterModal({ onClose }) {
                             type="button"
                             onClick={() => setActiveTab("documentation")}
                             className={`flex min-h-11 items-center justify-center gap-2 rounded-lg px-2 py-3 text-sm font-bold transition ${activeTab === "documentation"
-                                    ? "bg-white text-[#0b1f33] shadow"
-                                    : "text-white hover:bg-white/10"
+                                ? "bg-white text-[#0b1f33] shadow"
+                                : "text-white hover:bg-white/10"
                                 }`}
                         >
                             <FaBookOpen />
@@ -348,8 +348,8 @@ export default function HelpCenterModal({ onClose }) {
                             type="button"
                             onClick={() => setActiveTab("videos")}
                             className={`flex min-h-11 items-center justify-center gap-2 rounded-lg px-2 py-3 text-sm font-bold transition ${activeTab === "videos"
-                                    ? "bg-white text-[#0b1f33] shadow"
-                                    : "text-white hover:bg-white/10"
+                                ? "bg-white text-[#0b1f33] shadow"
+                                : "text-white hover:bg-white/10"
                                 }`}
                         >
                             <FaPlayCircle />
@@ -394,8 +394,8 @@ export default function HelpCenterModal({ onClose }) {
                                         <section
                                             key={guide.id}
                                             className={`overflow-hidden rounded-2xl border bg-white transition ${isExpanded
-                                                    ? "border-cyan-200 shadow-md"
-                                                    : "border-slate-200 hover:border-slate-300"
+                                                ? "border-cyan-200 shadow-md"
+                                                : "border-slate-200 hover:border-slate-300"
                                                 }`}
                                         >
                                             <button
@@ -477,6 +477,8 @@ export default function HelpCenterModal({ onClose }) {
                                     videos.
                                 </p>
                             </div>
+
+
 
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 {HELP_VIDEOS.map((video, index) => (

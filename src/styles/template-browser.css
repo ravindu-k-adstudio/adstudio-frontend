@@ -1,4 +1,4 @@
-.tb-overlay {
+/* .tb-overlay {
   position: fixed;
   inset: 0;
   z-index: 10000;
@@ -2641,4 +2641,5 @@
   .tb-grid {
     grid-template-columns: minmax(0, 1fr);
   }
-}
+} 
+
