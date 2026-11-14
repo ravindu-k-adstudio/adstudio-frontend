@@ -1438,3 +1438,207 @@
         justify-content: center;
     }
 }
+
+
+/* =========================================
+   ADSTUDIO WELCOME VIDEO POPUP
+========================================= */
+
+.tutorial-video-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(8, 13, 28, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    animation: tutorialFadeIn 0.35s ease;
+}
+
+.tutorial-video-modal {
+    width: min(900px, 96vw);
+    max-height: 94vh;
+    overflow-y: auto;
+
+    background: #ffffff;
+    border-radius: 20px;
+
+    box-shadow: 0 25px 90px rgba(0, 0, 0, 0.4);
+
+    animation: tutorialSlideIn 0.4s ease;
+}
+
+.tutorial-video-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+
+    padding: 22px 25px;
+}
+
+.tutorial-video-header h2 {
+    margin: 0 0 7px;
+    color: #172033;
+    font-size: 23px;
+    font-weight: 750;
+}
+
+.tutorial-video-header p {
+    margin: 0;
+    color: #687386;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.tutorial-close-btn {
+    flex-shrink: 0;
+
+    width: 38px;
+    height: 38px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #f1f3f7;
+    color: #333d50;
+
+    font-size: 21px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s ease;
+}
+
+.tutorial-close-btn:hover {
+    background: #fee2e2;
+    color: #dc2626;
+    transform: rotate(90deg);
+}
+
+.tutorial-video-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    overflow: hidden;
+}
+
+.tutorial-video-container iframe {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    border: none;
+}
+
+.tutorial-video-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+
+    padding: 18px 25px;
+}
+
+.tutorial-video-footer span {
+    color: #687386;
+    font-size: 13px;
+}
+
+.tutorial-skip-btn {
+    flex-shrink: 0;
+
+    padding: 11px 19px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: linear-gradient(135deg, #6255ed, #8b5cf6);
+    color: white;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tutorial-skip-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(98, 85, 237, 0.3);
+}
+
+@keyframes tutorialFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes tutorialSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Mobile responsive */
+
+@media (max-width: 600px) {
+
+    .tutorial-video-overlay {
+        padding: 12px;
+    }
+
+    .tutorial-video-modal {
+        width: 100%;
+        border-radius: 14px;
+    }
+
+    .tutorial-video-header {
+        padding: 17px;
+    }
+
+    .tutorial-video-header h2 {
+        font-size: 19px;
+    }
+
+    .tutorial-video-header p {
+        font-size: 12px;
+    }
+
+    .tutorial-video-footer {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px;
+    }
+
+    .tutorial-video-footer span {
+        text-align: center;
+    }
+
+    .tutorial-skip-btn {
+        width: 100%;
+    }
+}
